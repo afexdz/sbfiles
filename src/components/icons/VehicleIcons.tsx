@@ -95,12 +95,19 @@ export function BusIcon(props: IconProps) {
 }
 
 export const CATEGORY_ICONS: Record<string, (props: IconProps) => React.ReactElement> = {
-  car:   CarIcon,
-  truck: TruckIcon,
-  moto:  MotoIcon,
-  quad:  QuadIcon,
-  jet:   JetIcon,
-  tract: TractorIcon,
-  exca:  ExcavatorIcon,
-  bus:   BusIcon,
+  /* reference.html keys */
+  car:          CarIcon,
+  truck:        TruckIcon,
+  moto:         MotoIcon,
+  quad:         QuadIcon,
+  jet:          JetIcon,
+  tract:        TractorIcon,
+  exca:         ExcavatorIcon,
+  bus:          BusIcon,
+  /* DB seed keys */
+  bike:         MotoIcon,
+  zap:          QuadIcon,
+  anchor:       JetIcon,
+  sprout:       TractorIcon,
+  construction: ExcavatorIcon,
 };
