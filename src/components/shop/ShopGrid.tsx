@@ -23,6 +23,7 @@ export function ShopGrid({ cards }: Props) {
               nom:         card.productName,
               variante:    card.variantName,
               prix_eur:    card.prixEur,
+              imageUrl:    card.image?.url ?? null,
             })
           }
         />

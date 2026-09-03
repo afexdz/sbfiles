@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Saira_Condensed, IBM_Plex_Sans } from "next/font/google";
-import { CartProvider } from "@/lib/cart";
+import { CartProvider }  from "@/lib/cart";
+import { CartDrawer }   from "@/components/cart/CartDrawer";
 import "./globals.css";
 
 const saira = Saira_Condensed({
@@ -53,7 +54,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${saira.variable} ${ibm.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CartProvider>{children}</CartProvider>
+        <CartProvider>
+          {children}
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

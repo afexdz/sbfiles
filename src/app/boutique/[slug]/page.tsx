@@ -145,6 +145,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
                 defaultVariant={sp.variante}
                 productSlug={slug}
                 productName={product.nom}
+                imageUrl={images[0]?.url ?? null}
               />
             </div>
           </div>

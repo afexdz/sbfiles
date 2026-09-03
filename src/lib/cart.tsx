@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -15,21 +16,53 @@ export interface CartItem {
   variante:    string;
   prix_eur:    number;
   qte:         number;
+  imageUrl?:   string | null;
 }
 
 interface CartCtx {
-  items:      CartItem[];
-  addItem:    (item: Omit<CartItem, "qte">) => void;
-  removeItem: (variantId: string) => void;
-  updateQte:  (variantId: string, qte: number) => void;
-  total:      number;
-  count:      number;
+  items:       CartItem[];
+  isOpen:      boolean;
+  openCart:    () => void;
+  closeCart:   () => void;
+  toggleCart:  () => void;
+  addItem:     (item: Omit<CartItem, "qte">) => void;
+  removeItem:  (variantId: string) => void;
+  updateQte:   (variantId: string, qte: number) => void;
+  subtotal:    number;
+  total:       number;
+  count:       number;
 }
 
 const CartContext = createContext<CartCtx | null>(null);
+const LS_KEY = "sbfiles-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items,   setItems]   = useState<CartItem[]>([]);
+  const [isOpen,  setIsOpen]  = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  /* Hydrate from localStorage after first client render */
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) setItems(JSON.parse(raw));
+    } catch {
+      /* ignore malformed / quota errors */
+    }
+  }, []);
+
+  /* Persist on every items change — client only */
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(items));
+    } catch { /* ignore */ }
+  }, [items, mounted]);
+
+  const openCart   = useCallback(() => setIsOpen(true),         []);
+  const closeCart  = useCallback(() => setIsOpen(false),        []);
+  const toggleCart = useCallback(() => setIsOpen((o) => !o),    []);
 
   const addItem = useCallback((item: Omit<CartItem, "qte">) => {
     setItems((prev) => {
@@ -41,6 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, qte: 1 }];
     });
+    setIsOpen(true);
   }, []);
 
   const removeItem = useCallback((variantId: string) => {
@@ -57,11 +91,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const total = items.reduce((s, i) => s + i.prix_eur * i.qte, 0);
-  const count = items.reduce((s, i) => s + i.qte, 0);
+  const subtotal = items.reduce((s, i) => s + i.prix_eur * i.qte, 0);
+  const count    = items.reduce((s, i) => s + i.qte, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQte, total, count }}>
+    <CartContext.Provider
+      value={{
+        items, isOpen, openCart, closeCart, toggleCart,
+        addItem, removeItem, updateQte,
+        subtotal, total: subtotal, count,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

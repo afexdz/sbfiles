@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button }  from "@/components/ui/Button";
 import { Logo }    from "@/components/layout/Logo";
@@ -20,19 +20,33 @@ const ICON_BTN =
   "hover:border-ink2 hover:shadow-card transition-[border-color,box-shadow] duration-[180ms]";
 
 export function Header() {
-  const { count: cartCount }    = useCart();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { count: cartCount, openCart } = useCart();
+  const [menuOpen, setMenuOpen]        = useState(false);
+
+  /* Badge "pop" animation when count increases */
+  const prevCountRef = useRef(cartCount);
+  const [badgePing, setBadgePing] = useState(false);
+
+  useEffect(() => {
+    if (cartCount > prevCountRef.current) {
+      setBadgePing(true);
+      const t = setTimeout(() => setBadgePing(false), 380);
+      prevCountRef.current = cartCount;
+      return () => clearTimeout(t);
+    }
+    prevCountRef.current = cartCount;
+  }, [cartCount]);
 
   function toggleMenu() { setMenuOpen((o) => !o); }
   function closeMenu()  { setMenuOpen(false); }
 
   return (
     <>
-      {/* z-50 keeps it above page content; drawer is z-60 */}
+      {/* z-50 keeps it above page content; cart drawer is z-[70] */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-[14px] border-b border-line">
         <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] flex items-center gap-3 sm:gap-[26px] h-14 sm:h-16">
 
-          {/* Logo — shrinks instead of overflowing */}
+          {/* Logo */}
           <div className="min-w-0 flex-shrink">
             <Logo />
           </div>
@@ -52,7 +66,6 @@ export function Header() {
 
           {/* Right actions */}
           <div className="ml-auto flex items-center gap-2 sm:gap-[10px]">
-            {/* Desktop auth buttons */}
             <Button variant="ghost" className="hidden [min-width:940px]:inline-flex">
               Se connecter
             </Button>
@@ -60,15 +73,26 @@ export function Header() {
               Créer un compte
             </Button>
 
-            {/* Cart */}
-            <button aria-label="Panier" className={ICON_BTN}>
+            {/* Cart button — opens cart drawer */}
+            <button
+              id="header-cart-btn"
+              aria-label="Ouvrir le panier"
+              aria-haspopup="dialog"
+              aria-expanded={cartCount > 0}
+              className={ICON_BTN}
+              onClick={openCart}
+            >
               <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
                 <path d="M3 4h2l2.4 11h9.8l2.2-8H6.2" />
                 <circle cx="9"  cy="19" r="1.6" />
                 <circle cx="17" cy="19" r="1.6" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-[6px] -right-[6px] bg-ember text-white text-[11px] min-w-[18px] h-[18px] rounded-full grid place-items-center font-semibold px-[3px]">
+                <span
+                  className={`absolute -top-[6px] -right-[6px] bg-ember text-white text-[11px] min-w-[18px] h-[18px] rounded-full grid place-items-center font-semibold px-[3px] transition-transform duration-[200ms] ${
+                    badgePing ? "scale-[1.4]" : "scale-100"
+                  }`}
+                >
                   {cartCount}
                 </span>
               )}
@@ -88,23 +112,19 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile nav drawer — z-60 so it floats above header */}
+      {/* Mobile nav drawer */}
       {menuOpen && (
         <>
-          {/* Backdrop */}
           <div
             className="[min-width:940px]:hidden fixed inset-0 z-[59] bg-black/30 backdrop-blur-[2px]"
             aria-hidden
             onClick={closeMenu}
           />
-
-          {/* Drawer */}
           <nav
             id="mobile-nav"
             className="[min-width:940px]:hidden fixed inset-x-0 top-14 sm:top-16 z-60 bg-card border-b border-line shadow-card-lg"
           >
             <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)]">
-              {/* Nav links */}
               <div className="flex flex-col">
                 {NAV_LINKS.map((link) => (
                   <a
@@ -117,8 +137,6 @@ export function Header() {
                   </a>
                 ))}
               </div>
-
-              {/* Auth + close */}
               <div className="py-4 flex flex-col gap-2">
                 <Button variant="ghost" className="w-full justify-center" onClick={closeMenu}>
                   Se connecter

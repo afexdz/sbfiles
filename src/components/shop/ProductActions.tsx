@@ -7,13 +7,14 @@ import { useCart }  from "@/lib/cart";
 import type { ShopVariant } from "@/lib/types";
 
 interface Props {
-  variants:       ShopVariant[];
+  variants:        ShopVariant[];
   defaultVariant?: string;
-  productSlug:    string;
-  productName:    string;
+  productSlug:     string;
+  productName:     string;
+  imageUrl?:       string | null;
 }
 
-export function ProductActions({ variants, defaultVariant, productSlug, productName }: Props) {
+export function ProductActions({ variants, defaultVariant, productSlug, productName, imageUrl }: Props) {
   const sorted = [...variants].sort((a, b) => a.ordre - b.ordre);
   const initialSlug = defaultVariant && sorted.some((v) => v.slug === defaultVariant)
     ? defaultVariant
@@ -33,6 +34,7 @@ export function ProductActions({ variants, defaultVariant, productSlug, productN
       nom:         productName,
       variante:    activeVariant.nom,
       prix_eur:    activeVariant.prix_eur,
+      imageUrl:    imageUrl ?? null,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
