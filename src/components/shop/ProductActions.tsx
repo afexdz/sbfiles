@@ -1,18 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button }   from "@/components/ui/Button";
 import { formatEUR } from "@/lib/format";
+import { useCart }  from "@/lib/cart";
 import type { ShopVariant } from "@/lib/types";
 
 interface Props {
-  variants: ShopVariant[];
+  variants:       ShopVariant[];
+  defaultVariant?: string;
+  productSlug:    string;
+  productName:    string;
 }
 
-export function ProductActions({ variants }: Props) {
+export function ProductActions({ variants, defaultVariant, productSlug, productName }: Props) {
   const sorted = [...variants].sort((a, b) => a.ordre - b.ordre);
-  const [activeSlug, setActiveSlug] = useState(sorted[0]?.slug ?? "");
+  const initialSlug = defaultVariant && sorted.some((v) => v.slug === defaultVariant)
+    ? defaultVariant
+    : sorted[0]?.slug ?? "";
+
+  const [activeSlug, setActiveSlug] = useState(initialSlug);
+  const [added, setAdded]           = useState(false);
+
   const activeVariant = sorted.find((v) => v.slug === activeSlug) ?? sorted[0];
+  const { addItem }   = useCart();
+
+  function handleAdd() {
+    if (!activeVariant) return;
+    addItem({
+      variantId:   activeVariant.id,
+      productSlug,
+      nom:         productName,
+      variante:    activeVariant.nom,
+      prix_eur:    activeVariant.prix_eur,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  }
 
   return (
     <div className="flex flex-col gap-5">
@@ -60,9 +84,12 @@ export function ProductActions({ variants }: Props) {
       {/* CTA */}
       <Button
         variant="solid"
-        className="w-full justify-center !h-12 !text-[15px]"
+        onClick={handleAdd}
+        className={`w-full justify-center !h-12 !text-[15px] transition-colors ${
+          added ? "!bg-ok" : ""
+        }`}
       >
-        Ajouter au panier
+        {added ? "Ajouté ✓" : "Ajouter au panier"}
       </Button>
     </div>
   );

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Logo }   from "@/components/layout/Logo";
+import { Button }  from "@/components/ui/Button";
+import { Logo }    from "@/components/layout/Logo";
+import { useCart } from "@/lib/cart";
 
 const NAV_LINKS = [
   { label: "Catalogue",        href: "/catalogue" },
@@ -19,7 +20,7 @@ const ICON_BTN =
   "hover:border-ink2 hover:shadow-card transition-[border-color,box-shadow] duration-[180ms]";
 
 export function Header() {
-  const [cartCount]          = useState(0);
+  const { count: cartCount }    = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
 
   function toggleMenu() { setMenuOpen((o) => !o); }

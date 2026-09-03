@@ -9,7 +9,8 @@ import type { Metadata }      from "next";
 import type { ShopProductWithRelations } from "@/lib/types";
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params:       Promise<{ slug: string }>;
+  searchParams: Promise<{ variante?: string }>;
 };
 
 async function safeSelect<T>(
@@ -60,8 +61,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const WRAP = "max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)]";
 
-export default async function ProductPage({ params }: Props) {
-  const { slug } = await params;
+export default async function ProductPage({ params, searchParams }: Props) {
+  const [{ slug }, sp] = await Promise.all([params, searchParams]);
   const product = await getProduct(slug);
   if (!product) notFound();
 
@@ -138,8 +139,13 @@ export default async function ProductPage({ params }: Props) {
                 </ul>
               )}
 
-              {/* Variant selector + price + CTA */}
-              <ProductActions variants={variants} />
+              {/* Variant selector + price + CTA — presélectionne ?variante= */}
+              <ProductActions
+                variants={variants}
+                defaultVariant={sp.variante}
+                productSlug={slug}
+                productName={product.nom}
+              />
             </div>
           </div>
         </div>
