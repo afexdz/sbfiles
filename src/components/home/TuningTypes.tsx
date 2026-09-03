@@ -21,7 +21,7 @@ export function TuningTypes({ types }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-4 gap-[14px] max-[940px]:grid-cols-2 max-[560px]:grid-cols-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-[14px]">
       {types.map((t) => {
         const tag = GAIN_TAGS[t.slug];
         return (

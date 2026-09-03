@@ -35,7 +35,7 @@ export function BrandCard({ name, slug, logoUrl, onClick }: Props) {
         role={onClick ? "button" : undefined}
         tabIndex={onClick ? 0 : undefined}
         onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
-        className="flex flex-col items-center justify-center gap-3 w-[172px] h-[158px] rounded-[14px] cursor-pointer relative overflow-hidden border border-line shadow-card group-hover:border-line2 group-hover:shadow-[0_28px_52px_-26px_rgba(16,32,48,.48),0_2px_6px_rgba(16,32,48,.08)] transition-[border-color,box-shadow] duration-[400ms]"
+        className="flex flex-col items-center justify-center gap-3 w-32 h-28 sm:w-40 sm:h-36 rounded-[14px] cursor-pointer relative overflow-hidden border border-line shadow-card group-hover:border-line2 group-hover:shadow-[0_28px_52px_-26px_rgba(16,32,48,.48),0_2px_6px_rgba(16,32,48,.08)] transition-[border-color,box-shadow] duration-[400ms]"
         style={{
           background: "linear-gradient(168deg, #FFFFFF 0%, #F4F7FA 62%, #E9EFF4 100%)",
         }}

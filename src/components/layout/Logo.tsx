@@ -6,7 +6,7 @@ export function Logo() {
     <Link
       href="/"
       aria-label="SBFiles"
-      className="flex items-center gap-2 sm:gap-3 min-w-0 shrink overflow-hidden"
+      className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink overflow-hidden"
     >
       <span className="sr-only">SBFiles</span>
 
@@ -16,7 +16,7 @@ export function Logo() {
         alt=""
         width={908}
         height={399}
-        className="h-7 sm:h-9 md:h-10 w-auto object-contain flex-none"
+        className="h-6 sm:h-7 md:h-8 w-auto object-contain flex-none"
         priority
       />
 
@@ -26,7 +26,7 @@ export function Logo() {
         alt=""
         width={954}
         height={57}
-        className="hidden xs:block h-3.5 sm:h-4 md:h-5 w-auto object-contain flex-none"
+        className="hidden xs:block h-3 sm:h-3.5 md:h-4 w-auto object-contain flex-none"
         priority
       />
     </Link>

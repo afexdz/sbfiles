@@ -15,7 +15,7 @@ export function CategoryGrid({ categories }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-4 gap-5 max-[1050px]:grid-cols-2 max-[520px]:grid-cols-1">
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
       {categories.map((cat) => (
         <CategoryCard
           key={cat.id}

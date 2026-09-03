@@ -18,20 +18,24 @@ const ICON_BTN =
   "hover:border-ink2 hover:shadow-card transition-[border-color,box-shadow] duration-[180ms]";
 
 export function Header() {
-  const [cartCount]  = useState(0);
+  const [cartCount]          = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  function toggleMenu() { setMenuOpen((o) => !o); }
+  function closeMenu()  { setMenuOpen(false); }
 
   return (
     <>
-      <header className="sticky top-0 z-60 bg-white/90 backdrop-blur-[14px] border-b border-line">
+      {/* z-50 keeps it above page content; drawer is z-60 */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-[14px] border-b border-line">
         <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] flex items-center gap-3 sm:gap-[26px] h-14 sm:h-16">
 
-          {/* Logo */}
+          {/* Logo — shrinks instead of overflowing */}
           <div className="min-w-0 flex-shrink">
             <Logo />
           </div>
 
-          {/* Main nav — desktop only */}
+          {/* Main nav — desktop only (940 px+) */}
           <nav className="hidden [min-width:940px]:flex gap-[22px] ml-[10px] text-[14.5px] text-ink2">
             {NAV_LINKS.map((link) => (
               <a
@@ -45,7 +49,7 @@ export function Header() {
           </nav>
 
           {/* Right actions */}
-          <div className="ml-auto flex items-center gap-[10px]">
+          <div className="ml-auto flex items-center gap-2 sm:gap-[10px]">
             {/* Desktop auth buttons */}
             <Button variant="ghost" className="hidden [min-width:940px]:inline-flex">
               Se connecter
@@ -68,12 +72,13 @@ export function Header() {
               )}
             </button>
 
-            {/* Burger — mobile only */}
+            {/* Burger — hidden at 940 px+ */}
             <button
               aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
               aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
               className={`${ICON_BTN} [min-width:940px]:hidden`}
-              onClick={() => setMenuOpen((o) => !o)}
+              onClick={toggleMenu}
             >
               {menuOpen ? <X size={19} aria-hidden /> : <Menu size={19} aria-hidden />}
             </button>
@@ -81,32 +86,54 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile nav drawer */}
+      {/* Mobile nav drawer — z-60 so it floats above header */}
       {menuOpen && (
-        <div
-          className="[min-width:940px]:hidden fixed inset-x-0 top-14 sm:top-16 z-50 bg-card border-b border-line shadow-card-lg"
-          onClick={() => setMenuOpen(false)}
-        >
-          <nav className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] py-2 flex flex-col">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="py-3 text-[15px] text-ink2 border-b border-line last:border-b-0 hover:text-ember-ink transition-colors duration-[180ms]"
-              >
-                {link.label}
-              </a>
-            ))}
-            <div className="py-4 flex flex-col gap-2">
-              <Button variant="ghost" className="w-full justify-center">
-                Se connecter
-              </Button>
-              <Button variant="solid" className="w-full justify-center">
-                Créer un compte
-              </Button>
+        <>
+          {/* Backdrop */}
+          <div
+            className="[min-width:940px]:hidden fixed inset-0 z-[59] bg-black/30 backdrop-blur-[2px]"
+            aria-hidden
+            onClick={closeMenu}
+          />
+
+          {/* Drawer */}
+          <nav
+            id="mobile-nav"
+            className="[min-width:940px]:hidden fixed inset-x-0 top-14 sm:top-16 z-60 bg-card border-b border-line shadow-card-lg"
+          >
+            <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)]">
+              {/* Nav links */}
+              <div className="flex flex-col">
+                {NAV_LINKS.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="py-3.5 text-[15px] text-ink border-b border-line last:border-b-0 hover:text-ember-ink transition-colors duration-[180ms]"
+                    onClick={closeMenu}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+
+              {/* Auth + close */}
+              <div className="py-4 flex flex-col gap-2">
+                <Button variant="ghost" className="w-full justify-center" onClick={closeMenu}>
+                  Se connecter
+                </Button>
+                <Button variant="solid" className="w-full justify-center" onClick={closeMenu}>
+                  Créer un compte
+                </Button>
+                <button
+                  className="mt-1 text-[13px] text-mute hover:text-ink transition-colors duration-[180ms] py-1"
+                  onClick={closeMenu}
+                >
+                  Fermer
+                </button>
+              </div>
             </div>
           </nav>
-        </div>
+        </>
       )}
     </>
   );

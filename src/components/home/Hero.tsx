@@ -14,8 +14,18 @@ type Fuel = "essence" | "diesel" | "hybride";
 
 const DEFAULT_CHART = { hp: 150, nm: 380, fuel: "diesel" as Fuel, ecu: "—" };
 
+/* Custom-arrow select — width 100%, height 44 px for touch targets */
+const SELECT_CLS =
+  "w-full h-11 bg-card border border-line2 rounded-[5px] px-3 text-[15px] cursor-pointer appearance-none " +
+  "hover:border-ink2 focus:outline-none focus:border-ember focus:shadow-[0_0_0_4px_var(--ember-soft)] " +
+  "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-soft " +
+  "transition-[border-color,box-shadow] duration-[180ms] " +
+  "[background-image:linear-gradient(45deg,transparent_50%,var(--ink2)_50%),linear-gradient(135deg,var(--ink2)_50%,transparent_50%)] " +
+  "[background-position:calc(100%_-_19px)_52%,calc(100%_-_13px)_52%] " +
+  "[background-size:6px_6px] [background-repeat:no-repeat]";
+
 export function Hero({ brands }: Props) {
-  /* Lazy Supabase client — only initialised on first user interaction */
+  /* Lazy Supabase client — initialised only on first user interaction */
   const sbRef = useRef<ReturnType<typeof createClient> | null | "failed">(null);
   function sb() {
     if (sbRef.current === "failed") return null;
@@ -37,46 +47,30 @@ export function Hero({ brands }: Props) {
   const [chart, setChart] = useState(DEFAULT_CHART);
   const [ecuTag, setEcuTag] = useState("ECU —");
 
-  /* ---- cascading fetch handlers ---- */
-
   const onBrand = useCallback(async (brandId: string) => {
-    setSelBrand(brandId);
-    setSelModel(""); setSelPeriod(""); setSelEngine("");
+    setSelBrand(brandId); setSelModel(""); setSelPeriod(""); setSelEngine("");
     setModels([]); setPeriods([]); setEngines([]);
     const client = sb();
     if (!brandId || !client) return;
-    const { data } = await client
-      .from("models")
-      .select("*")
-      .eq("brand_id", brandId)
-      .order("ordre");
+    const { data } = await client.from("models").select("*").eq("brand_id", brandId).order("ordre");
     setModels(data ?? []);
   }, []);
 
   const onModel = useCallback(async (modelId: string) => {
-    setSelModel(modelId);
-    setSelPeriod(""); setSelEngine("");
+    setSelModel(modelId); setSelPeriod(""); setSelEngine("");
     setPeriods([]); setEngines([]);
     const client = sb();
     if (!modelId || !client) return;
-    const { data } = await client
-      .from("periods")
-      .select("*")
-      .eq("model_id", modelId)
-      .order("ordre");
+    const { data } = await client.from("periods").select("*").eq("model_id", modelId).order("ordre");
     setPeriods(data ?? []);
   }, []);
 
   const onPeriod = useCallback(async (periodId: string) => {
-    setSelPeriod(periodId);
-    setSelEngine("");
+    setSelPeriod(periodId); setSelEngine("");
     setEngines([]);
     const client = sb();
     if (!periodId || !client) return;
-    const { data } = await client
-      .from("engines")
-      .select("*")
-      .eq("period_id", periodId);
+    const { data } = await client.from("engines").select("*").eq("period_id", periodId);
     setEngines(data ?? []);
   }, []);
 
@@ -95,16 +89,8 @@ export function Hero({ brands }: Props) {
 
   const canSubmit = Boolean(selEngine);
 
-  /* ---- select style shared ---- */
-  const selectCls =
-    "w-full bg-card border border-line2 rounded-[5px] px-[13px] py-3 text-[15px] cursor-pointer appearance-none " +
-    "hover:border-ink2 focus:outline-none focus:border-ember focus:shadow-[0_0_0_4px_var(--ember-soft)] " +
-    "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-soft transition-[border-color,box-shadow] duration-[180ms] " +
-    "[background-image:linear-gradient(45deg,transparent_50%,var(--ink2)_50%),linear-gradient(135deg,var(--ink2)_50%,transparent_50%)] " +
-    "[background-position:calc(100%_-_19px)_52%,calc(100%_-_13px)_52%] [background-size:6px_6px] [background-repeat:no-repeat]";
-
   return (
-    <section className="relative py-5 sm:py-[clamp(34px,5vw,66px)] sm:pb-[clamp(30px,4vw,50px)] overflow-hidden">
+    <section className="relative py-8 sm:py-12 lg:py-16 overflow-hidden">
       {/* Background radial glow */}
       <div
         aria-hidden
@@ -112,103 +98,75 @@ export function Hero({ brands }: Props) {
         style={{
           inset: "-30% -20% auto 40%",
           height: "560px",
-          background:
-            "radial-gradient(52% 58% at 60% 45%, rgba(255,77,18,.10), transparent 70%)",
+          background: "radial-gradient(52% 58% at 60% 45%, rgba(255,77,18,.10), transparent 70%)",
         }}
       />
 
       <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] relative">
-        <div className="grid [grid-template-columns:minmax(0,.88fr)_minmax(0,1.12fr)] gap-[clamp(24px,3.5vw,48px)] items-start [max-width:1000px]:![grid-template-columns:1fr] [max-width:1000px]:gap-[30px]">
+        {/* Mobile-first: 1 col → 2 cols at lg */}
+        <div className="grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] gap-6 sm:gap-8 lg:gap-12 items-start">
 
-          {/* ---- Left column ---- */}
+          {/* ---- Left column: text + console ---- */}
           <div className="stagger">
             {/* Kicker */}
-            <div className="inline-flex items-center gap-2 text-xs text-ink2 bg-card border border-line px-3 py-[6px] rounded-full mb-[18px] shadow-card whitespace-nowrap">
+            <div className="inline-flex items-center gap-2 text-xs text-ink2 bg-card border border-line px-3 py-[6px] rounded-full mb-4 shadow-card whitespace-nowrap">
               <span className="w-[7px] h-[7px] rounded-full bg-ok shadow-[0_0_0_3px_rgba(18,161,80,.16)]" />
               4 218 fichiers en ligne · téléchargement immédiat
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display mb-4">
+            <h1 className="text-[2.5rem] leading-[0.95] sm:text-6xl lg:text-7xl font-display mb-4 text-balance">
               Le fichier exact
               <span className="block text-mute">pour ton moteur.</span>
             </h1>
 
-            <p className="text-ink2 max-w-[46ch] text-[16.5px] mb-[26px]">
+            {/* Lead */}
+            <p className="text-base sm:text-lg text-ink2 max-w-prose mb-6">
               Marque, modèle, année, motorisation. Tu vois les gains avant
               d&apos;acheter et tu télécharges dans la seconde.
             </p>
 
             {/* Console */}
             <div className="bg-card border border-line rounded-lg shadow-card-lg overflow-hidden">
-              <div className="flex justify-between items-center px-[18px] py-3 border-b border-line text-[12.5px] text-mute bg-soft">
+              {/* Console header — stacks on mobile */}
+              <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center px-[18px] py-3 border-b border-line text-[12.5px] text-mute bg-soft">
                 <span>Trouve ton fichier</span>
                 <span>{ecuTag}</span>
               </div>
-              <div className="p-[18px] flex flex-col gap-3">
+
+              <div className="p-4 sm:p-[18px] flex flex-col gap-3">
                 {/* Marque */}
                 <label className="flex flex-col gap-[5px] text-[12.5px] text-mute">
                   Marque
-                  <select
-                    className={selectCls}
-                    value={selBrand}
-                    onChange={(e) => onBrand(e.target.value)}
-                  >
+                  <select className={SELECT_CLS} value={selBrand} onChange={(e) => onBrand(e.target.value)}>
                     <option value="">Sélectionne une marque</option>
-                    {brands.map((b) => (
-                      <option key={b.id} value={b.id}>{b.nom}</option>
-                    ))}
+                    {brands.map((b) => <option key={b.id} value={b.id}>{b.nom}</option>)}
                   </select>
                 </label>
 
                 {/* Modèle */}
                 <label className="flex flex-col gap-[5px] text-[12.5px] text-mute">
                   Modèle
-                  <select
-                    className={selectCls}
-                    value={selModel}
-                    disabled={models.length === 0}
-                    onChange={(e) => onModel(e.target.value)}
-                  >
-                    <option value="">
-                      {models.length === 0 ? "—" : "Sélectionne un modèle"}
-                    </option>
-                    {models.map((m) => (
-                      <option key={m.id} value={m.id}>{m.nom}</option>
-                    ))}
+                  <select className={SELECT_CLS} value={selModel} disabled={models.length === 0} onChange={(e) => onModel(e.target.value)}>
+                    <option value="">{models.length === 0 ? "—" : "Sélectionne un modèle"}</option>
+                    {models.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
                   </select>
                 </label>
 
                 {/* Année */}
                 <label className="flex flex-col gap-[5px] text-[12.5px] text-mute">
                   Année
-                  <select
-                    className={selectCls}
-                    value={selPeriod}
-                    disabled={periods.length === 0}
-                    onChange={(e) => onPeriod(e.target.value)}
-                  >
-                    <option value="">
-                      {periods.length === 0 ? "—" : "Sélectionne une année"}
-                    </option>
-                    {periods.map((p) => (
-                      <option key={p.id} value={p.id}>{p.label}</option>
-                    ))}
+                  <select className={SELECT_CLS} value={selPeriod} disabled={periods.length === 0} onChange={(e) => onPeriod(e.target.value)}>
+                    <option value="">{periods.length === 0 ? "—" : "Sélectionne une année"}</option>
+                    {periods.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
                   </select>
                 </label>
 
                 {/* Motorisation */}
                 <label className="flex flex-col gap-[5px] text-[12.5px] text-mute">
                   Motorisation
-                  <select
-                    className={selectCls}
-                    value={selEngine}
-                    disabled={engines.length === 0}
-                    onChange={(e) => onEngine(e.target.value)}
-                  >
-                    <option value="">
-                      {engines.length === 0 ? "—" : "Sélectionne une motorisation"}
-                    </option>
+                  <select className={SELECT_CLS} value={selEngine} disabled={engines.length === 0} onChange={(e) => onEngine(e.target.value)}>
+                    <option value="">{engines.length === 0 ? "—" : "Sélectionne une motorisation"}</option>
                     {engines.map((e) => (
                       <option key={e.id} value={e.id}>
                         {e.nom}{e.ch_stock ? ` · ${e.ch_stock} ch` : ""}
@@ -220,7 +178,7 @@ export function Hero({ brands }: Props) {
                 <Button
                   variant="solid"
                   disabled={!canSubmit}
-                  className="w-full py-[14px] mt-[6px] text-[15px] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  className="w-full h-11 mt-1 text-[15px] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                   Voir les fichiers disponibles
                 </Button>
@@ -228,7 +186,7 @@ export function Hero({ brands }: Props) {
             </div>
           </div>
 
-          {/* ---- Right column — DynoChart ---- */}
+          {/* ---- Right column: DynoChart ---- */}
           <DynoChart
             hp={chart.hp}
             nm={chart.nm}

@@ -11,7 +11,7 @@ const FOOTER_NAV = [
 export function Footer() {
   return (
     <footer className="border-t border-line mt-5 py-8 text-mute text-[13.5px] bg-card">
-      <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] flex justify-between gap-5 flex-wrap">
+      <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] flex flex-col gap-6 md:flex-row md:justify-between md:items-start">
         {/* Brand */}
         <div>
           <Logo />

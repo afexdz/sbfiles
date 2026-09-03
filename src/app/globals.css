@@ -130,3 +130,13 @@ button, select, input { font: inherit; color: inherit; }
   .stagger > * { opacity: 1; transform: none; }
   .ico-layer, .halo-layer, .brand-logo-layer { transform: none !important; }
 }
+
+/* Touch / coarse-pointer devices: disable 3D hover transforms */
+@media (hover: none) {
+  .ico-layer,
+  .group:hover .ico-layer { transform: none !important; filter: none !important; }
+  .halo-layer,
+  .group:hover .halo-layer { transform: none !important; }
+  .brand-logo-layer,
+  .group:hover .brand-logo-layer { transform: none !important; }
+}

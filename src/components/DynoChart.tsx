@@ -196,22 +196,22 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
   return (
     <div className="bg-card border border-line rounded-lg shadow-card-lg overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 pt-4">
-        <h3 className="font-display text-[20px]">{title ?? "Comparatif origine / SBFiles"}</h3>
+      <div className="flex flex-wrap items-center gap-2 px-4 sm:px-5 pt-4 pb-0">
+        <h3 className="font-display text-[18px] sm:text-[20px] min-w-0">{title ?? "Comparatif origine / SBFiles"}</h3>
         <span className="ml-auto text-[12px] text-ink2 bg-soft border border-line px-[9px] py-[3px] rounded-full whitespace-nowrap">
           {ecu}
         </span>
       </div>
 
       {/* Stage buttons */}
-      <div className="flex flex-wrap gap-2 px-4 sm:px-5 py-3 sm:py-[14px]">
+      <div className="flex flex-wrap gap-1.5 px-4 sm:px-5 py-3 sm:py-[14px]">
         {STAGES.map(({ key, label }) => (
           <Button
             key={key}
             variant="stage"
             pressed={stage === key}
             onClick={() => handleStage(key)}
-            className="!text-xs !px-3 !py-1.5 sm:!text-[13.5px] sm:!px-3.5 sm:!py-2"
+            className="!text-xs !px-2.5 !py-1.5 sm:!text-[13.5px] sm:!px-[14px] sm:!py-2"
           >
             {label}
           </Button>
@@ -219,7 +219,7 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
       </div>
 
       {/* Chart */}
-      <div className="px-[10px] min-h-[180px] sm:min-h-0">
+      <div className="px-[10px] min-h-[160px] sm:min-h-0">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="xMidYMid meet"
