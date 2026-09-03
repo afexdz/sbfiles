@@ -37,26 +37,28 @@ export default async function BoutiquePage() {
       )
     : [];
 
-  /* Flatten: one card per variant */
+  /* Flatten: one card per variant, each carrying full product data for the modal */
   const cards = products.flatMap((product) => {
-    const firstImage =
-      [...(product.shop_images ?? [])].sort((a, b) => a.ordre - b.ordre)[0] ?? null;
-    const image = firstImage
-      ? { url: firstImage.url, alt: firstImage.alt }
-      : null;
+    const allImages   = [...(product.shop_images   ?? [])].sort((a, b) => a.ordre - b.ordre);
+    const allVariants = [...(product.shop_variants ?? [])].sort((a, b) => a.ordre - b.ordre);
+    const allFeatures = [...(product.shop_features ?? [])].sort((a, b) => a.ordre - b.ordre);
+    const firstImage  = allImages[0] ?? null;
+    const image       = firstImage ? { url: firstImage.url, alt: firstImage.alt } : null;
 
-    return [...(product.shop_variants ?? [])]
-      .sort((a, b) => a.ordre - b.ordre)
-      .map((v) => ({
-        productSlug: product.slug,
-        variantId:   v.id,
-        variantSlug: v.slug,
-        productName: product.nom,
-        variantName: v.nom,
-        brand:       product.marque,
-        prixEur:     v.prix_eur,
-        image,
-      }));
+    return allVariants.map((v) => ({
+      productSlug: product.slug,
+      variantId:   v.id,
+      variantSlug: v.slug,
+      productName: product.nom,
+      variantName: v.nom,
+      brand:       product.marque,
+      prixEur:     v.prix_eur,
+      image,
+      description: product.description,
+      allVariants,
+      allImages,
+      allFeatures,
+    }));
   });
 
   return (

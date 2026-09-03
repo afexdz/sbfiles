@@ -93,6 +93,18 @@ button, select, input { font: inherit; color: inherit; }
 }
 .group:hover .shop-card-img { transform: translateZ(42px); }
 
+/* ---- Modal animations ---- */
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(24px) scale(.94) rotateX(8deg); }
+  to   { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+}
+@keyframes modal-out {
+  from { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+  to   { opacity: 0; transform: translateY(24px) scale(.94) rotateX(8deg); }
+}
+.modal-enter { animation: modal-in  340ms cubic-bezier(.2,.85,.3,1) forwards; }
+.modal-exit  { animation: modal-out 200ms cubic-bezier(.2,.85,.3,1) forwards; }
+
 /* ---- stagger / enter animations ---- */
 @keyframes pop {
   to { opacity: 1; transform: none; }
