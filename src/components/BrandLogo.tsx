@@ -10,6 +10,14 @@ interface Props {
   logoUrl?: string | null;
 }
 
+// DB slug → actual filename stem (when they differ from the DB slug)
+const FILE_SLUG: Readonly<Record<string, string>> = {
+  "land-rover":      "landrover",
+  "mercedes-benz":   "mercedes",
+  "mercedes-citaro": "mercedes",
+};
+function fileSlug(slug: string): string { return FILE_SLUG[slug] ?? slug; }
+
 function nextPhase(phase: Phase): Phase {
   if (phase === "db")  return "png";
   if (phase === "png") return "svg";
@@ -18,8 +26,8 @@ function nextPhase(phase: Phase): Phase {
 
 function getSrc(phase: Phase, slug: string, logoUrl?: string | null): string | null {
   if (phase === "db")  return logoUrl ?? null;
-  if (phase === "png") return `/logos/${slug}.png`;
-  if (phase === "svg") return `/logos/${slug}.svg`;
+  if (phase === "png") return `/logos/${fileSlug(slug)}.png`;
+  if (phase === "svg") return `/logos/${fileSlug(slug)}.svg`;
   return null;
 }
 

@@ -22,8 +22,15 @@ const brandsBlock = sql.match(/insert into brands[\s\S]+?on conflict/i)?.[0] ?? 
 const slugs = [...brandsBlock.matchAll(/^\s*\('([a-z0-9-]+)',/gm)].map((m) => m[1]);
 
 // Brands intentionally excluded from the logo requirement
-const EXCLUDED = new Set(["tesla", "setra"]);
+const EXCLUDED = new Set(["tesla", "mercedes-citaro"]);
 const expected = slugs.filter((s) => !EXCLUDED.has(s));
+
+// DB slug → actual filename stem (mirrors BrandLogo.tsx FILE_SLUG mapping)
+const FILE_SLUG = {
+  "land-rover":    "landrover",
+  "mercedes-benz": "mercedes",
+};
+function toFileSlug(s) { return FILE_SLUG[s] ?? s; }
 
 // ── 2. Scan public/logos/ for .png and .svg files ──────────────────────────
 const logosDir = resolve(root, "public/logos");
@@ -40,8 +47,8 @@ try {
 }
 
 // ── 3. Report ─────────────────────────────────────────────────────────────
-const present = expected.filter((s) => presentBases.has(s));
-const missing = expected.filter((s) => !presentBases.has(s));
+const present = expected.filter((s) => presentBases.has(toFileSlug(s)));
+const missing = expected.filter((s) => !presentBases.has(toFileSlug(s)));
 
 console.log(`\n📊 ${present.length} / ${expected.length} logos présents\n`);
 
