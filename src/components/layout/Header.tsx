@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { label: "Catalogue",        href: "/catalogue" },
   { label: "Types de tuning",  href: "/#types" },
   { label: "Marques",          href: "/#marques" },
+  { label: "Boutique",         href: "/boutique" },
   { label: "Tarifs",           href: "/tarifs" },
   { label: "Aide",             href: "/aide" },
 ];

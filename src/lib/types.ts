@@ -111,3 +111,45 @@ export interface BrandWithCategory extends Brand {
 export interface ModelWithBrand extends Model {
   brand: Brand;
 }
+
+/* ---- Shop types ---- */
+
+export interface ShopProduct {
+  id: string;
+  slug: string;
+  nom: string;
+  marque: string;
+  description: string | null;
+  actif: boolean;
+  ordre: number;
+}
+
+export interface ShopVariant {
+  id: string;
+  product_id: string;
+  slug: string;
+  nom: string;
+  prix_eur: number;
+  ordre: number;
+}
+
+export interface ShopImage {
+  id: string;
+  product_id: string;
+  url: string;
+  alt: string | null;
+  ordre: number;
+}
+
+export interface ShopFeature {
+  id: string;
+  product_id: string;
+  label: string;
+  ordre: number;
+}
+
+export interface ShopProductWithRelations extends ShopProduct {
+  shop_variants: ShopVariant[] | null;
+  shop_images: ShopImage[] | null;
+  shop_features: ShopFeature[] | null;
+}
