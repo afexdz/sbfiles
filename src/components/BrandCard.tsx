@@ -1,33 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { TiltCard, Glare } from "@/components/ui/TiltCard";
+import { BrandLogo }       from "@/components/BrandLogo";
 
 interface Props {
-  name: string;
-  slug: string;
+  name:     string;
+  slug:     string;
   logoUrl?: string | null;
   onClick?: () => void;
 }
 
 export function BrandCard({ name, slug, logoUrl, onClick }: Props) {
-  const initials = name.replace(/[^A-Za-zÀ-ÿ]/g, "").slice(0, 2).toUpperCase();
-  const cdnUrl = `https://cdn.simpleicons.org/${slug}`;
-
-  const [src, setSrc] = useState<string | null>(logoUrl ?? `/logos/${slug}.png`);
-  const [triedCdn, setTriedCdn] = useState(false);
-  const [showInitials, setShowInitials] = useState(false);
-
-  function handleError() {
-    if (!triedCdn) {
-      setTriedCdn(true);
-      setSrc(cdnUrl);
-    } else {
-      setSrc(null);
-      setShowInitials(true);
-    }
-  }
-
   return (
     <TiltCard>
       <div
@@ -43,23 +26,9 @@ export function BrandCard({ name, slug, logoUrl, onClick }: Props) {
         {/* Top fade */}
         <div className="absolute left-0 right-0 top-0 h-[52%] bg-gradient-to-b from-white/95 to-transparent pointer-events-none" />
 
-        {/* Logo or initials */}
+        {/* Logo — fixed-size container prevents layout shifts during loading */}
         <div className="relative z-[3] brand-logo-layer w-24 h-[66px] grid place-items-center">
-          {showInitials ? (
-            <div className="w-[88px] h-[58px] grid place-items-center font-display text-[26px] font-bold text-ink2 bg-card border border-line rounded-lg">
-              {initials}
-            </div>
-          ) : (
-            src && (
-              <img
-                src={src}
-                alt={name}
-                loading="lazy"
-                onError={handleError}
-                className="max-w-[92px] max-h-[62px] object-contain drop-shadow-[0_10px_12px_rgba(16,32,48,.22)]"
-              />
-            )
-          )}
+          <BrandLogo slug={slug} name={name} logoUrl={logoUrl} />
         </div>
 
         {/* Brand name */}
