@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Logo }   from "@/components/layout/Logo";
 
 const NAV_LINKS = [
   { label: "Catalogue",        href: "/catalogue" },
@@ -18,12 +19,9 @@ export function Header() {
     <header className="sticky top-0 z-60 bg-white/90 backdrop-blur-[14px] border-b border-line">
       <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] flex items-center gap-[26px] h-16">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2 font-display font-bold text-[24px] shrink-0">
-          <span className="bg-ember text-white px-2 py-[3px] rounded-[3px] text-[20px] tracking-[0.03em]">
-            SB
-          </span>
-          FILES
-        </a>
+        <div className="shrink-0">
+          <Logo />
+        </div>
 
         {/* Main nav — hidden under 940 px */}
         <nav className="hidden [min-width:940px]:flex gap-[22px] ml-[10px] text-[14.5px] text-ink2">

@@ -1,3 +1,5 @@
+import { Logo } from "@/components/layout/Logo";
+
 const FOOTER_NAV = [
   { label: "Catalogue",       href: "/catalogue" },
   { label: "Types de tuning", href: "/#types" },
@@ -12,12 +14,7 @@ export function Footer() {
       <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] flex justify-between gap-5 flex-wrap">
         {/* Brand */}
         <div>
-          <a href="/" className="flex items-center gap-2 font-display font-bold text-[20px] text-ink">
-            <span className="bg-ember text-white px-2 py-[3px] rounded-[3px] text-[17px] tracking-[0.03em]">
-              SB
-            </span>
-            FILES
-          </a>
+          <Logo markHeight={32} wordHeight={17} />
           <p className="mt-2">Reprogrammation moteur · Algérie</p>
         </div>
 
