@@ -204,13 +204,14 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
       </div>
 
       {/* Stage buttons */}
-      <div className="flex gap-[7px] px-5 py-[14px] flex-wrap">
+      <div className="flex flex-wrap gap-2 px-4 sm:px-5 py-3 sm:py-[14px]">
         {STAGES.map(({ key, label }) => (
           <Button
             key={key}
             variant="stage"
             pressed={stage === key}
             onClick={() => handleStage(key)}
+            className="!text-xs !px-3 !py-1.5 sm:!text-[13.5px] sm:!px-3.5 sm:!py-2"
           >
             {label}
           </Button>
@@ -218,9 +219,10 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
       </div>
 
       {/* Chart */}
-      <div className="px-[10px]">
+      <div className="px-[10px] min-h-[180px] sm:min-h-0">
         <svg
           viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="xMidYMid meet"
           className="block w-full h-auto"
           role="img"
           aria-label="Courbe de puissance"
@@ -281,16 +283,19 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
         </svg>
       </div>
 
-      {/* Readout */}
-      <div className="grid grid-cols-3 border-t border-line bg-soft">
-        <ReadoutCell label="Puissance" value={dispHp} unit="ch" delta={deltaHp} />
-        <ReadoutCell label="Couple"    value={dispNm} unit="Nm" delta={deltaNm} className="border-r border-line" />
+      {/* Readout — 2 cols on mobile, 3 on sm+ */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 border-t border-line bg-soft">
+        <ReadoutCell label="Puissance" value={dispHp} unit="ch" delta={deltaHp}
+          className="border-r border-line" />
+        <ReadoutCell label="Couple"    value={dispNm} unit="Nm" delta={deltaNm}
+          className="sm:border-r sm:border-line" />
         <ReadoutCell
           label="Prix du fichier"
           value={price || undefined}
           unit="DZD"
           delta={price ? "Téléchargement immédiat" : ""}
           raw={price ? fmt(price) : "—"}
+          className="col-span-2 sm:col-span-1 border-t border-line sm:border-t-0 sm:border-l sm:border-line"
         />
       </div>
     </div>
@@ -308,9 +313,9 @@ interface ReadoutCellProps {
 
 function ReadoutCell({ label, value, unit, delta, raw, className }: ReadoutCellProps) {
   return (
-    <div className={`px-5 py-[15px] border-r border-line last:border-r-0 ${className ?? ""}`}>
+    <div className={`px-3 sm:px-5 py-3 sm:py-[15px] ${className ?? ""}`}>
       <div className="text-[12px] text-mute mb-[3px]">{label}</div>
-      <div className="font-display text-[clamp(26px,3.2vw,34px)] font-semibold leading-none tabular-nums">
+      <div className="font-display text-2xl sm:text-[clamp(26px,3.2vw,34px)] font-semibold leading-none tabular-nums">
         {raw ?? (value !== undefined ? fmt(value) : "—")}
         <small className="text-[.45em] text-mute font-medium ml-[3px]">{unit}</small>
       </div>

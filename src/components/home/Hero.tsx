@@ -104,7 +104,7 @@ export function Hero({ brands }: Props) {
     "[background-position:calc(100%_-_19px)_52%,calc(100%_-_13px)_52%] [background-size:6px_6px] [background-repeat:no-repeat]";
 
   return (
-    <section className="relative py-[clamp(34px,5vw,66px)] pb-[clamp(30px,4vw,50px)] overflow-hidden">
+    <section className="relative py-5 sm:py-[clamp(34px,5vw,66px)] sm:pb-[clamp(30px,4vw,50px)] overflow-hidden">
       {/* Background radial glow */}
       <div
         aria-hidden
@@ -123,13 +123,13 @@ export function Hero({ brands }: Props) {
           {/* ---- Left column ---- */}
           <div className="stagger">
             {/* Kicker */}
-            <div className="inline-flex items-center gap-2 text-[13px] text-ink2 bg-card border border-line px-3 py-[6px] rounded-full mb-[18px] shadow-card">
+            <div className="inline-flex items-center gap-2 text-xs text-ink2 bg-card border border-line px-3 py-[6px] rounded-full mb-[18px] shadow-card whitespace-nowrap">
               <span className="w-[7px] h-[7px] rounded-full bg-ok shadow-[0_0_0_3px_rgba(18,161,80,.16)]" />
               4 218 fichiers en ligne · téléchargement immédiat
             </div>
 
             {/* Headline */}
-            <h1 className="text-[clamp(42px,6vw,76px)] font-display mb-4">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display mb-4">
               Le fichier exact
               <span className="block text-mute">pour ton moteur.</span>
             </h1>

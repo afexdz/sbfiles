@@ -14,7 +14,7 @@ export function Footer() {
       <div className="max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)] flex justify-between gap-5 flex-wrap">
         {/* Brand */}
         <div>
-          <Logo markHeight={32} wordHeight={17} />
+          <Logo />
           <p className="mt-2">Reprogrammation moteur · Algérie</p>
         </div>
 

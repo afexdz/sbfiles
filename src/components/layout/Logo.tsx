@@ -1,46 +1,32 @@
 import Link  from "next/link";
 import Image from "next/image";
 
-/* Intrinsic dimensions of the source PNGs — used to preserve aspect ratio */
-const MARK_W = 908;
-const MARK_H = 399;
-const WORD_W = 954;
-const WORD_H = 57;
-
-interface Props {
-  markHeight?: number;
-  wordHeight?: number;
-}
-
-export function Logo({ markHeight = 42, wordHeight = 22 }: Props) {
-  const markDisplayW = Math.round(markHeight * (MARK_W / MARK_H));
-  const wordDisplayW = Math.round(wordHeight * (WORD_W / WORD_H));
-
+export function Logo() {
   return (
     <Link
       href="/"
       aria-label="SBFiles"
-      className="flex items-center gap-3"
+      className="flex items-center gap-2 sm:gap-3 min-w-0 shrink overflow-hidden"
     >
       <span className="sr-only">SBFiles</span>
 
-      {/* Logo-mark: the car + "SB" badge */}
+      {/* Logo-mark: car + "SB" badge — always visible */}
       <Image
         src="/logo-mark.png"
         alt=""
-        width={markDisplayW}
-        height={markHeight}
-        style={{ width: "auto" }}
+        width={908}
+        height={399}
+        className="h-7 sm:h-9 md:h-10 w-auto object-contain flex-none"
         priority
       />
 
-      {/* Wordmark: the "FILES" lettering */}
+      {/* Wordmark: "FILES" lettering — hidden below 400 px */}
       <Image
         src="/logo-wordmark.png"
         alt=""
-        width={wordDisplayW}
-        height={wordHeight}
-        style={{ width: "auto" }}
+        width={954}
+        height={57}
+        className="hidden xs:block h-3.5 sm:h-4 md:h-5 w-auto object-contain flex-none"
         priority
       />
     </Link>

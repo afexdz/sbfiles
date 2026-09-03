@@ -21,6 +21,7 @@
 
 /* ---- Tailwind theme mapping ---- */
 @theme inline {
+  --breakpoint-xs: 400px;
   --color-bg: var(--bg);
   --color-card: var(--card);
   --color-soft: var(--soft);
@@ -40,9 +41,13 @@
   --shadow-card-lg: var(--shadow-lg);
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
 body {
+  overflow-x: hidden;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-ibm, "IBM Plex Sans", system-ui, sans-serif);
