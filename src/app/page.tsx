@@ -129,11 +129,11 @@ function AccentLink({ href, label, className = "" }: { href: string; label: stri
   return (
     <a
       href={href}
-      className={`group inline-flex items-center gap-0.5 text-sm font-bold text-ember-ink underline underline-offset-4 hover:no-underline transition-[text-decoration] duration-[150ms] ${className}`}
+      className={`group inline-flex items-center gap-0.5 text-sm sm:text-base font-bold text-ember underline underline-offset-4 decoration-2 hover:no-underline transition-[text-decoration] duration-[180ms] ${className}`}
     >
       {text}
       {arrow && (
-        <span className="inline-block transition-transform duration-150 group-hover:translate-x-[3px]" aria-hidden>
+        <span className="inline-block transition-transform duration-[180ms] group-hover:translate-x-[3px]" aria-hidden>
           →
         </span>
       )}
@@ -165,9 +165,7 @@ function SectionHead({
         )}
       </div>
       {link && (
-        <div className="hidden sm:block shrink-0">
-          <AccentLink href={link.href} label={link.label} className="whitespace-nowrap" />
-        </div>
+        <AccentLink href={link.href} label={link.label} className="whitespace-nowrap shrink-0 max-[720px]:mt-1" />
       )}
     </div>
   );
