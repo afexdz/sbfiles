@@ -40,7 +40,7 @@ export function BrandCard({ name, slug, logoUrl, onClick, eager, highPriority, c
   }
 
   return (
-    <TiltCard innerClassName="h-full">
+    <TiltCard>
       <div
         {...clickProps}
         className="flex flex-col items-center justify-center gap-3 w-36 h-32 sm:w-44 sm:h-40 rounded-[14px] cursor-pointer relative overflow-hidden border border-line shadow-card group-hover:border-line2 group-hover:shadow-[0_28px_52px_-26px_rgba(16,32,48,.48),0_2px_6px_rgba(16,32,48,.08)] transition-[border-color,box-shadow] duration-[400ms]"

@@ -66,12 +66,13 @@ export default async function Home() {
         </section>
 
         {/* ---- Marques ---- */}
-        <section id="marques" className="py-8 sm:py-12 lg:py-16">
+        <section id="marques" className="pt-8 sm:pt-12 lg:pt-16">
           <div className={WRAP}>
             <SectionHead
               title="Les marques couvertes"
               sub="Plus de 90 constructeurs au catalogue."
               link={{ label: "Tout voir →", href: "/marques" }}
+              mb="mb-8 sm:mb-12 lg:mb-16"
             />
           </div>
           <BrandMarquee brands={brands} />
@@ -121,39 +122,52 @@ export default async function Home() {
   );
 }
 
+/* ---- Accent link (animated arrow) ---- */
+function AccentLink({ href, label, className = "" }: { href: string; label: string; className?: string }) {
+  const text  = label.replace(/\s*→\s*$/, "");
+  const arrow = label.includes("→");
+  return (
+    <a
+      href={href}
+      className={`group inline-flex items-center gap-0.5 text-sm font-bold text-ember-ink underline underline-offset-4 hover:no-underline transition-[text-decoration] duration-[150ms] ${className}`}
+    >
+      {text}
+      {arrow && (
+        <span className="inline-block transition-transform duration-150 group-hover:translate-x-[3px]" aria-hidden>
+          →
+        </span>
+      )}
+    </a>
+  );
+}
+
 /* ---- Section heading ---- */
 function SectionHead({
   title,
   sub,
   link,
   subLink,
+  mb = "mb-[26px]",
 }: {
   title:     string;
   sub?:      string;
   link?:     { label: string; href: string };
   subLink?:  { label: string; href: string };
+  mb?:       string;
 }) {
   return (
-    <div className="flex items-end justify-between gap-5 mb-[26px] max-[720px]:flex-col max-[720px]:items-start max-[720px]:gap-2">
+    <div className={`flex items-end justify-between gap-5 ${mb} max-[720px]:flex-col max-[720px]:items-start max-[720px]:gap-2`}>
       <div>
         <h2 className="font-display text-[clamp(26px,3.2vw,36px)]">{title}</h2>
         {sub && <p className="text-ink2 text-[14.5px] max-w-[42ch] mt-1">{sub}</p>}
         {subLink && (
-          <a
-            href={subLink.href}
-            className="inline-block mt-2 text-[13.5px] text-ember-ink underline underline-offset-2 hover:no-underline transition-[text-decoration] duration-[150ms]"
-          >
-            {subLink.label}
-          </a>
+          <AccentLink href={subLink.href} label={subLink.label} className="mt-2" />
         )}
       </div>
       {link && (
-        <a
-          href={link.href}
-          className="text-[14px] text-ember-ink whitespace-nowrap hover:underline"
-        >
-          {link.label}
-        </a>
+        <div className="hidden sm:block shrink-0">
+          <AccentLink href={link.href} label={link.label} className="whitespace-nowrap" />
+        </div>
       )}
     </div>
   );
