@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fileSlug } from "@/lib/logo-utils";
 
 // Phase order: db → webp → png → svg → initials
@@ -14,7 +14,6 @@ interface Props {
   highPriority?: boolean;
   compact?:      boolean;
 }
-
 
 function nextPhase(phase: Phase): Phase {
   if (phase === "db")   return "webp";
@@ -34,10 +33,22 @@ function getSrc(phase: Phase, slug: string, logoUrl?: string | null): string | n
 export function BrandLogo({ slug, name, logoUrl, eager = false, highPriority = false, compact = false }: Props) {
   const initials = name.replace(/[^A-Za-zÀ-ÿ]/g, "").slice(0, 2).toUpperCase();
   const [phase, setPhase] = useState<Phase>(logoUrl ? "db" : "webp");
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  function handleError() {
+  function advance() {
     setPhase((p) => nextPhase(p));
   }
+
+  // If the img already errored before React attached onError (SSR hydration race),
+  // complete=true && naturalWidth=0 — detect and advance manually.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+    if (img.complete && img.naturalWidth === 0) {
+      advance();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
 
   if (phase === "initials") {
     return compact ? (
@@ -52,14 +63,12 @@ export function BrandLogo({ slug, name, logoUrl, eager = false, highPriority = f
   }
 
   const src = getSrc(phase, slug, logoUrl);
-  if (!src) {
-    setPhase("webp");
-    return null;
-  }
+  if (!src) return null; // guards against unexpected state (getSrc only returns null for "initials")
 
   return (
     // key=src forces a fresh <img> mount on each src change so onError fires reliably
     <img
+      ref={imgRef}
       key={src}
       src={src}
       alt=""
@@ -69,7 +78,7 @@ export function BrandLogo({ slug, name, logoUrl, eager = false, highPriority = f
       loading={eager ? "eager" : "lazy"}
       fetchPriority={highPriority ? "high" : "auto"}
       decoding="async"
-      onError={handleError}
+      onError={advance}
       className={
         compact
           ? "max-w-full max-h-[46px] sm:max-h-[56px] object-contain"
