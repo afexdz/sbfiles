@@ -1,6 +1,7 @@
 -- ────────────────────────────────────────────────────────────────────────────
 -- 0006_auth_profiles.sql
 -- Authentification, profils utilisateurs et ateliers
+-- Entièrement idempotente (réexécutable sans erreur)
 -- ────────────────────────────────────────────────────────────────────────────
 
 -- ─── 1. profiles (shadow table pour auth.users) ───────────────────────────────
@@ -81,13 +82,20 @@ create trigger trg_ateliers_updated_at
 alter table public.profiles enable row level security;
 alter table public.ateliers  enable row level security;
 
--- profiles : lecture par le propriétaire et l'admin, modification admin
+-- profiles
+drop policy if exists "profiles own read"   on public.profiles;
+drop policy if exists "profiles admin write" on public.profiles;
+
 create policy "profiles own read" on public.profiles for select to authenticated
   using (id = auth.uid() or public.is_admin());
 create policy "profiles admin write" on public.profiles for update to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
--- ateliers : lecture par le propriétaire et l'admin
+-- ateliers
+drop policy if exists "ateliers own read"    on public.ateliers;
+drop policy if exists "ateliers own insert"  on public.ateliers;
+drop policy if exists "ateliers admin update" on public.ateliers;
+
 create policy "ateliers own read" on public.ateliers for select to authenticated
   using (user_id = auth.uid() or public.is_admin());
 create policy "ateliers own insert" on public.ateliers for insert to authenticated

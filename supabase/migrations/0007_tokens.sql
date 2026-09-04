@@ -3,20 +3,27 @@
 -- Système de tokens, codes de recharge et demandes de tuning
 -- Dépend de : 0006_auth_profiles.sql (profiles, ateliers, is_admin,
 --             is_atelier_approuve, set_updated_at)
+-- Entièrement idempotente (réexécutable sans erreur)
 -- ────────────────────────────────────────────────────────────────────────────
 
 -- ─── 0. Extensions ───────────────────────────────────────────────────────────
 create extension if not exists pgcrypto;
 
 -- ─── 1. Enum types ───────────────────────────────────────────────────────────
-create type public.token_request_statut as enum
-  ('en_attente','code_genere','expediee','livree','utilisee','annulee');
+do $$ begin
+  create type public.token_request_statut as enum
+    ('en_attente','code_genere','expediee','livree','utilisee','annulee');
+exception when duplicate_object then null; end $$;
 
-create type public.token_motif as enum
-  ('recharge','demande_tuning','remboursement','ajustement_admin');
+do $$ begin
+  create type public.token_motif as enum
+    ('recharge','demande_tuning','remboursement','ajustement_admin');
+exception when duplicate_object then null; end $$;
 
-create type public.demande_statut as enum
-  ('recue','en_cours','livree','refusee','annulee');
+do $$ begin
+  create type public.demande_statut as enum
+    ('recue','en_cours','livree','refusee','annulee');
+exception when duplicate_object then null; end $$;
 
 -- ─── 2. app_settings ─────────────────────────────────────────────────────────
 create table if not exists public.app_settings (
@@ -149,20 +156,29 @@ alter table public.token_codes              enable row level security;
 alter table public.code_redemption_attempts enable row level security;
 alter table public.tuning_demandes          enable row level security;
 
--- app_settings : lecture publique, écriture admin
+-- app_settings
+drop policy if exists "settings public read" on public.app_settings;
+drop policy if exists "settings admin write" on public.app_settings;
+
 create policy "settings public read" on public.app_settings
   for select to anon, authenticated using (true);
 create policy "settings admin write" on public.app_settings
   for update to authenticated using (public.is_admin()) with check (public.is_admin());
 
--- token_ledger : atelier lit les siennes, aucune écriture directe
+-- token_ledger
+drop policy if exists "ledger own read" on public.token_ledger;
+
 create policy "ledger own read" on public.token_ledger for select to authenticated
   using (
     atelier_id in (select id from public.ateliers where user_id = auth.uid())
     or public.is_admin()
   );
 
--- token_requests : atelier lit et crée, admin lit et modifie
+-- token_requests
+drop policy if exists "requests own read"    on public.token_requests;
+drop policy if exists "requests own insert"  on public.token_requests;
+drop policy if exists "requests admin update" on public.token_requests;
+
 create policy "requests own read" on public.token_requests for select to authenticated
   using (
     atelier_id in (select id from public.ateliers where user_id = auth.uid())
@@ -175,11 +191,16 @@ create policy "requests own insert" on public.token_requests for insert to authe
 create policy "requests admin update" on public.token_requests for update to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
--- token_codes : admin seulement
+-- token_codes
+drop policy if exists "codes admin read" on public.token_codes;
+
 create policy "codes admin read" on public.token_codes for select to authenticated
   using (public.is_admin());
 
--- tuning_demandes : atelier lit les siennes, admin lit et modifie
+-- tuning_demandes
+drop policy if exists "demandes own read"    on public.tuning_demandes;
+drop policy if exists "demandes admin update" on public.tuning_demandes;
+
 create policy "demandes own read" on public.tuning_demandes for select to authenticated
   using (
     atelier_id in (select id from public.ateliers where user_id = auth.uid())
@@ -474,7 +495,11 @@ values
   ('bin-tune',     'bin-tune',     false, 20971520, array['application/octet-stream'])
 on conflict (id) do nothing;
 
--- bin-original : atelier écrit dans son propre dossier, admin lit tout
+-- bin-original
+drop policy if exists "bin_original atelier insert" on storage.objects;
+drop policy if exists "bin_original read"           on storage.objects;
+drop policy if exists "bin_original admin delete"   on storage.objects;
+
 create policy "bin_original atelier insert" on storage.objects
   for insert to authenticated
   with check (
@@ -504,7 +529,11 @@ create policy "bin_original admin delete" on storage.objects
   for delete to authenticated
   using (bucket_id = 'bin-original' and public.is_admin());
 
--- bin-tune : admin écrit, atelier propriétaire lit
+-- bin-tune
+drop policy if exists "bin_tune admin insert" on storage.objects;
+drop policy if exists "bin_tune read"         on storage.objects;
+drop policy if exists "bin_tune admin delete" on storage.objects;
+
 create policy "bin_tune admin insert" on storage.objects
   for insert to authenticated
   with check (bucket_id = 'bin-tune' and public.is_admin());
