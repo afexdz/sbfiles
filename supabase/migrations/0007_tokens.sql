@@ -1,6 +1,8 @@
 -- ────────────────────────────────────────────────────────────────────────────
 -- 0007_tokens.sql
 -- Système de tokens, codes de recharge et demandes de tuning
+-- Dépend de : 0006_auth_profiles.sql (profiles, ateliers, is_admin,
+--             is_atelier_approuve, set_updated_at)
 -- ────────────────────────────────────────────────────────────────────────────
 
 -- ─── 0. Extensions ───────────────────────────────────────────────────────────
@@ -16,59 +18,7 @@ create type public.token_motif as enum
 create type public.demande_statut as enum
   ('recue','en_cours','livree','refusee','annulee');
 
--- ─── 2. profiles (shadow table pour auth.users) ───────────────────────────────
-create table if not exists public.profiles (
-  id         uuid primary key references auth.users(id) on delete cascade,
-  role       text not null default 'user' check (role in ('user','admin')),
-  nom        text,
-  email      text,
-  created_at timestamptz default now()
-);
-
--- Création automatique du profil à l'inscription
-create or replace function public.handle_new_user()
-returns trigger language plpgsql security definer set search_path = public as $$
-begin
-  insert into public.profiles (id, email)
-  values (new.id, new.email)
-  on conflict (id) do nothing;
-  return new;
-end;
-$$;
-
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute function public.handle_new_user();
-
--- ─── 3. is_admin() — doit exister avant toute politique RLS ──────────────────
-create or replace function public.is_admin()
-returns boolean language sql security definer stable set search_path = public as $$
-  select coalesce(
-    (select role = 'admin' from public.profiles where id = auth.uid()),
-    false
-  )
-$$;
-
--- ─── 4. ateliers ─────────────────────────────────────────────────────────────
-create table if not exists public.ateliers (
-  id         uuid primary key default gen_random_uuid(),
-  user_id    uuid not null unique references auth.users(id) on delete cascade,
-  nom        text not null,
-  telephone  text,
-  ville      text,
-  adresse    text,
-  statut     text not null default 'en_attente'
-             check (statut in ('en_attente','approuve','refuse')),
-  note_admin text,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-
-create index if not exists idx_ateliers_user_id on public.ateliers(user_id);
-create index if not exists idx_ateliers_statut  on public.ateliers(statut);
-
--- ─── 5. app_settings ─────────────────────────────────────────────────────────
+-- ─── 2. app_settings ─────────────────────────────────────────────────────────
 create table if not exists public.app_settings (
   cle        text primary key,
   valeur     text not null,
@@ -79,7 +29,7 @@ insert into public.app_settings (cle, valeur)
 values ('token_dzd', '1000')
 on conflict (cle) do nothing;
 
--- ─── 6. cout_tokens sur tuning_types et options ───────────────────────────────
+-- ─── 3. cout_tokens sur tuning_types et options ───────────────────────────────
 alter table public.tuning_types
   add column if not exists cout_tokens int not null default 1;
 
@@ -100,10 +50,10 @@ update public.tuning_types set cout_tokens = 1 where slug = 'start-stop';
 update public.tuning_types set cout_tokens = 2 where slug = 'pop-bang';
 update public.tuning_types set cout_tokens = 2 where slug = 'launch-control';
 
--- ─── 7. Séquence pour les références de demandes ─────────────────────────────
+-- ─── 4. Séquence pour les références de demandes ─────────────────────────────
 create sequence if not exists public.tuning_ref_seq start 1;
 
--- ─── 8. token_ledger ─────────────────────────────────────────────────────────
+-- ─── 5. token_ledger ─────────────────────────────────────────────────────────
 create table if not exists public.token_ledger (
   id         uuid primary key default gen_random_uuid(),
   atelier_id uuid not null references public.ateliers(id) on delete cascade,
@@ -119,7 +69,7 @@ create table if not exists public.token_ledger (
 create index if not exists idx_token_ledger_atelier
   on public.token_ledger(atelier_id, created_at desc);
 
--- ─── 9. token_requests ───────────────────────────────────────────────────────
+-- ─── 6. token_requests ───────────────────────────────────────────────────────
 create table if not exists public.token_requests (
   id                uuid primary key default gen_random_uuid(),
   atelier_id        uuid not null references public.ateliers(id) on delete cascade,
@@ -135,7 +85,7 @@ create table if not exists public.token_requests (
   updated_at        timestamptz default now()
 );
 
--- ─── 10. token_codes ─────────────────────────────────────────────────────────
+-- ─── 7. token_codes ──────────────────────────────────────────────────────────
 create table if not exists public.token_codes (
   id          uuid primary key default gen_random_uuid(),
   request_id  uuid unique references public.token_requests(id) on delete cascade,
@@ -151,7 +101,7 @@ create table if not exists public.token_codes (
 
 create index if not exists idx_token_codes_hash on public.token_codes(code_hash);
 
--- ─── 11. code_redemption_attempts ────────────────────────────────────────────
+-- ─── 8. code_redemption_attempts ─────────────────────────────────────────────
 create table if not exists public.code_redemption_attempts (
   id         uuid primary key default gen_random_uuid(),
   atelier_id uuid,
@@ -163,7 +113,7 @@ create table if not exists public.code_redemption_attempts (
 create index if not exists idx_code_attempts_atelier
   on public.code_redemption_attempts(atelier_id, created_at desc);
 
--- ─── 12. tuning_demandes ─────────────────────────────────────────────────────
+-- ─── 9. tuning_demandes ──────────────────────────────────────────────────────
 create table if not exists public.tuning_demandes (
   id                      uuid primary key default gen_random_uuid(),
   reference               text unique not null,
@@ -191,30 +141,13 @@ create index if not exists idx_tuning_demandes_atelier
 create index if not exists idx_tuning_demandes_statut
   on public.tuning_demandes(statut);
 
--- ─── 13. RLS ─────────────────────────────────────────────────────────────────
-
-alter table public.profiles               enable row level security;
-alter table public.ateliers               enable row level security;
-alter table public.app_settings           enable row level security;
-alter table public.token_ledger           enable row level security;
-alter table public.token_requests         enable row level security;
-alter table public.token_codes            enable row level security;
+-- ─── 10. RLS ─────────────────────────────────────────────────────────────────
+alter table public.app_settings             enable row level security;
+alter table public.token_ledger             enable row level security;
+alter table public.token_requests           enable row level security;
+alter table public.token_codes              enable row level security;
 alter table public.code_redemption_attempts enable row level security;
-alter table public.tuning_demandes        enable row level security;
-
--- profiles
-create policy "profiles own read" on public.profiles for select to authenticated
-  using (id = auth.uid() or public.is_admin());
-create policy "profiles admin write" on public.profiles for update to authenticated
-  using (public.is_admin()) with check (public.is_admin());
-
--- ateliers
-create policy "ateliers own read" on public.ateliers for select to authenticated
-  using (user_id = auth.uid() or public.is_admin());
-create policy "ateliers own insert" on public.ateliers for insert to authenticated
-  with check (user_id = auth.uid());
-create policy "ateliers admin update" on public.ateliers for update to authenticated
-  using (public.is_admin()) with check (public.is_admin());
+alter table public.tuning_demandes          enable row level security;
 
 -- app_settings : lecture publique, écriture admin
 create policy "settings public read" on public.app_settings
@@ -255,11 +188,8 @@ create policy "demandes own read" on public.tuning_demandes for select to authen
 create policy "demandes admin update" on public.tuning_demandes for update to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
--- ─── 14. Triggers updated_at ─────────────────────────────────────────────────
-create or replace function public.set_updated_at()
-returns trigger language plpgsql as $$
-begin new.updated_at = now(); return new; end;
-$$;
+-- ─── 11. Triggers updated_at ─────────────────────────────────────────────────
+-- set_updated_at() est définie dans 0006_auth_profiles.sql
 
 drop trigger if exists trg_token_requests_updated_at on public.token_requests;
 create trigger trg_token_requests_updated_at
@@ -271,14 +201,9 @@ create trigger trg_tuning_demandes_updated_at
   before update on public.tuning_demandes
   for each row execute function public.set_updated_at();
 
-drop trigger if exists trg_ateliers_updated_at on public.ateliers;
-create trigger trg_ateliers_updated_at
-  before update on public.ateliers
-  for each row execute function public.set_updated_at();
+-- ─── 12. Fonctions Postgres ──────────────────────────────────────────────────
 
--- ─── 15. Fonctions Postgres ──────────────────────────────────────────────────
-
--- solde_tokens : somme du registre
+-- solde_tokens : somme du registre (jamais une colonne)
 create or replace function public.solde_tokens(p_atelier uuid)
 returns int language sql security definer stable set search_path = public as $$
   select coalesce(sum(delta), 0)::int
@@ -477,9 +402,9 @@ begin
   values (v_atelier_id, -v_cout_total, 'demande_tuning', v_demande_id, auth.uid());
 
   return jsonb_build_object(
-    'ok',           true,
-    'reference',    v_ref,
-    'demande_id',   v_demande_id,
+    'ok',            true,
+    'reference',     v_ref,
+    'demande_id',    v_demande_id,
     'nouveau_solde', public.solde_tokens(v_atelier_id)
   );
 end;
@@ -521,7 +446,7 @@ begin
 end;
 $$;
 
--- ajustement_admin : crédite ou débite manuellement
+-- ajuster_solde : crédite ou débite manuellement
 create or replace function public.ajuster_solde(
   p_atelier uuid,
   p_delta   int,
@@ -542,7 +467,7 @@ begin
 end;
 $$;
 
--- ─── 16. Storage ─────────────────────────────────────────────────────────────
+-- ─── 13. Storage ─────────────────────────────────────────────────────────────
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values
   ('bin-original', 'bin-original', false, 20971520, array['application/octet-stream']),
