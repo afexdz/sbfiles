@@ -8,6 +8,7 @@ import { TuningTypes }  from "@/components/home/TuningTypes";
 import { Button }       from "@/components/ui/Button";
 import { fileSlug }     from "@/lib/logo-utils";
 import { preload }      from "react-dom";
+import Link             from "next/link";
 import type { Category, Brand, TuningType } from "@/lib/types";
 
 /* Safe wrapper — returns [] on Supabase error or missing env vars */
@@ -127,17 +128,15 @@ function AccentLink({ href, label, className = "" }: { href: string; label: stri
   const text  = label.replace(/\s*→\s*$/, "");
   const arrow = label.includes("→");
   return (
-    <a
+    <Link
       href={href}
-      className={`group inline-flex items-center gap-0.5 text-sm sm:text-base font-bold text-ember underline underline-offset-4 decoration-2 hover:no-underline transition-[text-decoration] duration-[180ms] ${className}`}
+      className={`group inline-flex items-center gap-1.5 text-[color:var(--ember)] font-bold text-sm sm:text-base underline underline-offset-4 decoration-2 hover:text-[color:var(--ember-ink)] transition-colors ${className}`}
     >
       {text}
       {arrow && (
-        <span className="inline-block transition-transform duration-[180ms] group-hover:translate-x-[3px]" aria-hidden>
-          →
-        </span>
+        <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden>→</span>
       )}
-    </a>
+    </Link>
   );
 }
 
