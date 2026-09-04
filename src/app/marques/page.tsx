@@ -23,7 +23,6 @@ async function safeSelect<T>(
 }
 
 const HIDDEN_SLUGS = new Set(["tesla"]);
-const WRAP = "max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)]";
 
 export default async function MarquesPage() {
   const supabase = await createClient().catch(() => null);
@@ -44,13 +43,12 @@ export default async function MarquesPage() {
       <Header />
 
       <main className="flex-1">
-        <div className={`${WRAP} py-10 sm:py-14 lg:py-20`}>
-          {/* Page header */}
-          <div className="mb-8">
-            <h1 className="font-display text-[clamp(30px,4vw,48px)]">
+        <div className="px-[5vw] py-8 sm:py-12 lg:py-16">
+          <div className="mb-6">
+            <h1 className="font-display text-[clamp(28px,4vw,44px)]">
               Toutes les marques
             </h1>
-            <p className="text-ink2 text-[15px] mt-2">
+            <p className="text-ink2 text-[14.5px] mt-1.5">
               {visible.length} constructeur{visible.length !== 1 ? "s" : ""} au catalogue
             </p>
           </div>

@@ -6,6 +6,8 @@ import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { BrandMarquee } from "@/components/home/BrandMarquee";
 import { TuningTypes }  from "@/components/home/TuningTypes";
 import { Button }       from "@/components/ui/Button";
+import { fileSlug }     from "@/lib/logo-utils";
+import { preload }      from "react-dom";
 import type { Category, Brand, TuningType } from "@/lib/types";
 
 /* Safe wrapper — returns [] on Supabase error or missing env vars */
@@ -37,6 +39,12 @@ export default async function Home() {
       : Promise.resolve<TuningType[]>([]),
   ]);
 
+  // Preload the first 4 marquee logos so they're fetched before the JS runs
+  const HIDDEN = new Set(["tesla"]);
+  brands.filter((b) => !HIDDEN.has(b.slug)).slice(0, 4).forEach((b) => {
+    preload(`/logos/${fileSlug(b.slug)}.svg`, { as: "image", type: "image/svg+xml" });
+  });
+
   return (
     <>
       <Header />
@@ -46,7 +54,7 @@ export default async function Home() {
         <Hero brands={brands} />
 
         {/* ---- Catégories ---- */}
-        <section id="categories" className="py-10 sm:py-14 lg:py-20">
+        <section id="categories" className="py-8 sm:py-12 lg:py-16">
           <div className={WRAP}>
             <SectionHead
               title="Choisis ton type de véhicule"
@@ -58,7 +66,7 @@ export default async function Home() {
         </section>
 
         {/* ---- Marques ---- */}
-        <section id="marques" className="py-10 sm:py-14 lg:py-20">
+        <section id="marques" className="py-8 sm:py-12 lg:py-16">
           <div className={WRAP}>
             <SectionHead
               title="Les marques couvertes"
@@ -70,7 +78,7 @@ export default async function Home() {
         </section>
 
         {/* ---- Types de tuning ---- */}
-        <section id="types" className="py-10 sm:py-14 lg:py-20">
+        <section id="types" className="py-8 sm:py-12 lg:py-16">
           <div className={WRAP}>
             <SectionHead
               title="Types de tuning"
@@ -81,7 +89,7 @@ export default async function Home() {
         </section>
 
         {/* ---- CTA ---- */}
-        <section className="py-10 sm:py-14 lg:py-20">
+        <section className="py-8 sm:py-12 lg:py-16">
           <div className={WRAP}>
             <div className="flex items-center gap-7 flex-wrap rounded-[10px] px-[clamp(26px,4.5vw,48px)] py-[clamp(26px,4.5vw,48px)] shadow-card-lg"
               style={{

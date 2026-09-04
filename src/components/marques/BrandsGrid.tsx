@@ -10,8 +10,8 @@ interface Props {
 }
 
 export function BrandsGrid({ brands, categories }: Props) {
-  const [search,   setSearch]   = useState("");
-  const [catId,    setCatId]    = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [catId,  setCatId]  = useState<string | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   const q = search.trim().toLowerCase();
@@ -21,12 +21,11 @@ export function BrandsGrid({ brands, categories }: Props) {
     return matchSearch && matchCat;
   });
 
-  // Stagger reveal: observe each .brand-item and add .is-visible when in viewport
+  // Stagger reveal via IntersectionObserver
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return;
     const items = Array.from(grid.querySelectorAll<HTMLElement>(".brand-item"));
-    // reset state so filter changes re-animate
     items.forEach((el) => el.classList.remove("is-visible"));
 
     const observer = new IntersectionObserver(
@@ -47,18 +46,18 @@ export function BrandsGrid({ brands, categories }: Props) {
   return (
     <div>
       {/* Search */}
-      <div className="mb-5">
+      <div className="mb-4">
         <input
           type="search"
           placeholder="Rechercher une marque…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-md bg-card border border-line rounded-lg px-4 py-2.5 text-[14.5px] placeholder:text-mute focus:outline-none focus:border-ember focus:ring-1 focus:ring-ember transition-[border-color,box-shadow] duration-[180ms]"
+          className="w-full max-w-sm bg-card border border-line rounded-lg px-4 py-2.5 text-[14px] placeholder:text-mute focus:outline-none focus:border-ember focus:ring-1 focus:ring-ember transition-[border-color,box-shadow] duration-[180ms]"
         />
       </div>
 
       {/* Category chips */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-1.5 mb-6">
         <Chip label="Toutes" active={!catId} onClick={() => setCatId(null)} />
         {categories.map((cat) => (
           <Chip
@@ -78,7 +77,7 @@ export function BrandsGrid({ brands, categories }: Props) {
       ) : (
         <div
           ref={gridRef}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-3 lg:gap-4"
         >
           {filtered.map((brand, i) => (
             <div
@@ -90,14 +89,14 @@ export function BrandsGrid({ brands, categories }: Props) {
                 name={brand.nom}
                 slug={brand.slug}
                 logoUrl={brand.logo_url}
+                compact
               />
             </div>
           ))}
         </div>
       )}
 
-      {/* Count */}
-      <p className="mt-6 text-mute text-[13px]">
+      <p className="mt-5 text-mute text-[13px]">
         {filtered.length} marque{filtered.length !== 1 ? "s" : ""}
         {(q || catId) ? " trouvée" + (filtered.length !== 1 ? "s" : "") : " au catalogue"}
       </p>
@@ -109,7 +108,7 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
   return (
     <button
       onClick={onClick}
-      className={`px-3.5 py-1.5 rounded-full text-[13px] border transition-[background,border-color,color] duration-[150ms] cursor-pointer ${
+      className={`px-3 py-1.5 rounded-full text-xs border transition-[background,border-color,color] duration-[150ms] cursor-pointer ${
         active
           ? "bg-ember text-white border-ember"
           : "bg-card text-ink2 border-line hover:border-ember-ink hover:text-ember-ink"

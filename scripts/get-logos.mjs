@@ -5,7 +5,7 @@
  * For brands absent from simple-icons, tries the SimpleIcons CDN (one-time download).
  * Run once during setup: node scripts/get-logos.mjs
  */
-import { copyFileSync, existsSync, writeFileSync } from "fs";
+import { copyFileSync, existsSync, writeFileSync, statSync, unlinkSync } from "fs";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -81,8 +81,16 @@ for (const [target, siSlug] of Object.entries(MAP)) {
   const outPath  = resolve(dest, `${target}.svg`);
   const npmPath  = resolve(npmDir, `${siSlug}.svg`);
 
+  const MIN_BYTES = 100;
+
   if (existsSync(npmPath)) {
     copyFileSync(npmPath, outPath);
+    // Guard: delete and skip if the copied file is suspiciously small
+    if (statSync(outPath).size < MIN_BYTES) {
+      unlinkSync(outPath);
+      skipped.push(`${target} (npm file < ${MIN_BYTES}B)`);
+      continue;
+    }
     fromNpm.push(target);
   } else {
     // Try SimpleIcons CDN (one-time fetch)
@@ -92,11 +100,11 @@ for (const [target, siSlug] of Object.entries(MAP)) {
       if (res.ok) {
         const svg = await res.text();
         // Sanity check — must look like an SVG
-        if (svg.trimStart().startsWith("<svg")) {
+        if (svg.trimStart().startsWith("<svg") && svg.length >= 100) {
           writeFileSync(outPath, svg);
           fromCdn.push(target);
         } else {
-          skipped.push(`${target} (bad response)`);
+          skipped.push(`${target} (bad response or < 100B)`);
         }
       } else {
         skipped.push(`${target} (HTTP ${res.status})`);
