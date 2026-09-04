@@ -64,7 +64,8 @@ h1, h2, h3, h4 {
   letter-spacing: 0.005em;
 }
 
-a { color: inherit; text-decoration: none; }
+a { color: inherit; }
+nav a, footer a { text-decoration: none; }
 button, select, input { font: inherit; color: inherit; }
 
 /* ---- 3D card layer helpers ---- */

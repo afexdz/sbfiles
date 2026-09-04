@@ -130,7 +130,14 @@ function AccentLink({ href, label, className = "" }: { href: string; label: stri
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-1.5 text-[color:var(--ember)] font-bold text-sm sm:text-base underline underline-offset-4 decoration-2 hover:text-[color:var(--ember-ink)] transition-colors ${className}`}
+      className={`group inline-flex items-center gap-1.5 text-sm sm:text-base ${className}`}
+      style={{
+        color: "var(--ember)",
+        fontWeight: 700,
+        textDecoration: "underline",
+        textUnderlineOffset: "4px",
+        textDecorationThickness: "2px",
+      }}
     >
       {text}
       {arrow && (
