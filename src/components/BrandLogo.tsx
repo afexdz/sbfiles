@@ -64,8 +64,8 @@ export function BrandLogo({ slug, name, logoUrl, eager = false, highPriority = f
       src={src}
       alt=""
       aria-hidden
-      width={compact ? 56 : 92}
-      height={compact ? 46 : 62}
+      width={compact ? 56 : 160}
+      height={compact ? 46 : 80}
       loading={eager ? "eager" : "lazy"}
       fetchPriority={highPriority ? "high" : "auto"}
       decoding="async"
@@ -73,7 +73,7 @@ export function BrandLogo({ slug, name, logoUrl, eager = false, highPriority = f
       className={
         compact
           ? "max-w-full max-h-[46px] sm:max-h-[56px] object-contain"
-          : "max-w-[92px] max-h-[62px] object-contain drop-shadow-[0_10px_12px_rgba(16,32,48,.22)]"
+          : "max-w-full max-h-16 sm:max-h-20 object-contain drop-shadow-[0_10px_12px_rgba(16,32,48,.22)]"
       }
     />
   );

@@ -24,8 +24,8 @@ export function BrandMarquee({ brands }: Props) {
   const row2 = visible.slice(half).length > 0 ? visible.slice(half) : row1;
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* Row 1 → slides left; first 12 positions are eager-loaded */}
+    <div className="flex flex-col gap-4">
+      {/* Row 1 → slides left; first 8 positions are eager-loaded */}
       <Track brands={[...row1, ...row1]} reverse={false} eagerCount={8} />
       {/* Row 2 → slides right (opposite direction) */}
       <Track brands={[...row2, ...row2]} reverse={true} />
@@ -35,7 +35,8 @@ export function BrandMarquee({ brands }: Props) {
 
 function Track({ brands, reverse, eagerCount = 0 }: { brands: Brand[]; reverse: boolean; eagerCount?: number }) {
   return (
-    <div className="marquee">
+    // h-32 sm:h-40 matches BrandCard exactly — forces overflow:hidden to clip at card height, no more
+    <div className="marquee h-32 sm:h-40">
       <div className={`marquee-track${reverse ? " rev" : ""}`}>
         {brands.map((brand, i) => (
           <BrandCard

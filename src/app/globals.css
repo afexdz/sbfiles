@@ -133,7 +133,7 @@ button, select, input { font: inherit; color: inherit; }
 .marquee-track {
   display: flex;
   align-items: stretch;
-  gap: 18px;
+  gap: 16px;
   width: max-content;
   animation: marquee-slide 48s linear infinite;
 }
