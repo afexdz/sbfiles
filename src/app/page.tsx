@@ -46,30 +46,31 @@ export default async function Home() {
         <Hero brands={brands} />
 
         {/* ---- Catégories ---- */}
-        <section id="categories" className="py-[clamp(40px,5vw,74px)] pt-[10px]">
+        <section id="categories" className="py-10 sm:py-14 lg:py-20">
           <div className={WRAP}>
             <SectionHead
               title="Choisis ton type de véhicule"
               sub="Voiture, deux-roues, poids lourd, agricole, engins et loisirs."
+              subLink={{ label: "Voir toutes les marques →", href: "/marques" }}
             />
             <CategoryGrid categories={categories} />
           </div>
         </section>
 
         {/* ---- Marques ---- */}
-        <section id="marques" className="pb-[clamp(40px,5vw,74px)]">
+        <section id="marques" className="py-10 sm:py-14 lg:py-20">
           <div className={WRAP}>
             <SectionHead
               title="Les marques couvertes"
               sub="Plus de 90 constructeurs au catalogue."
-              link={{ label: "Tout voir", href: "/catalogue" }}
+              link={{ label: "Tout voir →", href: "/marques" }}
             />
           </div>
           <BrandMarquee brands={brands} />
         </section>
 
         {/* ---- Types de tuning ---- */}
-        <section id="types" className="py-[clamp(40px,5vw,74px)]">
+        <section id="types" className="py-10 sm:py-14 lg:py-20">
           <div className={WRAP}>
             <SectionHead
               title="Types de tuning"
@@ -80,7 +81,7 @@ export default async function Home() {
         </section>
 
         {/* ---- CTA ---- */}
-        <section className="py-[clamp(40px,5vw,74px)] pt-0">
+        <section className="py-10 sm:py-14 lg:py-20">
           <div className={WRAP}>
             <div className="flex items-center gap-7 flex-wrap rounded-[10px] px-[clamp(26px,4.5vw,48px)] py-[clamp(26px,4.5vw,48px)] shadow-card-lg"
               style={{
@@ -117,16 +118,26 @@ function SectionHead({
   title,
   sub,
   link,
+  subLink,
 }: {
-  title: string;
-  sub?: string;
-  link?: { label: string; href: string };
+  title:     string;
+  sub?:      string;
+  link?:     { label: string; href: string };
+  subLink?:  { label: string; href: string };
 }) {
   return (
     <div className="flex items-end justify-between gap-5 mb-[26px] max-[720px]:flex-col max-[720px]:items-start max-[720px]:gap-2">
       <div>
         <h2 className="font-display text-[clamp(26px,3.2vw,36px)]">{title}</h2>
         {sub && <p className="text-ink2 text-[14.5px] max-w-[42ch] mt-1">{sub}</p>}
+        {subLink && (
+          <a
+            href={subLink.href}
+            className="inline-block mt-2 text-[13.5px] text-ember-ink underline underline-offset-2 hover:no-underline transition-[text-decoration] duration-[150ms]"
+          >
+            {subLink.label}
+          </a>
+        )}
       </div>
       {link && (
         <a

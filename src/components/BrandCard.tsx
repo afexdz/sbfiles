@@ -8,9 +8,10 @@ interface Props {
   slug:     string;
   logoUrl?: string | null;
   onClick?: () => void;
+  eager?:   boolean;
 }
 
-export function BrandCard({ name, slug, logoUrl, onClick }: Props) {
+export function BrandCard({ name, slug, logoUrl, onClick, eager }: Props) {
   return (
     <TiltCard>
       <div
@@ -28,7 +29,7 @@ export function BrandCard({ name, slug, logoUrl, onClick }: Props) {
 
         {/* Logo — fixed-size container prevents layout shifts during loading */}
         <div className="relative z-[3] brand-logo-layer w-24 h-[66px] grid place-items-center">
-          <BrandLogo slug={slug} name={name} logoUrl={logoUrl} />
+          <BrandLogo slug={slug} name={name} logoUrl={logoUrl} eager={eager} />
         </div>
 
         {/* Brand name */}

@@ -25,15 +25,15 @@ export function BrandMarquee({ brands }: Props) {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Row 1 → slides left */}
-      <Track brands={[...row1, ...row1]} reverse={false} />
+      {/* Row 1 → slides left; first 12 positions are eager-loaded */}
+      <Track brands={[...row1, ...row1]} reverse={false} eagerCount={12} />
       {/* Row 2 → slides right (opposite direction) */}
       <Track brands={[...row2, ...row2]} reverse={true} />
     </div>
   );
 }
 
-function Track({ brands, reverse }: { brands: Brand[]; reverse: boolean }) {
+function Track({ brands, reverse, eagerCount = 0 }: { brands: Brand[]; reverse: boolean; eagerCount?: number }) {
   return (
     <div className="marquee">
       <div className={`marquee-track${reverse ? " rev" : ""}`}>
@@ -43,6 +43,7 @@ function Track({ brands, reverse }: { brands: Brand[]; reverse: boolean }) {
             name={brand.nom}
             slug={brand.slug}
             logoUrl={brand.logo_url}
+            eager={i < eagerCount}
           />
         ))}
       </div>

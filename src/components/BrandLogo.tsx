@@ -8,6 +8,7 @@ interface Props {
   slug:     string;
   name:     string;
   logoUrl?: string | null;
+  eager?:   boolean;
 }
 
 // DB slug → actual filename stem (when they differ from the DB slug)
@@ -31,14 +32,7 @@ function getSrc(phase: Phase, slug: string, logoUrl?: string | null): string | n
   return null;
 }
 
-/**
- * Displays a brand logo with a local-first cascade:
- * 1. logo_url (DB field) — priority absolute
- * 2. /logos/{slug}.png
- * 3. /logos/{slug}.svg
- * 4. Initials plate (final fallback — no external network calls)
- */
-export function BrandLogo({ slug, name, logoUrl }: Props) {
+export function BrandLogo({ slug, name, logoUrl, eager = false }: Props) {
   const initials = name.replace(/[^A-Za-zÀ-ÿ]/g, "").slice(0, 2).toUpperCase();
   const [phase, setPhase] = useState<Phase>(logoUrl ? "db" : "png");
 
@@ -55,13 +49,21 @@ export function BrandLogo({ slug, name, logoUrl }: Props) {
   }
 
   const src = getSrc(phase, slug, logoUrl);
-  if (!src) return null;
+  // If src is null (only happens when phase="db" with no logoUrl), skip to png
+  if (!src) {
+    setPhase("png");
+    return null;
+  }
 
   return (
+    // key=src forces a fresh <img> mount on each src change so onError fires reliably
     <img
+      key={src}
       src={src}
       alt={name}
-      loading="lazy"
+      width={92}
+      height={62}
+      loading={eager ? "eager" : "lazy"}
       decoding="async"
       onError={handleError}
       className="max-w-[92px] max-h-[62px] object-contain drop-shadow-[0_10px_12px_rgba(16,32,48,.22)]"

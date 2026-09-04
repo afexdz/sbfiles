@@ -2,6 +2,7 @@ import { Logo } from "@/components/layout/Logo";
 
 const FOOTER_NAV = [
   { label: "Catalogue",       href: "/catalogue" },
+  { label: "Marques",         href: "/marques" },
   { label: "Types de tuning", href: "/#types" },
   { label: "Boutique",        href: "/boutique" },
   { label: "Tarifs",          href: "/tarifs" },

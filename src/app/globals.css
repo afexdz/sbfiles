@@ -143,10 +143,22 @@ button, select, input { font: inherit; color: inherit; }
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 
+/* ---- Brands grid stagger (IntersectionObserver driven) ---- */
+.brand-item {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 400ms ease var(--delay, 0ms), transform 400ms ease var(--delay, 0ms);
+}
+.brand-item.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   .stagger > * { opacity: 1; transform: none; }
   .ico-layer, .halo-layer, .brand-logo-layer, .shop-card-img { transform: none !important; }
+  .brand-item { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
 /* Touch / coarse-pointer devices: disable 3D hover transforms */
