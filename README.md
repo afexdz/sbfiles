@@ -10,6 +10,30 @@ For Google OAuth and email magic links, configure the following redirect URLs:
   - `http://localhost:3000/auth/callback`
   - `https://your-domain.com/auth/callback`
   - `https://*.vercel.app/auth/callback`
+  - `https://your-domain.com/reinitialiser-mot-de-passe`
+  - `http://localhost:3000/reinitialiser-mot-de-passe`
+
+### Réinitialisation de mot de passe
+
+Lors d'un appel à `supabase.auth.resetPasswordForEmail()`, passez le `redirectTo`
+pointant vers la page dédiée :
+
+```ts
+await supabase.auth.resetPasswordForEmail(email, {
+  redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
+})
+```
+
+Supabase appendra le token de recovery sous forme de fragment URL :
+`/reinitialiser-mot-de-passe#access_token=...&type=recovery`
+
+Le client Supabase (`detectSessionInUrl: true`) détecte automatiquement ce
+fragment, établit la session et émet l'événement `PASSWORD_RECOVERY` que la
+page consomme pour afficher le formulaire de saisie du nouveau mot de passe.
+
+> **Important** : sans `https://your-domain.com/reinitialiser-mot-de-passe`
+> dans les Redirect URLs autorisées, Supabase refusera de rediriger vers cette
+> page (erreur « redirect_uri_mismatch »).
 
 ### Google Cloud Console — Credentials > OAuth 2.0
 Under **Authorized redirect URIs** add:
