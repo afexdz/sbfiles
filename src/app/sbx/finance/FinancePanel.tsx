@@ -32,6 +32,10 @@ export function FinancePanel({ entries, ateliers }: Props) {
     return true;
   }), [entries, atelierFilter, fromDate, toDate]);
 
+  const totalCredits = useMemo(() => filtered.filter((e) => e.delta > 0).reduce((s, e) => s + e.delta, 0), [filtered]);
+  const totalDebits  = useMemo(() => filtered.filter((e) => e.delta < 0).reduce((s, e) => s + e.delta, 0), [filtered]);
+  const totalDelta   = totalCredits + totalDebits;
+
   function downloadCsv() {
     const header = "Date,Atelier,Motif,Note,Delta";
     const rows = filtered.map((e) =>
@@ -49,8 +53,6 @@ export function FinancePanel({ entries, ateliers }: Props) {
     a.download = `sbfiles-finance-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
   }
-
-  const totalDelta = filtered.reduce((s, e) => s + e.delta, 0);
 
   return (
     <div className="space-y-5">
@@ -80,13 +82,25 @@ export function FinancePanel({ entries, ateliers }: Props) {
         </button>
       </div>
 
-      {/* Résumé */}
-      <div className="text-sm text-white/50">
-        {filtered.length} ligne{filtered.length !== 1 ? "s" : ""} —
-        bilan : <span className={totalDelta >= 0 ? "text-green-400" : "text-red-400"}>
-          {totalDelta >= 0 ? "+" : ""}{totalDelta}
-        </span>
+      {/* Totaux */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="bg-[#13141A] border border-white/[0.07] rounded-[10px] px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Entrées</p>
+          <p className="font-mono font-semibold text-green-400">+{totalCredits}</p>
+        </div>
+        <div className="bg-[#13141A] border border-white/[0.07] rounded-[10px] px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Sorties</p>
+          <p className="font-mono font-semibold text-red-400">{totalDebits === 0 ? "0" : totalDebits}</p>
+        </div>
+        <div className="bg-[#13141A] border border-white/[0.07] rounded-[10px] px-4 py-3">
+          <p className="text-[10px] uppercase tracking-wider text-white/30 mb-1">Bilan net</p>
+          <p className={`font-mono font-semibold ${totalDelta >= 0 ? "text-green-400" : "text-red-400"}`}>
+            {totalDelta >= 0 ? `+${totalDelta}` : totalDelta}
+          </p>
+        </div>
       </div>
+
+      <p className="text-xs text-white/30">{filtered.length} ligne{filtered.length !== 1 ? "s" : ""}</p>
 
       {/* Tableau */}
       <div className="border border-white/[0.07] rounded-[12px] overflow-hidden">
