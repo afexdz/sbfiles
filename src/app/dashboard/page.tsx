@@ -1,10 +1,11 @@
-import { redirect }           from "next/navigation";
-import { revalidatePath }      from "next/cache";
-import { createClient }        from "../../../lib/supabase/server";
-import { Header }              from "@/components/layout/Header";
-import { Footer }              from "@/components/layout/Footer";
-import { CodeRedemptionForm }  from "@/components/dashboard/CodeRedemptionForm";
-import Link                    from "next/link";
+import { redirect }              from "next/navigation";
+import { revalidatePath }         from "next/cache";
+import { createClient }           from "../../../lib/supabase/server";
+import { Header }                 from "@/components/layout/Header";
+import { Footer }                 from "@/components/layout/Footer";
+import { CodeRedemptionForm }     from "@/components/dashboard/CodeRedemptionForm";
+import { DemandeCountdown }       from "@/components/dashboard/DemandeCountdown";
+import Link                       from "next/link";
 import type {
   Atelier, TokenLedgerEntry, TuningDemande, DemandeStatut, TokenMotif,
 } from "@/lib/types";
@@ -131,7 +132,7 @@ export default async function DashboardPage() {
     supabase.rpc("solde_tokens", { p_atelier: atelier.id }),
     supabase
       .from("tuning_demandes")
-      .select("id, reference, statut, cout_tokens, fichier_tune, fichier_tune_nom, created_at, engine_id, tuning_type_id")
+      .select("id, reference, statut, cout_tokens, fichier_tune, fichier_tune_nom, created_at, engine_id, tuning_type_id, telecharge_le, delai_heures")
       .eq("atelier_id", atelier.id)
       .order("created_at", { ascending: false })
       .limit(20),
@@ -215,6 +216,7 @@ export default async function DashboardPage() {
                     <tr className="bg-soft border-b border-line text-ink2 text-xs uppercase tracking-wider">
                       <th className="text-left px-4 py-3">Référence</th>
                       <th className="text-left px-4 py-3">Statut</th>
+                      <th className="text-left px-4 py-3">Délai restant</th>
                       <th className="text-left px-4 py-3">Tokens</th>
                       <th className="text-left px-4 py-3">Date</th>
                       <th className="text-left px-4 py-3">Fichier</th>
@@ -228,6 +230,16 @@ export default async function DashboardPage() {
                           <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${DEMANDE_BADGE[d.statut]}`}>
                             {d.statut.replace("_", " ")}
                           </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          {d.statut === "en_cours" && d.telecharge_le ? (
+                            <DemandeCountdown
+                              telechargeLeIso={d.telecharge_le}
+                              delaiHeures={d.delai_heures ?? 24}
+                            />
+                          ) : (
+                            <span className="text-mute text-xs">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-ink2">{d.cout_tokens}</td>
                         <td className="px-4 py-3 text-mute text-xs">

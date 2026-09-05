@@ -123,7 +123,7 @@ export type AtelierStatut      = 'en_attente' | 'approuve' | 'refuse';
 
 export interface Profile {
   id: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'super_admin';
   nom: string | null;
   email: string | null;
   created_at: string;
@@ -199,6 +199,9 @@ export interface TuningDemande {
   note_admin: string | null;
   traite_par: string | null;
   livree_le: string | null;
+  assigned_admin_id: string | null;
+  telecharge_le: string | null;
+  delai_heures: number;
   created_at: string;
   updated_at: string;
 }

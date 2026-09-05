@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /sbx
+Disallow: /adx
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /demande
+Allow: /
