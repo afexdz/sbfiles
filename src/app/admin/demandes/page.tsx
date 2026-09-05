@@ -17,7 +17,7 @@ export default async function AdminDemandesPage() {
     .order("created_at", { ascending: false });
 
   const demandes = (data ?? []).map((d: Record<string, unknown>) => ({
-    ...(d as TuningDemande),
+    ...(d as unknown as TuningDemande),
     atelier_nom: (d.atelier as { nom: string } | null)?.nom,
     engine_nom:  (d.engine  as { nom: string } | null)?.nom,
     tuning_nom:  (d.tuning_type as { nom_fr: string } | null)?.nom_fr,

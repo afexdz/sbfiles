@@ -44,12 +44,13 @@ export default async function DemandePage({
 
   if (engineRes.error || !engineRes.data) notFound();
 
-  const engine = engineRes.data as {
+  type EngineWithPeriod = {
     id: string; nom: string; code_moteur: string | null;
     carburant: string | null; ch_stock: number | null; nm_stock: number | null;
     period: { label: string; annee_debut: number | null; annee_fin: number | null;
                model: { nom: string; brand: { nom: string } } };
   };
+  const engine = engineRes.data as unknown as EngineWithPeriod;
   const tuningTypes = (typesRes.data ?? []) as TuningType[];
   const options     = (optionsRes.data ?? []) as Option[];
   const tokenDzd    = parseInt(settingsRes.data?.valeur ?? "1000");

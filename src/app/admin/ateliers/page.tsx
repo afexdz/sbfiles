@@ -23,7 +23,7 @@ export default async function AdminAteliersPage() {
   }
 
   const ateliers = (raw ?? []).map((a: Record<string, unknown>) => ({
-    ...(a as Atelier),
+    ...(a as unknown as Atelier),
     email:  (a.user as { email: string } | null)?.email,
     solde:  soldesMap[a.id as string] ?? 0,
   }));

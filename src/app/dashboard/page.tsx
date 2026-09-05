@@ -1,6 +1,6 @@
 import { redirect }           from "next/navigation";
 import { revalidatePath }      from "next/cache";
-import { createClient }        from "../../lib/supabase/server";
+import { createClient }        from "../../../lib/supabase/server";
 import { Header }              from "@/components/layout/Header";
 import { Footer }              from "@/components/layout/Footer";
 import { CodeRedemptionForm }  from "@/components/dashboard/CodeRedemptionForm";
@@ -148,7 +148,10 @@ export default async function DashboardPage() {
   const ledger = (ledgerRes.data as TokenLedgerEntry[]) ?? [];
 
   async function getSignedUrl(path: string): Promise<string | null> {
-    const { data } = await supabase.storage
+    "use server";
+    const sb = await createClient().catch(() => null);
+    if (!sb) return null;
+    const { data } = await sb.storage
       .from("bin-tune")
       .createSignedUrl(path, 3600);
     return data?.signedUrl ?? null;

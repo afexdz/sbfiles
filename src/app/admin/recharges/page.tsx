@@ -16,7 +16,7 @@ export default async function AdminRechargesPage() {
     .order("created_at", { ascending: false });
 
   const requests = (data ?? []).map((r: Record<string, unknown>) => ({
-    ...(r as TokenRequest),
+    ...(r as unknown as TokenRequest),
     atelier_nom: (r.atelier as { nom: string } | null)?.nom,
     code_indice: (r.token_codes as { code_indice: string } | null)?.code_indice,
   }));
