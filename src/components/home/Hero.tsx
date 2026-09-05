@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { Upload } from "lucide-react";
 import { createClient } from "../../../lib/supabase/client";
 import { DynoChart } from "@/components/DynoChart";
 import { Button } from "@/components/ui/Button";
@@ -49,8 +50,9 @@ export function Hero({ brands }: Props) {
   const [selPeriod, setSelPeriod] = useState("");
   const [selEngine, setSelEngine] = useState("");
 
-  const [chart, setChart] = useState(DEFAULT_CHART);
-  const [ecuTag, setEcuTag] = useState("ECU —");
+  const [chart, setChart]       = useState(DEFAULT_CHART);
+  const [ecuTag, setEcuTag]     = useState("ECU —");
+  const [uploading, setUploading] = useState(false);
 
   const onBrand = useCallback(async (brandId: string) => {
     setSelBrand(brandId);
@@ -97,6 +99,35 @@ export function Hero({ brands }: Props) {
   }, [engines]);
 
   const canSubmit = Boolean(selEngine && selBrandSlug && selModelSlug && selPeriod);
+
+  const hint = !selBrand  ? "Sélectionne ta marque pour commencer"
+    : !selModel  ? "Sélectionne ton modèle pour continuer"
+    : !selPeriod ? "Sélectionne l'année pour continuer"
+    : !selEngine ? "Sélectionne ta motorisation pour continuer"
+    : null;
+
+  async function handleUpload() {
+    if (!canSubmit) return;
+    setUploading(true);
+    const client = sb();
+    if (!client) { router.push(`/connexion?next=/demande/${selEngine}`); return; }
+
+    const { data: { user } } = await client.auth.getUser();
+    if (!user) { router.push(`/connexion?next=/demande/${selEngine}`); return; }
+
+    const { data: atelier } = await client
+      .from("ateliers")
+      .select("statut")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!atelier || atelier.statut !== "approuve") {
+      router.push("/compte?notice=upload_reserved");
+      return;
+    }
+
+    router.push(`/demande/${selEngine}`);
+  }
 
   return (
     <section className="relative py-8 sm:py-12 lg:py-16 overflow-hidden">
@@ -184,18 +215,20 @@ export function Hero({ brands }: Props) {
                   </select>
                 </label>
 
-                <Button
-                  variant="solid"
-                  disabled={!canSubmit}
-                  onClick={() => {
-                    if (canSubmit) {
-                      router.push(`/marques/${selBrandSlug}/${selModelSlug}/${selPeriod}/${selEngine}`);
-                    }
-                  }}
-                  className="w-full h-11 mt-1 text-[15px] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-                >
-                  Voir les fichiers disponibles
-                </Button>
+                <div className="mt-1 space-y-2">
+                  <Button
+                    variant="solid"
+                    disabled={!canSubmit || uploading}
+                    onClick={handleUpload}
+                    className="w-full h-11 text-[15px] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  >
+                    <Upload size={16} aria-hidden />
+                    {uploading ? "Vérification…" : "Uploader votre fichier .bin"}
+                  </Button>
+                  {hint && (
+                    <p className="text-[12px] text-mute text-center">{hint}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

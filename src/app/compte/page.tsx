@@ -5,7 +5,12 @@ import { Footer }       from "@/components/layout/Footer";
 import { CompteClient } from "./CompteClient";
 import type { Profile, Atelier } from "@/lib/types";
 
-export default async function ComptePage() {
+export default async function ComptePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ notice?: string }>;
+}) {
+  const { notice } = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/connexion");
@@ -22,7 +27,7 @@ export default async function ComptePage() {
     <>
       <Header />
       <main className="flex-1">
-        <CompteClient profile={profile} atelier={atelier} />
+        <CompteClient profile={profile} atelier={atelier} notice={notice ?? null} />
       </main>
       <Footer />
     </>

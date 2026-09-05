@@ -30,9 +30,10 @@ const INPUT =
 interface Props {
   profile: Profile | null;
   atelier: Atelier | null;
+  notice?: string | null;
 }
 
-export function CompteClient({ profile, atelier }: Props) {
+export function CompteClient({ profile, atelier, notice }: Props) {
   const router = useRouter();
 
   const [nom, setNom]               = useState(profile?.nom ?? "");
@@ -103,6 +104,19 @@ export function CompteClient({ profile, atelier }: Props) {
           {signingOut ? "…" : "Se déconnecter"}
         </button>
       </div>
+
+      {notice === "upload_reserved" && (
+        <div className="mb-6 px-4 py-4 bg-amber-50 border border-amber-200 rounded-[10px] text-sm text-amber-800">
+          <p className="font-semibold mb-1">Upload réservé aux ateliers approuvés</p>
+          <p>
+            {!atelier
+              ? "Pour soumettre une demande de reprogrammation, vous devez créer un compte atelier et attendre son approbation."
+              : atelier.statut === "en_attente"
+              ? "Votre dossier est en cours d'examen. L'upload sera disponible dès son approbation."
+              : "Votre demande d'atelier n'a pas été approuvée. Contactez-nous pour plus d'informations."}
+          </p>
+        </div>
+      )}
 
       {workspaceLink && (
         <div className="mb-6">

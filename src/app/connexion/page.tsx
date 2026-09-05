@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "../../../lib/supabase/client";
@@ -15,6 +15,12 @@ export default function ConnexionPage() {
   const [password, setPassword] = useState("");
   const [error, setError]       = useState<string | null>(null);
   const [loading, setLoading]   = useState(false);
+  const [nextUrl, setNextUrl]   = useState("");
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    setNextUrl(p.get("next") ?? "");
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,6 +46,9 @@ export default function ConnexionPage() {
     if (role === "super_admin") { router.push("/sbx"); return; }
     if (role === "admin")       { router.push("/adx"); return; }
 
+    // Honour ?next= for regular users
+    if (nextUrl) { router.push(nextUrl); return; }
+
     const { data: atelier } = await supabase
       .from("ateliers")
       .select("id")
@@ -51,9 +60,10 @@ export default function ConnexionPage() {
 
   async function handleGoogle() {
     const supabase = createClient();
+    const redirectTo = `${window.location.origin}/auth/callback${nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : ""}`;
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo },
     });
   }
 

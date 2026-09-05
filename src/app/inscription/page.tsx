@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "../../../lib/supabase/client";
@@ -24,7 +24,13 @@ type AccountType = "client" | "atelier";
 
 export default function InscriptionPage() {
   const router = useRouter();
+  const [nextUrl, setNextUrl]     = useState("");
   const [type, setType]           = useState<AccountType | null>(null);
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    setNextUrl(p.get("next") ?? "");
+  }, []);
   const [nom, setNom]             = useState("");
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
@@ -54,10 +60,11 @@ export default function InscriptionPage() {
       metadata.registre_commerce = registre;
     }
 
+    const emailRedirectTo = `${window.location.origin}/auth/callback${nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : ""}`;
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: metadata },
+      options: { data: metadata, emailRedirectTo },
     });
 
     setLoading(false);
@@ -68,12 +75,10 @@ export default function InscriptionPage() {
   async function handleGoogle() {
     if (!type) { setError("Choisissez d'abord un type de compte."); return; }
     const supabase = createClient();
+    const redirectTo = `${window.location.origin}/auth/callback${nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : ""}`;
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: { type },
-      },
+      options: { redirectTo, queryParams: { type } },
     });
   }
 
@@ -88,6 +93,7 @@ export default function InscriptionPage() {
             <p className="text-ink2 text-sm max-w-sm mx-auto">
               Un lien de confirmation vous a été envoyé à <strong>{email}</strong>.
               Cliquez dessus pour activer votre compte.
+              {nextUrl && " Vous serez ensuite redirigé automatiquement vers votre destination."}
             </p>
             <Link href="/connexion" className="inline-block text-ember text-sm hover:underline font-medium">
               Retour à la connexion

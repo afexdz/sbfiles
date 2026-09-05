@@ -1,12 +1,11 @@
 import { notFound }     from "next/navigation";
-import Link              from "next/link";
 import type { Metadata } from "next";
 import { createClient }  from "../../../../../../../lib/supabase/server";
 import { Header }        from "@/components/layout/Header";
 import { Footer }        from "@/components/layout/Footer";
 import { Breadcrumb }    from "@/components/ui/Breadcrumb";
 import { DynoChart }     from "@/components/DynoChart";
-import { Button }        from "@/components/ui/Button";
+import { DemandeCTA }    from "@/components/engine/DemandeCTA";
 import type { TuningFile, TuningType, Option, Fuel } from "@/lib/types";
 
 export const dynamicParams = true;
@@ -151,11 +150,7 @@ export default async function EnginePage({
 
             {/* CTA — visible on large screens */}
             <div className="hidden sm:flex items-center gap-3">
-              <Link href={`/demande/${engineId}`}>
-                <Button variant="solid" className="whitespace-nowrap">
-                  Demander ce fichier →
-                </Button>
-              </Link>
+              <DemandeCTA engineId={engineId} />
             </div>
           </div>
 
@@ -270,11 +265,7 @@ export default async function EnginePage({
                 Transmettez votre fichier stock. Le fichier reprogrammé vous est renvoyé en quelques heures.
               </p>
             </div>
-            <Link href={`/demande/${engineId}`} className="shrink-0">
-              <Button variant="solid" className="text-base px-6 py-3 whitespace-nowrap">
-                Demander ce fichier →
-              </Button>
-            </Link>
+            <DemandeCTA engineId={engineId} className="shrink-0 text-base px-6 py-3" />
           </div>
         </div>
       </main>
