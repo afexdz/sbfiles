@@ -1,4 +1,19 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SbFiles — Plateforme de tuning moteur
+
+## OAuth Setup
+
+For Google OAuth and email magic links, configure the following redirect URLs:
+
+### Supabase — Auth > URL Configuration
+- **Site URL**: `https://your-domain.com`
+- **Redirect URLs** (add all):
+  - `http://localhost:3000/auth/callback`
+  - `https://your-domain.com/auth/callback`
+  - `https://*.vercel.app/auth/callback`
+
+### Google Cloud Console — Credentials > OAuth 2.0
+Under **Authorized redirect URIs** add:
+- `https://<your-supabase-project>.supabase.co/auth/v1/callback`
 
 ## Getting Started
 

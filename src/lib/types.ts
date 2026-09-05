@@ -136,6 +136,7 @@ export interface Atelier {
   telephone: string | null;
   ville: string | null;
   adresse: string | null;
+  registre_commerce: string | null;
   statut: AtelierStatut;
   note_admin: string | null;
   created_at: string;

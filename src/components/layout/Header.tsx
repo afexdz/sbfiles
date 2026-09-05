@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Button }  from "@/components/ui/Button";
 import { Logo }    from "@/components/layout/Logo";
+import { UserNav } from "@/components/layout/UserNav";
 import { useCart } from "@/lib/cart";
 
 const NAV_LINKS = [
@@ -66,12 +66,7 @@ export function Header() {
 
           {/* Right actions */}
           <div className="ml-auto flex items-center gap-2 sm:gap-[10px]">
-            <Button variant="ghost" className="hidden [min-width:940px]:inline-flex">
-              Se connecter
-            </Button>
-            <Button variant="solid" className="hidden [min-width:940px]:inline-flex">
-              Créer un compte
-            </Button>
+            <UserNav />
 
             {/* Cart button — opens cart drawer */}
             <button
@@ -138,18 +133,20 @@ export function Header() {
                 ))}
               </div>
               <div className="py-4 flex flex-col gap-2">
-                <Button variant="ghost" className="w-full justify-center" onClick={closeMenu}>
-                  Se connecter
-                </Button>
-                <Button variant="solid" className="w-full justify-center" onClick={closeMenu}>
-                  Créer un compte
-                </Button>
-                <button
-                  className="mt-1 text-[13px] text-mute hover:text-ink transition-colors duration-[180ms] py-1"
+                <a
+                  href="/connexion"
+                  className="block w-full text-center border border-line rounded px-4 py-2 text-sm font-medium text-ink hover:bg-soft transition-colors duration-[180ms]"
                   onClick={closeMenu}
                 >
-                  Fermer
-                </button>
+                  Se connecter
+                </a>
+                <a
+                  href="/inscription"
+                  className="block w-full text-center bg-ember text-white rounded px-4 py-2 text-sm font-semibold hover:bg-ember-ink transition-colors duration-[180ms]"
+                  onClick={closeMenu}
+                >
+                  Créer un compte
+                </a>
               </div>
             </div>
           </nav>
