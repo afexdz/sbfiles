@@ -105,9 +105,17 @@ export default function ConnexionPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">
-                Mot de passe
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm font-medium text-ink">
+                  Mot de passe
+                </label>
+                <Link
+                  href="/mot-de-passe-oublie"
+                  className="text-xs text-mute hover:text-ember transition-colors duration-150"
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </div>
               <input
                 type="password"
                 value={password}
