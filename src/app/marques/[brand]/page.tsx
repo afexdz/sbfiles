@@ -1,12 +1,11 @@
 import { notFound }    from "next/navigation";
-import Link             from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "../../../../lib/supabase/server";
 import { Header }       from "@/components/layout/Header";
 import { Footer }       from "@/components/layout/Footer";
 import { Breadcrumb }   from "@/components/ui/Breadcrumb";
 import { BrandLogo }    from "@/components/BrandLogo";
-import { TiltCard }     from "@/components/ui/TiltCard";
+import { CascadeSelector } from "@/components/catalogue/CascadeSelector";
 
 export const dynamicParams = true;
 
@@ -48,7 +47,7 @@ export default async function BrandPage({
 
   const { data: brand } = await supabase
     .from("brands")
-    .select("*")
+    .select("id, nom, slug, logo_url")
     .eq("slug", brandSlug)
     .single();
 
@@ -56,15 +55,11 @@ export default async function BrandPage({
 
   const { data: rawModels } = await supabase
     .from("models")
-    .select("*, periods(id, engines(id))")
+    .select("id, nom, slug")
     .eq("brand_id", brand.id)
     .order("ordre");
 
-  type RawModel = { id: string; slug: string; nom: string; brand_id: string; ordre: number; periods: { id: string; engines: { id: string }[] }[] | null };
-  const models = ((rawModels ?? []) as unknown as RawModel[]).map((m) => ({
-    ...m,
-    engineCount: (m.periods ?? []).flatMap((p) => p.engines ?? []).length,
-  }));
+  const models = (rawModels ?? []) as { id: string; nom: string; slug: string }[];
 
   return (
     <>
@@ -90,30 +85,14 @@ export default async function BrandPage({
             </div>
           </div>
 
-          {/* Models grid */}
+          {/* CascadeSelector */}
           {models.length === 0 ? (
             <p className="text-mute py-12 text-center">Aucun modèle disponible pour le moment.</p>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-              {models.map((model) => (
-                <TiltCard key={model.id as string}>
-                  <Link
-                    href={`/marques/${brandSlug}/${model.slug}`}
-                    className="flex flex-col justify-between p-4 sm:p-5 rounded-[12px] border border-line shadow-card bg-card group-hover:border-line2 group-hover:shadow-[0_16px_32px_-16px_rgba(16,32,48,.32)] transition-[border-color,box-shadow] duration-[400ms] aspect-[4/3] relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-transparent pointer-events-none" />
-                    <span className="font-display text-lg sm:text-xl leading-tight relative z-[1]">
-                      {model.nom as string}
-                    </span>
-                    <span className="text-xs text-mute relative z-[1]">
-                      {(model.engineCount as number) > 0
-                        ? `${model.engineCount as number} motorisation${(model.engineCount as number) !== 1 ? "s" : ""}`
-                        : "Voir les motorisations"}
-                    </span>
-                  </Link>
-                </TiltCard>
-              ))}
-            </div>
+            <CascadeSelector
+              brand={{ id: brand.id, nom: brand.nom, slug: brand.slug, logo_url: brand.logo_url }}
+              models={models}
+            />
           )}
         </div>
       </main>
