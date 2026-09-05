@@ -60,7 +60,6 @@ export default async function Home() {
             <SectionHead
               title="Choisis ton type de véhicule"
               sub="Voiture, deux-roues, poids lourd, agricole, engins et loisirs."
-              subLink={{ label: "Voir toutes les marques →", href: "/marques" }}
             />
             <CategoryGrid categories={categories} />
           </div>
