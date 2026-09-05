@@ -76,9 +76,9 @@ export default function ConnexionPage() {
             Se connecter
           </h1>
           <p className="text-ink2 text-sm text-center mb-8">
-            Pas encore de compte ?{" "}
+            Atelier professionnel ?{" "}
             <Link href="/inscription" className="text-ember hover:underline font-medium">
-              Créer un compte
+              Créer un compte atelier
             </Link>
           </p>
 

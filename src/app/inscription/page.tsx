@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "../../../lib/supabase/client";
 import { Header } from "@/components/layout/Header";
@@ -18,49 +17,47 @@ const WILAYAS = [
   "In Salah","In Guezzam","Touggourt","Djanet","El M'Ghair","El Menia",
 ];
 
-const WRAP = "max-w-[480px] mx-auto px-[clamp(18px,4.5vw,32px)]";
-
-type AccountType = "client" | "atelier";
+const WRAP  = "max-w-[480px] mx-auto px-[clamp(18px,4.5vw,32px)]";
+const INPUT =
+  "w-full border border-line rounded-[10px] px-4 py-2.5 text-sm focus:outline-none focus:border-ember/60 focus:ring-2 focus:ring-ember/10 transition bg-white";
 
 export default function InscriptionPage() {
-  const router = useRouter();
-  const [nextUrl, setNextUrl]     = useState("");
-  const [type, setType]           = useState<AccountType | null>(null);
-
+  const [nextUrl, setNextUrl] = useState("");
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     setNextUrl(p.get("next") ?? "");
   }, []);
-  const [nom, setNom]             = useState("");
-  const [email, setEmail]         = useState("");
-  const [password, setPassword]   = useState("");
-  const [nomAtelier, setNomAtelier]     = useState("");
-  const [telephone, setTelephone]       = useState("");
-  const [wilaya, setWilaya]             = useState("");
-  const [adresse, setAdresse]           = useState("");
-  const [registre, setRegistre]         = useState("");
-  const [error, setError]         = useState<string | null>(null);
-  const [success, setSuccess]     = useState(false);
-  const [loading, setLoading]     = useState(false);
+
+  const [nom,        setNom]        = useState("");
+  const [email,      setEmail]      = useState("");
+  const [password,   setPassword]   = useState("");
+  const [nomAtelier, setNomAtelier] = useState("");
+  const [wilaya,     setWilaya]     = useState("");
+  const [adresse,    setAdresse]    = useState("");
+  const [registre,   setRegistre]   = useState("");
+  const [error,      setError]      = useState<string | null>(null);
+  const [success,    setSuccess]    = useState(false);
+  const [loading,    setLoading]    = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!type) return;
     setLoading(true);
     setError(null);
 
     const supabase = createClient();
-    const metadata: Record<string, string> = { nom, type };
+    const metadata = {
+      nom,
+      type: "atelier",
+      nom_atelier: nomAtelier,
+      ville: wilaya,
+      adresse,
+      registre_commerce: registre,
+    };
 
-    if (type === "atelier") {
-      metadata.nom_atelier     = nomAtelier;
-      metadata.telephone       = telephone;
-      metadata.ville           = wilaya;
-      metadata.adresse         = adresse;
-      metadata.registre_commerce = registre;
-    }
+    const emailRedirectTo =
+      `${window.location.origin}/auth/callback` +
+      (nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : "");
 
-    const emailRedirectTo = `${window.location.origin}/auth/callback${nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : ""}`;
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -73,12 +70,13 @@ export default function InscriptionPage() {
   }
 
   async function handleGoogle() {
-    if (!type) { setError("Choisissez d'abord un type de compte."); return; }
     const supabase = createClient();
-    const redirectTo = `${window.location.origin}/auth/callback${nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : ""}`;
+    const redirectTo =
+      `${window.location.origin}/auth/callback` +
+      (nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : "");
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo, queryParams: { type } },
+      options: { redirectTo, queryParams: { type: "atelier" } },
     });
   }
 
@@ -91,11 +89,14 @@ export default function InscriptionPage() {
             <div className="text-5xl">✉️</div>
             <h1 className="font-display text-2xl">Vérifiez votre boîte mail</h1>
             <p className="text-ink2 text-sm max-w-sm mx-auto">
-              Un lien de confirmation vous a été envoyé à <strong>{email}</strong>.
-              Cliquez dessus pour activer votre compte.
-              {nextUrl && " Vous serez ensuite redirigé automatiquement vers votre destination."}
+              Un lien de confirmation a été envoyé à <strong>{email}</strong>.
+              Cliquez dessus pour activer votre compte atelier.
+              {nextUrl && " Vous serez ensuite redirigé automatiquement."}
             </p>
-            <Link href="/connexion" className="inline-block text-ember text-sm hover:underline font-medium">
+            <Link
+              href="/connexion"
+              className="inline-block text-ember text-sm hover:underline font-medium"
+            >
               Retour à la connexion
             </Link>
           </div>
@@ -111,7 +112,7 @@ export default function InscriptionPage() {
       <main className="flex-1">
         <div className={`${WRAP} py-14 sm:py-20`}>
           <h1 className="font-display text-[clamp(26px,3.5vw,34px)] mb-1 text-center">
-            Créer un compte
+            Créer un compte atelier
           </h1>
           <p className="text-ink2 text-sm text-center mb-8">
             Déjà inscrit ?{" "}
@@ -119,32 +120,6 @@ export default function InscriptionPage() {
               Se connecter
             </Link>
           </p>
-
-          {/* Type selector */}
-          <div className="grid grid-cols-2 gap-3 mb-8">
-            {(["client", "atelier"] as AccountType[]).map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setType(t)}
-                className={`border-2 rounded-[12px] p-4 text-left transition-colors duration-150 cursor-pointer ${
-                  type === t
-                    ? "border-ember bg-ember/5"
-                    : "border-line hover:border-ink2"
-                }`}
-              >
-                <div className="text-xl mb-1">{t === "client" ? "👤" : "🏭"}</div>
-                <div className="font-semibold text-sm capitalize">
-                  {t === "client" ? "Particulier" : "Atelier"}
-                </div>
-                <div className="text-xs text-mute mt-0.5">
-                  {t === "client"
-                    ? "Accéder aux fichiers et au catalogue"
-                    : "Soumettre des demandes de tuning"}
-                </div>
-              </button>
-            ))}
-          </div>
 
           {error && (
             <div className="mb-5 px-4 py-3 bg-[#FEF2F2] border border-[#FECACA] rounded-[10px] text-[#B91C1C] text-sm">
@@ -189,78 +164,63 @@ export default function InscriptionPage() {
               />
             </Field>
 
-            {type === "atelier" && (
-              <>
-                <div className="pt-3 border-t border-line">
-                  <p className="text-xs font-semibold text-mute uppercase tracking-wider mb-3">
-                    Informations de l&apos;atelier
-                  </p>
-                </div>
+            <div className="pt-3 border-t border-line">
+              <p className="text-xs font-semibold text-mute uppercase tracking-wider mb-3">
+                Votre atelier
+              </p>
+            </div>
 
-                <Field label="Nom de l'atelier" required>
-                  <input
-                    type="text"
-                    value={nomAtelier}
-                    onChange={(e) => setNomAtelier(e.target.value)}
-                    required
-                    placeholder="Ex : Garage Auto Elite"
-                    className={INPUT}
-                  />
-                </Field>
+            <Field label="Nom de l'atelier" required>
+              <input
+                type="text"
+                value={nomAtelier}
+                onChange={(e) => setNomAtelier(e.target.value)}
+                required
+                placeholder="Ex : Garage Auto Elite"
+                className={INPUT}
+              />
+            </Field>
 
-                <Field label="Téléphone" required>
-                  <input
-                    type="tel"
-                    value={telephone}
-                    onChange={(e) => setTelephone(e.target.value)}
-                    required
-                    placeholder="0555 00 00 00"
-                    className={INPUT}
-                  />
-                </Field>
+            <Field label="Wilaya" required>
+              <select
+                value={wilaya}
+                onChange={(e) => setWilaya(e.target.value)}
+                required
+                className={INPUT}
+              >
+                <option value="">— Sélectionnez —</option>
+                {WILAYAS.map((w) => (
+                  <option key={w} value={w}>{w}</option>
+                ))}
+              </select>
+            </Field>
 
-                <Field label="Wilaya" required>
-                  <select
-                    value={wilaya}
-                    onChange={(e) => setWilaya(e.target.value)}
-                    required
-                    className={INPUT}
-                  >
-                    <option value="">— Sélectionnez —</option>
-                    {WILAYAS.map((w) => (
-                      <option key={w} value={w}>{w}</option>
-                    ))}
-                  </select>
-                </Field>
+            <Field label="Adresse">
+              <input
+                type="text"
+                value={adresse}
+                onChange={(e) => setAdresse(e.target.value)}
+                placeholder="Rue, quartier…"
+                className={INPUT}
+              />
+            </Field>
 
-                <Field label="Adresse">
-                  <input
-                    type="text"
-                    value={adresse}
-                    onChange={(e) => setAdresse(e.target.value)}
-                    placeholder="Rue, quartier…"
-                    className={INPUT}
-                  />
-                </Field>
-
-                <Field label="Registre de commerce">
-                  <input
-                    type="text"
-                    value={registre}
-                    onChange={(e) => setRegistre(e.target.value)}
-                    placeholder="Numéro RC (optionnel)"
-                    className={INPUT}
-                  />
-                </Field>
-              </>
-            )}
+            <Field label="Registre de commerce">
+              <input
+                type="text"
+                value={registre}
+                onChange={(e) => setRegistre(e.target.value)}
+                placeholder="Numéro RC (optionnel)"
+                className={INPUT}
+              />
+            </Field>
 
             <button
               type="submit"
-              disabled={loading || !type}
+              disabled={loading}
               className="w-full bg-ember text-white font-semibold text-sm py-3 rounded-[10px] hover:bg-ember-ink transition-colors duration-150 disabled:opacity-60 cursor-pointer mt-2"
             >
-              {loading ? "Création…" : "Créer mon compte"}
+              {loading ? "Création…" : "Créer mon compte atelier"}
             </button>
           </form>
 
@@ -288,9 +248,6 @@ export default function InscriptionPage() {
     </>
   );
 }
-
-const INPUT =
-  "w-full border border-line rounded-[10px] px-4 py-2.5 text-sm focus:outline-none focus:border-ember/60 focus:ring-2 focus:ring-ember/10 transition bg-white";
 
 function Field({
   label,

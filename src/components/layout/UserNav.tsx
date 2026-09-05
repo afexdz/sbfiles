@@ -75,7 +75,7 @@ export function UserNav() {
           href="/inscription"
           className="hidden [min-width:940px]:inline-flex items-center bg-ember text-white text-sm font-semibold px-4 py-1.5 rounded hover:bg-ember-ink transition-colors duration-[180ms]"
         >
-          Créer un compte
+          Espace atelier
         </Link>
       </>
     );

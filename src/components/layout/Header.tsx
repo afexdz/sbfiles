@@ -145,7 +145,7 @@ export function Header() {
                   className="block w-full text-center bg-ember text-white rounded px-4 py-2 text-sm font-semibold hover:bg-ember-ink transition-colors duration-[180ms]"
                   onClick={closeMenu}
                 >
-                  Créer un compte
+                  Espace atelier
                 </a>
               </div>
             </div>
