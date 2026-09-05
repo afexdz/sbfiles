@@ -1,5 +1,5 @@
 import { revalidatePath }       from "next/cache";
-import { createClient }          from "../../../../lib/supabase/server";
+import { createClient }          from "../../../../../lib/supabase/server";
 import { DemandTableAdx }        from "@/components/adx/DemandTableAdx";
 import type { TuningDemande }    from "@/lib/types";
 
@@ -44,7 +44,7 @@ export default async function AdxDemandesPage() {
       }).eq("id", id);
 
       await sb.from("admin_actions").insert({
-        acteur_id:  user.id,
+        acteur:     user.id,
         action:     "telecharger_fichier_original",
         cible_type: "tuning_demande",
         cible_id:   id,
@@ -90,7 +90,7 @@ export default async function AdxDemandesPage() {
 
     if (user) {
       await sb.from("admin_actions").insert({
-        acteur_id:  user.id,
+        acteur:     user.id,
         action:     "livrer_demande",
         cible_type: "tuning_demande",
         cible_id:   demandeId,

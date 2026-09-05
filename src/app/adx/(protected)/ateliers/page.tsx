@@ -1,5 +1,5 @@
 import { revalidatePath }  from "next/cache";
-import { createClient }     from "../../../../lib/supabase/server";
+import { createClient }     from "../../../../../lib/supabase/server";
 import { AteliersTable }    from "@/components/admin/AteliersTable";
 import type { Atelier }     from "@/lib/types";
 
@@ -14,9 +14,15 @@ export default async function AdxAteliersPage() {
 
   const atelierIds: string[] = (raw ?? []).map((a: Record<string, unknown>) => a.id as string);
   const soldesMap: Record<string, number> = {};
-  for (const id of atelierIds) {
-    const { data: s } = await supabase.rpc("solde_tokens", { p_atelier: id });
-    soldesMap[id] = (s as number | null) ?? 0;
+  if (atelierIds.length > 0) {
+    const { data: ledgerRows } = await supabase
+      .from("token_ledger")
+      .select("atelier_id, delta")
+      .in("atelier_id", atelierIds);
+    for (const row of ledgerRows ?? []) {
+      const r = row as { atelier_id: string; delta: number };
+      soldesMap[r.atelier_id] = (soldesMap[r.atelier_id] ?? 0) + r.delta;
+    }
   }
 
   const ateliers = (raw ?? []).map((a: Record<string, unknown>) => ({

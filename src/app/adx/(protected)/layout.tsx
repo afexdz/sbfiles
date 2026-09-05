@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "../../../lib/supabase/server";
+import { createClient } from "../../../../lib/supabase/server";
 import { Header }  from "@/components/layout/Header";
 import { Footer }  from "@/components/layout/Footer";
 import Link        from "next/link";
@@ -10,12 +10,12 @@ const NAV = [
   { href: "/adx/ateliers",  label: "Ateliers" },
 ];
 
-export default async function AdxLayout({ children }: { children: React.ReactNode }) {
+export default async function AdxProtectedLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient().catch(() => null);
-  if (!supabase) redirect("/403");
+  if (!supabase) redirect("/adx/connexion");
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/403");
+  if (!user) redirect("/adx/connexion");
 
   const { data: profile } = await supabase
     .from("profiles").select("role").eq("id", user.id).single();
