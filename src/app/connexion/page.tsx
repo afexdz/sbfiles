@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "../../../lib/supabase/client";
+import { logLoginAttempt } from "../actions/logLogin";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -31,6 +32,7 @@ export default function ConnexionPage() {
     const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
     if (signInError || !data.user) {
+      await logLoginAttempt({ email, profileId: null, reussi: false });
       setError(signInError?.message ?? "Identifiants incorrects.");
       setLoading(false);
       return;
@@ -43,6 +45,8 @@ export default function ConnexionPage() {
       .single();
 
     const role = profile?.role;
+    await logLoginAttempt({ email, profileId: data.user.id, reussi: true });
+
     if (role === "super_admin") { router.push("/sbx"); return; }
     if (role === "admin")       { router.push("/adx"); return; }
 

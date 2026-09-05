@@ -9,8 +9,9 @@ const NAV = [
   { href: "/sbx/ateliers", label: "Ateliers" },
   { href: "/sbx/finance",  label: "Finance" },
   { href: "/sbx/codes",    label: "Codes" },
-  { href: "/sbx/journal",  label: "Journal" },
-  { href: "/sbx/reglages", label: "Réglages" },
+  { href: "/sbx/journal",     label: "Journal" },
+  { href: "/sbx/connexions",  label: "Connexions" },
+  { href: "/sbx/reglages",    label: "Réglages" },
 ];
 
 export default async function SbxLayout({ children }: { children: React.ReactNode }) {

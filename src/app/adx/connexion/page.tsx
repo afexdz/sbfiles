@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../../../lib/supabase/client";
+import { logLoginAttempt } from "../../actions/logLogin";
 
 export default function AdxConnexionPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function AdxConnexionPage() {
     const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
     if (signInError || !data.user) {
+      await logLoginAttempt({ email, profileId: null, reussi: false });
       setError("Identifiants incorrects.");
       setLoading(false);
       return;
@@ -32,12 +34,14 @@ export default function AdxConnexionPage() {
       .single();
 
     if (!["admin", "super_admin"].includes(profile?.role ?? "")) {
+      await logLoginAttempt({ email, profileId: data.user.id, reussi: false });
       await supabase.auth.signOut();
       setError("Accès réservé aux administrateurs.");
       setLoading(false);
       return;
     }
 
+    await logLoginAttempt({ email, profileId: data.user.id, reussi: true });
     router.push("/adx/demandes");
   }
 
@@ -72,7 +76,7 @@ export default function AdxConnexionPage() {
                 required
                 autoComplete="email"
                 placeholder="admin@exemple.com"
-                className="w-full border border-line rounded-[10px] px-4 py-2.5 text-sm focus:outline-none focus:border-ink/40 focus:ring-2 focus:ring-ink/8 transition bg-white"
+                className="w-full border border-line rounded-[10px] px-4 py-2.5 text-sm focus:outline-none focus:border-ember/60 focus:ring-2 focus:ring-ember/10 transition bg-white"
               />
             </div>
             <div>
@@ -84,13 +88,13 @@ export default function AdxConnexionPage() {
                 required
                 autoComplete="current-password"
                 placeholder="••••••••"
-                className="w-full border border-line rounded-[10px] px-4 py-2.5 text-sm focus:outline-none focus:border-ink/40 focus:ring-2 focus:ring-ink/8 transition bg-white"
+                className="w-full border border-line rounded-[10px] px-4 py-2.5 text-sm focus:outline-none focus:border-ember/60 focus:ring-2 focus:ring-ember/10 transition bg-white"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-ink text-white font-semibold text-sm py-3 rounded-[10px] hover:bg-ink/90 transition-colors duration-150 disabled:opacity-60 cursor-pointer mt-1"
+              className="w-full bg-ember text-white font-semibold text-sm py-3 rounded-[10px] hover:bg-ember-ink transition-colors duration-150 disabled:opacity-60 cursor-pointer"
             >
               {loading ? "Connexion…" : "Se connecter"}
             </button>
