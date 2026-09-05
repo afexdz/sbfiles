@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "../../../lib/supabase/client";
 import { DynoChart } from "@/components/DynoChart";
 import { Button } from "@/components/ui/Button";
@@ -35,12 +36,16 @@ export function Hero({ brands }: Props) {
     return sbRef.current as ReturnType<typeof createClient>;
   }
 
+  const router = useRouter();
+
   const [models,   setModels]   = useState<Model[]>([]);
   const [periods,  setPeriods]  = useState<Period[]>([]);
   const [engines,  setEngines]  = useState<Engine[]>([]);
 
-  const [selBrand,  setSelBrand]  = useState("");
-  const [selModel,  setSelModel]  = useState("");
+  const [selBrand,     setSelBrand]     = useState("");
+  const [selBrandSlug, setSelBrandSlug] = useState("");
+  const [selModel,     setSelModel]     = useState("");
+  const [selModelSlug, setSelModelSlug] = useState("");
   const [selPeriod, setSelPeriod] = useState("");
   const [selEngine, setSelEngine] = useState("");
 
@@ -48,22 +53,26 @@ export function Hero({ brands }: Props) {
   const [ecuTag, setEcuTag] = useState("ECU —");
 
   const onBrand = useCallback(async (brandId: string) => {
-    setSelBrand(brandId); setSelModel(""); setSelPeriod(""); setSelEngine("");
+    setSelBrand(brandId);
+    setSelBrandSlug(brands.find((b) => b.id === brandId)?.slug ?? "");
+    setSelModel(""); setSelModelSlug(""); setSelPeriod(""); setSelEngine("");
     setModels([]); setPeriods([]); setEngines([]);
     const client = sb();
     if (!brandId || !client) return;
     const { data } = await client.from("models").select("*").eq("brand_id", brandId).order("ordre");
     setModels(data ?? []);
-  }, []);
+  }, [brands]);
 
   const onModel = useCallback(async (modelId: string) => {
-    setSelModel(modelId); setSelPeriod(""); setSelEngine("");
+    setSelModel(modelId);
+    setSelModelSlug(models.find((m) => m.id === modelId)?.slug ?? "");
+    setSelPeriod(""); setSelEngine("");
     setPeriods([]); setEngines([]);
     const client = sb();
     if (!modelId || !client) return;
     const { data } = await client.from("periods").select("*").eq("model_id", modelId).order("ordre");
     setPeriods(data ?? []);
-  }, []);
+  }, [models]);
 
   const onPeriod = useCallback(async (periodId: string) => {
     setSelPeriod(periodId); setSelEngine("");
@@ -87,7 +96,7 @@ export function Hero({ brands }: Props) {
     setEcuTag(eng.ecu ? `ECU ${eng.ecu}` : "ECU —");
   }, [engines]);
 
-  const canSubmit = Boolean(selEngine);
+  const canSubmit = Boolean(selEngine && selBrandSlug && selModelSlug && selPeriod);
 
   return (
     <section className="relative py-8 sm:py-12 lg:py-16 overflow-hidden">
@@ -178,6 +187,11 @@ export function Hero({ brands }: Props) {
                 <Button
                   variant="solid"
                   disabled={!canSubmit}
+                  onClick={() => {
+                    if (canSubmit) {
+                      router.push(`/marques/${selBrandSlug}/${selModelSlug}/${selPeriod}/${selEngine}`);
+                    }
+                  }}
                   className="w-full h-11 mt-1 text-[15px] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                   Voir les fichiers disponibles

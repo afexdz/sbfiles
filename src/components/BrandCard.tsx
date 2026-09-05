@@ -1,7 +1,8 @@
 "use client";
 
-import { TiltCard, Glare } from "@/components/ui/TiltCard";
-import { BrandLogo }       from "@/components/BrandLogo";
+import Link                     from "next/link";
+import { TiltCard, Glare }      from "@/components/ui/TiltCard";
+import { BrandLogo }            from "@/components/BrandLogo";
 
 interface Props {
   name:          string;
@@ -14,15 +15,12 @@ interface Props {
 }
 
 export function BrandCard({ name, slug, logoUrl, onClick, eager, highPriority, compact }: Props) {
-  const clickProps = onClick
-    ? { onClick, role: "button" as const, tabIndex: 0, onKeyDown: (e: React.KeyboardEvent) => e.key === "Enter" && onClick() }
-    : {};
-
   if (compact) {
     return (
       <TiltCard>
-        <div
-          {...clickProps}
+        <Link
+          href={`/marques/${slug}`}
+          onClick={onClick}
           className="flex flex-col items-center justify-center gap-1.5 aspect-square p-2 sm:p-3 rounded-[10px] cursor-pointer relative overflow-hidden border border-line shadow-card group-hover:border-line2 group-hover:shadow-[0_16px_32px_-16px_rgba(16,32,48,.36)] transition-[border-color,box-shadow] duration-[400ms]"
           style={{ background: "linear-gradient(168deg, #FFFFFF 0%, #F4F7FA 62%, #E9EFF4 100%)" }}
         >
@@ -34,15 +32,16 @@ export function BrandCard({ name, slug, logoUrl, onClick, eager, highPriority, c
             {name}
           </span>
           <Glare />
-        </div>
+        </Link>
       </TiltCard>
     );
   }
 
   return (
     <TiltCard>
-      <div
-        {...clickProps}
+      <Link
+        href={`/marques/${slug}`}
+        onClick={onClick}
         className="flex flex-col items-center justify-center gap-3 w-36 h-32 sm:w-44 sm:h-40 rounded-[14px] cursor-pointer relative overflow-hidden border border-line shadow-card group-hover:border-line2 group-hover:shadow-[0_28px_52px_-26px_rgba(16,32,48,.48),0_2px_6px_rgba(16,32,48,.08)] transition-[border-color,box-shadow] duration-[400ms]"
         style={{ background: "linear-gradient(168deg, #FFFFFF 0%, #F4F7FA 62%, #E9EFF4 100%)" }}
       >
@@ -54,7 +53,7 @@ export function BrandCard({ name, slug, logoUrl, onClick, eager, highPriority, c
           {name}
         </span>
         <Glare />
-      </div>
+      </Link>
     </TiltCard>
   );
 }
