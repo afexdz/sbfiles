@@ -285,48 +285,63 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
         </button>
       </div>
 
-      {/* Revealed code banner */}
+      {/* Revealed code — full-screen modal, z-[60] above the gen modal */}
       {revealed && (
-        <div className="border-l-4 border-[#F5C842] bg-[#13141A] rounded-r-[12px] p-5">
-          <div className="flex items-start gap-3 mb-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5C842" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5" aria-hidden="true">
-              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            <div>
-              <p className="text-[#F5C842] font-semibold text-sm">Code généré — affiché une seule fois</p>
-              <p className="text-white/40 text-xs mt-0.5">Ce code en clair ne sera plus jamais récupérable. Notez-le ou exportez la carte avant de fermer.</p>
-            </div>
-          </div>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90">
+          <div className="w-full max-w-[540px] bg-[#13141A] border border-[#F5C842]/30 rounded-[20px] p-8 shadow-2xl">
 
-          <div className="bg-black/30 rounded-[10px] p-4 mb-4 flex items-center gap-3 flex-wrap">
-            <span className="font-mono text-2xl font-bold text-white tracking-[0.15em] flex-1 min-w-0 break-all">
-              {revealed.code}
-            </span>
-            <div className="flex gap-2 shrink-0">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="shrink-0 w-10 h-10 rounded-full bg-[#F5C842]/10 flex items-center justify-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5C842" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-white font-display text-lg leading-tight">Code généré</h2>
+                <p className="text-[#F5C842] text-xs font-medium mt-0.5">Affiché une seule fois — agissez maintenant</p>
+              </div>
+            </div>
+
+            {/* Warning */}
+            <div className="bg-[#F5C842]/[0.06] border border-[#F5C842]/20 rounded-[10px] px-4 py-3 mb-6">
+              <p className="text-[#F5C842] text-sm font-medium">
+                Ce code ne sera plus jamais affiché. Copiez-le ou exportez la carte maintenant.
+              </p>
+            </div>
+
+            {/* Code */}
+            <div className="bg-black/40 rounded-[12px] px-6 py-5 mb-6 text-center">
+              <span className="font-mono text-[clamp(28px,6vw,42px)] font-bold text-white tracking-[0.25em] break-all select-all">
+                {revealed.code}
+              </span>
+              <p className="text-white/25 text-xs mt-3 tabular-nums">
+                {revealed.tokens} token{revealed.tokens !== 1 ? "s" : ""} · Expire le {fmtDate(revealed.expireAt)}
+              </p>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 mb-4 flex-wrap">
               <button onClick={() => handleCopy(revealed.code)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/15 text-white text-xs rounded-[6px] transition-colors cursor-pointer">
+                className="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-3 bg-white/[0.07] hover:bg-white/[0.11] text-white text-sm rounded-[10px] transition-colors cursor-pointer font-medium">
                 {copied ? (
-                  <><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Copié</>
+                  <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span className="text-green-400">Copié !</span></>
                 ) : (
-                  <><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copier</>
+                  <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copier le code</>
                 )}
               </button>
               <button onClick={() => exportCard(revealed.code, revealed.tokens)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F5C842]/15 hover:bg-[#F5C842]/25 text-[#F5C842] text-xs font-medium rounded-[6px] transition-colors cursor-pointer">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Exporter en carte
+                className="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-3 bg-[#F5C842]/[0.12] hover:bg-[#F5C842]/[0.2] text-[#F5C842] text-sm font-medium rounded-[10px] transition-colors cursor-pointer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Exporter en carte PNG
               </button>
             </div>
-          </div>
 
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <p className="text-white/30 text-xs">
-              {revealed.tokens} token{revealed.tokens !== 1 ? "s" : ""} · Expire le {fmtDate(revealed.expireAt)}
-            </p>
+            {/* Dismiss — intentional, no X in corner */}
             <button onClick={dismissRevealed}
-              className="px-4 py-1.5 bg-white/[0.06] hover:bg-white/10 text-white text-xs font-medium rounded-[8px] transition-colors cursor-pointer">
-              J&apos;ai bien noté le code
+              className="w-full py-3 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] text-white/50 hover:text-white text-sm rounded-[10px] transition-colors cursor-pointer">
+              J&apos;ai terminé, fermer
             </button>
           </div>
         </div>
