@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../../../lib/supabase/client";
-import { logLoginAttempt } from "../../actions/logLogin";
+import { logLoginAttempt }    from "../../actions/logLogin";
+import { checkLoginRateLimit } from "../../actions/checkRateLimit";
 
 export default function AdxConnexionPage() {
   const router = useRouter();
@@ -16,6 +17,13 @@ export default function AdxConnexionPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    const { blocked, waitMinutes } = await checkLoginRateLimit(email);
+    if (blocked) {
+      setError(`Trop de tentatives. Réessayez dans ${waitMinutes} minutes.`);
+      setLoading(false);
+      return;
+    }
 
     const supabase = createClient();
     const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });

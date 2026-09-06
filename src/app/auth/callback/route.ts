@@ -3,8 +3,10 @@ import { createClient } from "../../../../lib/supabase/server";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const code    = searchParams.get("code");
+  const rawNext = searchParams.get("next") ?? "/";
+  // Accept only relative paths (not protocol-relative "//") to prevent open-redirect
+  const next    = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/";
 
   if (!code) return NextResponse.redirect(`${origin}/connexion`);
 

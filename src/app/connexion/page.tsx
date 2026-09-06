@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "../../../lib/supabase/client";
-import { logLoginAttempt } from "../actions/logLogin";
+import { logLoginAttempt }    from "../actions/logLogin";
+import { checkLoginRateLimit } from "../actions/checkRateLimit";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -19,14 +20,23 @@ export default function ConnexionPage() {
   const [nextUrl, setNextUrl]   = useState("");
 
   useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    setNextUrl(p.get("next") ?? "");
+    const p   = new URLSearchParams(window.location.search);
+    const raw = p.get("next") ?? "";
+    // Accept only relative paths starting with "/" (not "//") to prevent open-redirect
+    setNextUrl(raw.startsWith("/") && !raw.startsWith("//") ? raw : "");
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    const { blocked, waitMinutes } = await checkLoginRateLimit(email);
+    if (blocked) {
+      setError(`Trop de tentatives. Réessayez dans ${waitMinutes} minutes.`);
+      setLoading(false);
+      return;
+    }
 
     const supabase = createClient();
     const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
