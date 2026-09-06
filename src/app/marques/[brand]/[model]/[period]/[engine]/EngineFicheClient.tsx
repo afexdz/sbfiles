@@ -98,66 +98,59 @@ export function EngineFicheClient({
         { label: engine.nom },
       ]} />
 
-      {/* ── Vehicle photo ───────────────────────────────────────── */}
-      {showImage ? (
-        <div
-          className="relative w-full rounded-[12px] overflow-hidden mb-6 sm:mb-8 bg-soft"
-          style={{ aspectRatio: "16/9" }}
-        >
-          <Image
-            src={period.image_url!}
-            alt={`${brand.nom} ${model.nom} ${period.label}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1300px) 90vw, 1232px"
-            className="object-cover"
-            priority
-            unoptimized
-            onError={() => setImgFailed(true)}
-          />
-        </div>
-      ) : (
-        <div
-          className="w-full rounded-[12px] bg-soft border border-line flex flex-col items-center justify-center gap-3 mb-6 sm:mb-8"
-          style={{ aspectRatio: "16/9", minHeight: "180px" }}
-        >
-          <svg
-            width="52" height="52" viewBox="0 0 24 24"
-            fill="none" stroke="var(--line2)"
-            strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2l2-1 2-3h10l2 3 2 1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2" />
-            <circle cx="7.5" cy="17" r="2.5" />
-            <circle cx="16.5" cy="17" r="2.5" />
-            <path d="M7.5 14.5h9" />
-          </svg>
-          <span className="text-mute text-sm">Photo à venir</span>
-        </div>
-      )}
-
-      {/* ── Title + badges + desktop CTA ────────────────────────── */}
+      {/* ── Title + photo + badges + desktop CTA ────────────────── */}
       <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
-        <div>
-          <h1 className="font-display text-[clamp(24px,3.5vw,40px)] leading-tight">
-            {brand.nom} {model.nom}
-            <span className="text-mute"> · {engine.nom}</span>
-          </h1>
-          <div className="flex flex-wrap items-center gap-2 mt-2">
-            {engine.carburant && (
-              <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${FUEL_BADGE[engine.carburant] ?? ""}`}>
-                {FUEL_LABEL[engine.carburant] ?? engine.carburant}
-              </span>
+        <div className="flex items-start gap-3 flex-wrap">
+          <div className="shrink-0 relative w-24 h-24 rounded-[10px] overflow-hidden bg-soft border border-line">
+            {showImage ? (
+              <Image
+                src={period.image_url!}
+                alt={`${brand.nom} ${model.nom} ${period.label}`}
+                fill
+                sizes="96px"
+                className="object-cover"
+                priority
+                unoptimized
+                onError={() => setImgFailed(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <svg
+                  width="28" height="28" viewBox="0 0 24 24"
+                  fill="none" stroke="var(--line2)"
+                  strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2l2-1 2-3h10l2 3 2 1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2" />
+                  <circle cx="7.5" cy="17" r="2.5" />
+                  <circle cx="16.5" cy="17" r="2.5" />
+                  <path d="M7.5 14.5h9" />
+                </svg>
+              </div>
             )}
-            {engine.ecu && (
-              <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono bg-soft text-mute border border-line">
-                {engine.ecu}
-              </span>
-            )}
-            {period.annee_debut && (
-              <span className="text-xs text-mute">
-                {period.annee_debut}{period.annee_fin ? ` – ${period.annee_fin}` : "+"}
-              </span>
-            )}
+          </div>
+          <div>
+            <h1 className="font-display text-[clamp(24px,3.5vw,40px)] leading-tight">
+              {brand.nom} {model.nom}
+              <span className="text-mute"> · {engine.nom}</span>
+            </h1>
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+              {engine.carburant && (
+                <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${FUEL_BADGE[engine.carburant] ?? ""}`}>
+                  {FUEL_LABEL[engine.carburant] ?? engine.carburant}
+                </span>
+              )}
+              {engine.ecu && (
+                <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-mono bg-soft text-mute border border-line">
+                  {engine.ecu}
+                </span>
+              )}
+              {period.annee_debut && (
+                <span className="text-xs text-mute">
+                  {period.annee_debut}{period.annee_fin ? ` – ${period.annee_fin}` : "+"}
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-3">

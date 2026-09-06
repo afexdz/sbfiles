@@ -266,48 +266,39 @@ function EnginePanel({
   const nm = engine.nm_stock ?? 380;
 
   return (
-    <div className="mt-6">
-      {/* ── Vehicle photo / placeholder ──────────────────────────────── */}
-      {showImage ? (
-        <div
-          className="relative w-full rounded-[12px] overflow-hidden mb-4 bg-[var(--soft)]"
-          style={{ aspectRatio: "16/9" }}
-        >
-          <Image
-            src={period.image_url!}
-            alt={`${brand.nom} ${model.nom} ${period.label}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1300px) 90vw, 1232px"
-            className="object-cover"
-            priority
-            unoptimized
-            onError={() => setImgFailed(true)}
-          />
-        </div>
-      ) : (
-        <div
-          className="w-full rounded-[12px] bg-[var(--soft)] border border-[var(--line)] flex flex-col items-center justify-center gap-3 mb-4"
-          style={{ aspectRatio: "16/9", minHeight: "180px" }}
-        >
-          <svg
-            width="52" height="52" viewBox="0 0 24 24"
-            fill="none" stroke="var(--line2)"
-            strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"
-            aria-hidden
-          >
-            <path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2l2-1 2-3h10l2 3 2 1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2" />
-            <circle cx="7.5" cy="17" r="2.5" />
-            <circle cx="16.5" cy="17" r="2.5" />
-            <path d="M7.5 14.5h9" />
-          </svg>
-          <span className="text-[var(--mute)] text-sm">Photo à venir</span>
-        </div>
-      )}
-
-    <div className="border border-[var(--line)] rounded-[14px] overflow-hidden shadow-card bg-[var(--card)]">
+    <div className="mt-6 border border-[var(--line)] rounded-[14px] overflow-hidden shadow-card bg-[var(--card)]">
       {/* Header */}
       <div className="px-5 sm:px-6 py-4 border-b border-[var(--line)] flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-        <div>
+        <div className="flex items-start gap-3 flex-wrap">
+          <div className="shrink-0 relative w-24 h-24 rounded-[10px] overflow-hidden bg-[var(--soft)] border border-[var(--line)]">
+            {showImage ? (
+              <Image
+                src={period.image_url!}
+                alt={`${brand.nom} ${model.nom} ${period.label}`}
+                fill
+                sizes="96px"
+                className="object-cover"
+                priority
+                unoptimized
+                onError={() => setImgFailed(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <svg
+                  width="28" height="28" viewBox="0 0 24 24"
+                  fill="none" stroke="var(--line2)"
+                  strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2l2-1 2-3h10l2 3 2 1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2" />
+                  <circle cx="7.5" cy="17" r="2.5" />
+                  <circle cx="16.5" cy="17" r="2.5" />
+                  <path d="M7.5 14.5h9" />
+                </svg>
+              </div>
+            )}
+          </div>
+          <div>
           <h2 className="font-display text-[clamp(18px,2.2vw,26px)] leading-tight">
             {brand.nom} {model.nom}
             <span className="text-[var(--mute)]"> · {engine.nom}</span>
@@ -331,6 +322,7 @@ function EnginePanel({
                 {period.annee_fin ? ` – ${period.annee_fin}` : "+"}
               </span>
             )}
+          </div>
           </div>
         </div>
         <div className="hidden sm:block shrink-0">
@@ -458,7 +450,6 @@ function EnginePanel({
           </div>
         </>
       )}
-    </div>
     </div>
   );
 }
