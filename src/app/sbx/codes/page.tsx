@@ -1,6 +1,6 @@
 import { createClient }                              from "../../../../lib/supabase/server";
 import { CodesPanel }                                from "./CodesPanel";
-import { genererCode, modifierCode, invaliderCode }  from "./codeActions";
+import { genererCode, modifierCode, invaliderCode, supprimerCode } from "./codeActions";
 
 export default async function SbxCodesPage() {
   const supabase = await createClient();
@@ -59,6 +59,7 @@ export default async function SbxCodesPage() {
         genererAction={genererCode}
         modifierAction={modifierCode}
         invaliderAction={invaliderCode}
+        supprimerAction={supprimerCode}
       />
     </div>
   );

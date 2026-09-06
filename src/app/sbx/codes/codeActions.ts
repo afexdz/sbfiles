@@ -85,6 +85,30 @@ export async function modifierCode(
   return { ok: true };
 }
 
+export async function supprimerCode(id: string): Promise<{ ok: boolean; error?: string }> {
+  if (!id) return { ok: false, error: "ID manquant." };
+  const ctx = await verifySuperAdmin();
+  if (!ctx) return { ok: false, error: "Non autorisé." };
+
+  const { error } = await ctx.sb
+    .from("token_codes")
+    .delete()
+    .eq("id", id)
+    .is("utilise_le", null);
+  if (error) return { ok: false, error: error.message };
+
+  await ctx.sb.from("admin_actions").insert({
+    acteur_id:  ctx.userId,
+    action:     "supprimer_code",
+    cible_type: "token_codes",
+    cible_id:   id,
+    details:    { supprime_le: new Date().toISOString() },
+  });
+
+  revalidatePath("/sbx/codes");
+  return { ok: true };
+}
+
 export async function invaliderCode(id: string): Promise<{ ok: boolean; error?: string }> {
   if (!id) return { ok: false, error: "ID manquant." };
   const ctx = await verifySuperAdmin();

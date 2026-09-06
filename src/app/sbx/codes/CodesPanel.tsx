@@ -132,16 +132,17 @@ function exportCard(code: string, tokens: number) {
 // ── Props ─────────────────────────────────────────────────────────────────────
 
 interface Props {
-  codes:           CodeRow[];
-  tokenDzd:        number;
-  genererAction:   (tokens: number, jours: number) => Promise<GenererCodeResult>;
-  modifierAction:  (id: string, tokens: number, expireAt: string) => Promise<{ ok: boolean; error?: string }>;
-  invaliderAction: (id: string) => Promise<{ ok: boolean; error?: string }>;
+  codes:            CodeRow[];
+  tokenDzd:         number;
+  genererAction:    (tokens: number, jours: number) => Promise<GenererCodeResult>;
+  modifierAction:   (id: string, tokens: number, expireAt: string) => Promise<{ ok: boolean; error?: string }>;
+  invaliderAction:  (id: string) => Promise<{ ok: boolean; error?: string }>;
+  supprimerAction:  (id: string) => Promise<{ ok: boolean; error?: string }>;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, invaliderAction }: Props) {
+export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, invaliderAction, supprimerAction }: Props) {
   const router = useRouter();
 
   const [rows, setRows] = useState<CodeRow[]>(codes);
@@ -165,9 +166,13 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
   const [editBusy,   setEditBusy]   = useState(false);
   const [editErr,    setEditErr]    = useState<string | null>(null);
 
-  const [deleteId,   setDeleteId]   = useState<string | null>(null);
-  const [deleteBusy, setDeleteBusy] = useState(false);
-  const [deleteErr,  setDeleteErr]  = useState<string | null>(null);
+  const [deleteId,      setDeleteId]      = useState<string | null>(null);
+  const [deleteBusy,    setDeleteBusy]    = useState(false);
+  const [deleteErr,     setDeleteErr]     = useState<string | null>(null);
+
+  const [permDeleteId,   setPermDeleteId]   = useState<string | null>(null);
+  const [permDeleteBusy, setPermDeleteBusy] = useState(false);
+  const [permDeleteErr,  setPermDeleteErr]  = useState<string | null>(null);
 
   const genValid = genTokens >= 1 && !!genDebut && !!genFin && genFin > genDebut;
   const genJours = genValid
@@ -260,6 +265,17 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
       : r,
     ));
     setDeleteId(null);
+  }
+
+  async function handlePermDelete() {
+    if (!permDeleteId) return;
+    setPermDeleteBusy(true);
+    setPermDeleteErr(null);
+    const res = await supprimerAction(permDeleteId);
+    setPermDeleteBusy(false);
+    if (!res.ok) { setPermDeleteErr(res.error ?? "Erreur."); return; }
+    setRows((prev) => prev.filter((r) => r.id !== permDeleteId));
+    setPermDeleteId(null);
   }
 
   return (
@@ -365,10 +381,14 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
               <tr><td colSpan={6} className="px-5 py-8 text-center text-white/30">Aucun code.</td></tr>
             )}
             {filtered.map((c) => {
-              const isActive   = c.computedStatus === "actif";
-              const isDeleting = deleteId === c.id;
+              const isActive      = c.computedStatus === "actif";
+              const isUnused      = c.utilise_le === null;
+              const isDeleting    = deleteId === c.id;
+              const isPermDeleting = permDeleteId === c.id;
+              const isConfirming  = isDeleting || isPermDeleting;
+              const rowHighlight  = isDeleting ? "bg-red-900/[0.07]" : isPermDeleting ? "bg-red-900/[0.12]" : "hover:bg-white/[0.02]";
               return (
-                <tr key={c.id} className={`border-b border-white/[0.05] last:border-0 transition-colors ${isDeleting ? "bg-red-900/10" : "hover:bg-white/[0.02]"}`}>
+                <tr key={c.id} className={`border-b border-white/[0.05] last:border-0 transition-colors ${rowHighlight}`}>
                   <td className="px-5 py-3 font-mono">
                     <span className="text-white/30">••••-••••-</span>
                     <span className="text-white font-bold">{c.code_indice}</span>
@@ -385,32 +405,63 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
                   <td className="px-4 py-3 text-white/40 text-xs">{fmtDate(c.expire_le)}</td>
                   <td className="px-4 py-3 text-white/40 text-xs">{fmtDate(c.created_at)}</td>
                   <td className="px-4 py-3 text-right">
-                    {isActive && !isDeleting && (
+
+                    {/* ── Boutons normaux ── */}
+                    {!isConfirming && (
                       <div className="flex items-center justify-end gap-3">
-                        <button onClick={() => openEdit(c)}
-                          className="text-xs text-white/40 hover:text-white transition-colors cursor-pointer">
-                          Modifier
-                        </button>
-                        <button onClick={() => { setDeleteErr(null); setDeleteId(c.id); }}
-                          className="text-xs text-red-400/60 hover:text-red-400 transition-colors cursor-pointer">
-                          Annuler
-                        </button>
+                        {isActive && (
+                          <button onClick={() => openEdit(c)}
+                            className="text-xs text-white/40 hover:text-white transition-colors cursor-pointer">
+                            Modifier
+                          </button>
+                        )}
+                        {isActive && (
+                          <button onClick={() => { setDeleteErr(null); setPermDeleteId(null); setDeleteId(c.id); }}
+                            className="text-xs text-orange-400/60 hover:text-orange-400 transition-colors cursor-pointer">
+                            Annuler
+                          </button>
+                        )}
+                        {isUnused && (
+                          <button onClick={() => { setPermDeleteErr(null); setDeleteId(null); setPermDeleteId(c.id); }}
+                            className="text-xs text-red-400/60 hover:text-red-400 transition-colors cursor-pointer">
+                            Supprimer
+                          </button>
+                        )}
                       </div>
                     )}
+
+                    {/* ── Confirmation Annuler (invalider) ── */}
                     {isActive && isDeleting && (
                       <div className="flex items-center justify-end gap-2 flex-wrap">
                         {deleteErr && <span className="text-red-400 text-xs">{deleteErr}</span>}
-                        <span className="text-xs text-white/50">Confirmer&nbsp;?</span>
+                        <span className="text-xs text-white/40">Invalider&nbsp;?</span>
                         <button onClick={handleInvalidate} disabled={deleteBusy}
-                          className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors cursor-pointer disabled:opacity-50">
-                          {deleteBusy ? "…" : "Oui, annuler"}
+                          className="text-xs text-orange-400 hover:text-orange-300 font-medium transition-colors cursor-pointer disabled:opacity-50">
+                          {deleteBusy ? "…" : "Oui"}
                         </button>
                         <button onClick={() => { setDeleteId(null); setDeleteErr(null); }} disabled={deleteBusy}
-                          className="text-xs text-white/40 hover:text-white transition-colors cursor-pointer">
+                          className="text-xs text-white/30 hover:text-white transition-colors cursor-pointer">
                           Non
                         </button>
                       </div>
                     )}
+
+                    {/* ── Confirmation Supprimer (définitif) ── */}
+                    {isPermDeleting && (
+                      <div className="flex items-center justify-end gap-2 flex-wrap">
+                        {permDeleteErr && <span className="text-red-400 text-xs">{permDeleteErr}</span>}
+                        <span className="text-xs text-red-400/70 font-medium">Irréversible&nbsp;?</span>
+                        <button onClick={handlePermDelete} disabled={permDeleteBusy}
+                          className="text-xs text-red-400 hover:text-red-300 font-bold transition-colors cursor-pointer disabled:opacity-50">
+                          {permDeleteBusy ? "…" : "Oui, supprimer"}
+                        </button>
+                        <button onClick={() => { setPermDeleteId(null); setPermDeleteErr(null); }} disabled={permDeleteBusy}
+                          className="text-xs text-white/30 hover:text-white transition-colors cursor-pointer">
+                          Non
+                        </button>
+                      </div>
+                    )}
+
                   </td>
                 </tr>
               );
