@@ -1,14 +1,22 @@
-import { createClient } from "../../../../lib/supabase/server";
-import { CodesPanel }   from "./CodesPanel";
+import { createClient }                              from "../../../../lib/supabase/server";
+import { CodesPanel }                                from "./CodesPanel";
+import { genererCode, modifierCode, invaliderCode }  from "./codeActions";
 
 export default async function SbxCodesPage() {
   const supabase = await createClient();
 
-  const { data: raw, error } = await supabase
-    .from("token_codes")
-    .select("id, code_indice, tokens, expire_le, utilise_le, created_at")
-    .order("created_at", { ascending: false })
-    .limit(500);
+  const [{ data: raw, error }, { data: settRaw }] = await Promise.all([
+    supabase
+      .from("token_codes")
+      .select("id, code_indice, tokens, expire_le, utilise_le, created_at")
+      .order("created_at", { ascending: false })
+      .limit(500),
+    supabase
+      .from("app_settings")
+      .select("valeur")
+      .eq("cle", "token_dzd")
+      .single(),
+  ]);
 
   if (error) {
     return (
@@ -22,6 +30,7 @@ export default async function SbxCodesPage() {
     );
   }
 
+  const tokenDzd = parseInt((settRaw as { valeur: string } | null)?.valeur ?? "1000", 10);
   const now = new Date().toISOString();
 
   const codes = (raw ?? []).map((c: Record<string, unknown>) => {
@@ -41,10 +50,16 @@ export default async function SbxCodesPage() {
   return (
     <div>
       <h1 className="font-display text-[clamp(26px,3vw,36px)] text-white mb-2">Codes de recharge</h1>
-      <p className="text-white/40 text-[14px] mb-8">
-        {codes.length} code{codes.length !== 1 ? "s" : ""} — le code complet n&apos;est jamais affiché
+      <p className="text-white/40 text-[14px] mb-6">
+        {codes.length} code{codes.length !== 1 ? "s" : ""} — le code complet n&apos;est jamais stocké en clair
       </p>
-      <CodesPanel codes={codes} />
+      <CodesPanel
+        codes={codes}
+        tokenDzd={tokenDzd}
+        genererAction={genererCode}
+        modifierAction={modifierCode}
+        invaliderAction={invaliderCode}
+      />
     </div>
   );
 }
