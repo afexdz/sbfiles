@@ -1,7 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { createClient }   from "../../../../lib/supabase/server";
+import { revalidatePath }    from "next/cache";
+import { createClient }      from "../../../../lib/supabase/server";
+import { createAdminClient } from "../../../../lib/supabase/admin";
 
 type SuperAdminCtx = { sb: Awaited<ReturnType<typeof createClient>>; userId: string };
 
@@ -87,16 +88,26 @@ export async function modifierCode(
 
 export async function supprimerCode(id: string): Promise<{ ok: boolean; error?: string }> {
   if (!id) return { ok: false, error: "ID manquant." };
+
+  // Vérification super_admin via session utilisateur
   const ctx = await verifySuperAdmin();
   if (!ctx) return { ok: false, error: "Non autorisé." };
 
-  const { error } = await ctx.sb
+  // Vérifier que le code existe et n'est pas utilisé (via session + RLS SELECT)
+  const { data: row, error: fetchErr } = await ctx.sb
     .from("token_codes")
-    .delete()
+    .select("id, utilise_le")
     .eq("id", id)
-    .is("utilise_le", null);
+    .single();
+  if (fetchErr || !row) return { ok: false, error: "Code introuvable." };
+  if (row.utilise_le)   return { ok: false, error: "Code déjà utilisé — impossible de le supprimer." };
+
+  // DELETE via service_role : bypass RLS, indépendant de la migration 0017
+  const adminSb = createAdminClient();
+  const { error } = await adminSb.from("token_codes").delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
 
+  // Journalisation via session (acteur_id = auth.uid() requis par la policy INSERT)
   await ctx.sb.from("admin_actions").insert({
     acteur_id:  ctx.userId,
     action:     "supprimer_code",

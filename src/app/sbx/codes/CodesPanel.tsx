@@ -150,12 +150,13 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
 
   const [filter, setFilter] = useState<CodeStatus | "">("");
 
-  const [showGen,   setShowGen]   = useState(false);
-  const [genTokens, setGenTokens] = useState(5);
-  const [genDebut,  setGenDebut]  = useState(todayStr);
-  const [genFin,    setGenFin]    = useState(() => addDays(todayStr(), 30));
-  const [genBusy,   setGenBusy]   = useState(false);
-  const [genErr,    setGenErr]    = useState<string | null>(null);
+  const [showGen,    setShowGen]    = useState(false);
+  const [genTokens,  setGenTokens]  = useState(5);
+  const [genDebut,   setGenDebut]   = useState(todayStr);
+  const [genFin,     setGenFin]     = useState(() => addDays(todayStr(), 30));
+  const [genBusy,    setGenBusy]    = useState(false);
+  const [genErr,     setGenErr]     = useState<string | null>(null);
+  const [globalErr,  setGlobalErr]  = useState<string | null>(null);
 
   const [revealed, setRevealed] = useState<RevealedCode | null>(null);
   const [copied,   setCopied]   = useState(false);
@@ -203,7 +204,17 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
     setGenErr(null);
     const res = await genererAction(genTokens, genJours);
     setGenBusy(false);
-    if (!res.ok) { setGenErr(res.error ?? "Erreur inconnue."); return; }
+    if (!res.ok) {
+      const msg = res.error ?? "Erreur inconnue.";
+      setGenErr(msg);
+      // Si la fonction SQL n'existe pas, fermer le modal et afficher l'erreur globalement
+      if (msg.includes("generer_code_standalone") || msg.includes("schema cache")) {
+        setShowGen(false);
+        setGlobalErr("Fonction SQL manquante — appliquer les migrations 0015 et 0016 dans Supabase : " + msg);
+      }
+      return;
+    }
+    setGlobalErr(null);
 
     setShowGen(false);
     setRevealed({ code: res.code!, tokens: res.tokens!, id: res.id!, expireAt: res.expireAt! });
@@ -271,11 +282,13 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
     if (!permDeleteId) return;
     setPermDeleteBusy(true);
     setPermDeleteErr(null);
-    const res = await supprimerAction(permDeleteId);
+    const targetId = permDeleteId;
+    const res = await supprimerAction(targetId);
     setPermDeleteBusy(false);
     if (!res.ok) { setPermDeleteErr(res.error ?? "Erreur."); return; }
-    setRows((prev) => prev.filter((r) => r.id !== permDeleteId));
+    setRows((prev) => prev.filter((r) => r.id !== targetId));
     setPermDeleteId(null);
+    router.refresh();
   }
 
   return (
@@ -300,6 +313,18 @@ export function CodesPanel({ codes, tokenDzd, genererAction, modifierAction, inv
           + Générer un code
         </button>
       </div>
+
+      {/* Global error banner (e.g. missing SQL function) */}
+      {globalErr && (
+        <div className="bg-red-900/20 border border-red-800/40 rounded-[10px] px-4 py-3 flex items-start gap-3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div className="flex-1 min-w-0">
+            <p className="text-red-400 text-sm font-medium">Erreur de génération</p>
+            <p className="text-red-400/70 text-xs mt-0.5 break-words">{globalErr}</p>
+          </div>
+          <button onClick={() => setGlobalErr(null)} className="text-red-400/40 hover:text-red-400 transition-colors cursor-pointer shrink-0" aria-label="Fermer">✕</button>
+        </div>
+      )}
 
       {/* Revealed code — full-screen modal, z-[60] above the gen modal */}
       {revealed && (
