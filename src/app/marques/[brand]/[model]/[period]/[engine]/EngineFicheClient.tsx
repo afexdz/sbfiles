@@ -57,7 +57,7 @@ export function EngineFicheClient({
   const [imgFailed, setImgFailed]   = useState(false);
 
   const engine = useMemo(
-    () => engines.find((e) => e.id === selectedId) ?? engines[0],
+    () => engines.find((e) => e.id === selectedId) ?? engines[0] ?? null,
     [engines, selectedId],
   );
 
@@ -71,6 +71,9 @@ export function EngineFicheClient({
       `/marques/${brand.slug}/${model.slug}/${period.id}/${id}`,
     );
   }
+
+  // Defensive: engines array was empty (data error) — nothing to render
+  if (!engine) return null;
 
   const fuel: Fuel =
     engine.carburant === "hybride" ? "essence"
@@ -97,7 +100,10 @@ export function EngineFicheClient({
 
       {/* ── Vehicle photo ───────────────────────────────────────── */}
       {showImage ? (
-        <div className="relative w-full aspect-video rounded-[12px] overflow-hidden mb-6 sm:mb-8 bg-soft">
+        <div
+          className="relative w-full rounded-[12px] overflow-hidden mb-6 sm:mb-8 bg-soft"
+          style={{ aspectRatio: "16/9" }}
+        >
           <Image
             src={period.image_url!}
             alt={`${brand.nom} ${model.nom} ${period.label}`}
@@ -110,7 +116,10 @@ export function EngineFicheClient({
           />
         </div>
       ) : (
-        <div className="w-full aspect-video rounded-[12px] bg-soft border border-line flex flex-col items-center justify-center gap-3 mb-6 sm:mb-8">
+        <div
+          className="w-full rounded-[12px] bg-soft border border-line flex flex-col items-center justify-center gap-3 mb-6 sm:mb-8"
+          style={{ aspectRatio: "16/9", minHeight: "180px" }}
+        >
           <svg
             width="52" height="52" viewBox="0 0 24 24"
             fill="none" stroke="var(--line2)"

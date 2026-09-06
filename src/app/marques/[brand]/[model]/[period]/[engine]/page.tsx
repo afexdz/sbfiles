@@ -94,9 +94,25 @@ export default async function EnginePage({
     supabase.from("options").select("*").order("ordre"),
   ]);
 
-  const periodEngines: Engine[] = (rawPeriodEngines ?? []) as Engine[];
-  const allPeriods              = rawAllPeriods ?? [];
-  const options: Option[]       = (rawOptions ?? []) as Option[];
+  let periodEngines: Engine[] = (rawPeriodEngines ?? []) as Engine[];
+  const allPeriods             = rawAllPeriods ?? [];
+  const options: Option[]      = (rawOptions ?? []) as Option[];
+
+  // Ensure the current engine is always present — guards against a Supabase
+  // query failure or empty result which would crash EngineFicheClient.
+  if (!periodEngines.find((e) => e.id === engineId)) {
+    const fallback: Engine = {
+      id:          engine.id as string,
+      period_id:   period.id,
+      nom:         engine.nom as string,
+      code_moteur: (engine.code_moteur ?? null) as string | null,
+      carburant:   (engine.carburant ?? null) as Engine["carburant"],
+      ch_stock:    (engine.ch_stock ?? null) as number | null,
+      nm_stock:    (engine.nm_stock ?? null) as number | null,
+      ecu:         (engine.ecu ?? null) as string | null,
+    };
+    periodEngines = [fallback, ...periodEngines];
+  }
 
   // ── 3. Batch-fetch tuning files for all period engines ────────────────────
   const allEngineIds = periodEngines.map((e) => e.id);
