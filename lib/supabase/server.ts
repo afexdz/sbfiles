@@ -22,10 +22,9 @@ export async function createClient() {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, {
                 ...options,
-                httpOnly: true,
-                secure:   process.env.NODE_ENV === 'production',
+                secure:  process.env.NODE_ENV === 'production',
                 sameSite: 'lax' as const,
-                maxAge:   SESSION_MAX_AGE,
+                maxAge:  SESSION_MAX_AGE,
               })
             )
           } catch {
