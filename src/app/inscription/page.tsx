@@ -28,7 +28,6 @@ export default function InscriptionPage() {
     setNextUrl(p.get("next") ?? "");
   }, []);
 
-  const [nom,        setNom]        = useState("");
   const [email,      setEmail]      = useState("");
   const [password,   setPassword]   = useState("");
   const [nomAtelier, setNomAtelier] = useState("");
@@ -46,7 +45,6 @@ export default function InscriptionPage() {
 
     const supabase = createClient();
     const metadata = {
-      nom,
       type: "atelier",
       nom_atelier: nomAtelier,
       ville: wilaya,
@@ -128,17 +126,6 @@ export default function InscriptionPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Field label="Prénom et nom" required>
-              <input
-                type="text"
-                value={nom}
-                onChange={(e) => setNom(e.target.value)}
-                required
-                placeholder="Votre nom complet"
-                className={INPUT}
-              />
-            </Field>
-
             <Field label="Adresse e-mail" required>
               <input
                 type="email"

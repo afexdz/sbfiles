@@ -13,7 +13,7 @@ export default async function SbxAteliersPage() {
 
   const { data: raw, error } = await supabase
     .from("ateliers")
-    .select("*, user:profiles(email)")
+    .select("*, user:profiles!ateliers_user_id_profiles_fkey(email)")
     .order("statut", { ascending: true })
     .order("created_at", { ascending: true });
 

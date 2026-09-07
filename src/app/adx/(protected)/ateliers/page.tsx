@@ -8,7 +8,7 @@ export default async function AdxAteliersPage() {
 
   const { data: raw } = await supabase
     .from("ateliers")
-    .select("*, user:profiles(email)")
+    .select("*, user:profiles!ateliers_user_id_profiles_fkey(email)")
     .order("statut", { ascending: true })
     .order("created_at", { ascending: true });
 

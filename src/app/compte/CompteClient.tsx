@@ -36,7 +36,6 @@ interface Props {
 export function CompteClient({ profile, atelier, notice }: Props) {
   const router = useRouter();
 
-  const [nom, setNom]               = useState(profile?.nom ?? "");
   const [telephone, setTelephone]   = useState(atelier?.telephone ?? "");
   const [ville, setVille]           = useState(atelier?.ville ?? "");
   const [adresse, setAdresse]       = useState(atelier?.adresse ?? "");
@@ -54,24 +53,16 @@ export function CompteClient({ profile, atelier, notice }: Props) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setMsg({ ok: false, text: "Session expirée." }); setSaving(false); return; }
 
-    const { error: e1 } = await supabase
-      .from("profiles")
-      .update({ nom })
-      .eq("id", user.id);
+    if (!atelier) { setSaving(false); return; }
 
-    let e2: { message: string } | null = null;
-    if (atelier) {
-      const { error } = await supabase
-        .from("ateliers")
-        .update({ telephone, ville, adresse, registre_commerce: registre, updated_at: new Date().toISOString() })
-        .eq("id", atelier.id);
-      e2 = error as typeof e2;
-    }
+    const { error } = await supabase
+      .from("ateliers")
+      .update({ telephone, ville, adresse, registre_commerce: registre, updated_at: new Date().toISOString() })
+      .eq("id", atelier.id);
 
-    const firstError = (e1 ?? e2) as { message: string } | null;
     setSaving(false);
-    setMsg(firstError
-      ? { ok: false, text: firstError.message }
+    setMsg(error
+      ? { ok: false, text: error.message }
       : { ok: true,  text: "Profil mis à jour." }
     );
   }
@@ -149,51 +140,44 @@ export function CompteClient({ profile, atelier, notice }: Props) {
         </div>
       )}
 
-      <form onSubmit={handleSave} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-ink mb-1.5">Nom complet</label>
-          <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} className={INPUT} />
-        </div>
+      {atelier && (
+        <form onSubmit={handleSave} className="space-y-4">
+          <div className="pt-3 border-t border-line">
+            <p className="text-xs font-semibold text-mute uppercase tracking-wider mb-3">Atelier</p>
+          </div>
 
-        {atelier && (
-          <>
-            <div className="pt-3 border-t border-line">
-              <p className="text-xs font-semibold text-mute uppercase tracking-wider mb-3">Atelier</p>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1.5">Téléphone</label>
+            <input type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} className={INPUT} />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">Téléphone</label>
-              <input type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} className={INPUT} />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1.5">Wilaya</label>
+            <select value={ville} onChange={(e) => setVille(e.target.value)} className={INPUT}>
+              <option value="">— Sélectionnez —</option>
+              {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+            </select>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">Wilaya</label>
-              <select value={ville} onChange={(e) => setVille(e.target.value)} className={INPUT}>
-                <option value="">— Sélectionnez —</option>
-                {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
-              </select>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1.5">Adresse</label>
+            <input type="text" value={adresse} onChange={(e) => setAdresse(e.target.value)} className={INPUT} />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">Adresse</label>
-              <input type="text" value={adresse} onChange={(e) => setAdresse(e.target.value)} className={INPUT} />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1.5">Registre de commerce</label>
+            <input type="text" value={registre} onChange={(e) => setRegistre(e.target.value)} className={INPUT} />
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-ink mb-1.5">Registre de commerce</label>
-              <input type="text" value={registre} onChange={(e) => setRegistre(e.target.value)} className={INPUT} />
-            </div>
-          </>
-        )}
-
-        <button
-          type="submit"
-          disabled={saving}
-          className="bg-ember text-white font-semibold text-sm px-6 py-2.5 rounded-[10px] hover:bg-ember-ink transition-colors duration-150 disabled:opacity-60 cursor-pointer"
-        >
-          {saving ? "Enregistrement…" : "Enregistrer"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={saving}
+            className="bg-ember text-white font-semibold text-sm px-6 py-2.5 rounded-[10px] hover:bg-ember-ink transition-colors duration-150 disabled:opacity-60 cursor-pointer"
+          >
+            {saving ? "Enregistrement…" : "Enregistrer"}
+          </button>
+        </form>
+      )}
     </div>
   );
 }
