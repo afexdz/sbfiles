@@ -1,84 +1,20 @@
-import { notFound }      from "next/navigation";
-import type { Metadata }  from "next";
-import Link               from "next/link";
-import { createClient }   from "../../../../lib/supabase/server";
-import { Header }         from "@/components/layout/Header";
-import { Footer }         from "@/components/layout/Footer";
-import { BrandCard }      from "@/components/BrandCard";
-import type { Brand }     from "@/lib/types";
+import { notFound }     from "next/navigation";
+import type { Metadata } from "next";
+import Link              from "next/link";
+import { createClient }  from "../../../../lib/supabase/server";
+import { Header }        from "@/components/layout/Header";
+import { Footer }        from "@/components/layout/Footer";
+import { BrandCard }     from "@/components/BrandCard";
+import type { Brand }    from "@/lib/types";
 
+// Rendu dynamique uniquement — pas de SSG pour éviter
+// la pré-génération en 500 quand notFound() est appelé pendant le build.
+export const dynamic    = "force-dynamic";
 export const dynamicParams = true;
 
 const HIDDEN_SLUGS = new Set(["tesla"]);
 
-// ─── Supabase helpers ─────────────────────────────────────────────────────────
-
-async function getSupabase() {
-  try {
-    return await createClient();
-  } catch {
-    return null;
-  }
-}
-
-async function safeSelect<T>(
-  query: PromiseLike<{ data: T[] | null; error: unknown }>
-): Promise<T[]> {
-  try {
-    const { data } = await query;
-    return data ?? [];
-  } catch {
-    return [];
-  }
-}
-
-// ─── Data fetching ────────────────────────────────────────────────────────────
-
-interface CategoryRow {
-  id: string;
-  slug: string;
-  nom_fr: string;
-  icone: string | null;
-  couleur: string | null;
-}
-
-async function getCategory(slug: string): Promise<CategoryRow | null> {
-  const supabase = await getSupabase();
-  if (!supabase) return null;
-  try {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("id, slug, nom_fr, icone, couleur")
-      .eq("slug", slug)
-      .single();
-    if (error || !data) return null;
-    return data as CategoryRow;
-  } catch {
-    return null;
-  }
-}
-
-async function getBrandsForCategory(categoryId: string): Promise<Brand[]> {
-  const supabase = await getSupabase();
-  if (!supabase) return [];
-  return safeSelect<Brand>(
-    supabase
-      .from("brands")
-      .select("*")
-      .eq("category_id", categoryId)
-      .order("ordre")
-  );
-}
-
-// ─── Static params ────────────────────────────────────────────────────────────
-
-export async function generateStaticParams() {
-  const supabase = await getSupabase();
-  if (!supabase) return [];
-  return safeSelect<{ slug: string }>(
-    supabase.from("categories").select("slug")
-  ).then((rows) => rows.map((c) => ({ slug: c.slug })));
-}
+const WRAP = "max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)]";
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -87,15 +23,20 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const category = await getCategory(slug);
-  if (!category) return { title: "Catégorie — SBFiles" };
-  return { title: `${category.nom_fr} — SBFiles` };
+  try {
+    const { slug }  = await params;
+    const supabase  = await createClient();
+    const { data }  = await supabase
+      .from("categories")
+      .select("nom_fr")
+      .eq("slug", slug)
+      .single();
+    if (data) return { title: `${data.nom_fr} — SBFiles` };
+  } catch { /* ignore */ }
+  return { title: "Catégorie — SBFiles" };
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-
-const WRAP = "max-w-[1300px] mx-auto px-[clamp(18px,4.5vw,64px)]";
 
 export default async function CategoryPage({
   params,
@@ -104,12 +45,30 @@ export default async function CategoryPage({
 }) {
   const { slug } = await params;
 
-  const category = await getCategory(slug);
-  if (!category) notFound();
+  // ── Fetch category ──────────────────────────────────────────────────────────
+  const supabase = await createClient().catch(() => null);
+  if (!supabase) notFound();
 
-  const brands  = await getBrandsForCategory(category.id);
-  const visible = brands.filter((b) => !HIDDEN_SLUGS.has(b.slug));
+  const { data: category, error: catError } = await supabase
+    .from("categories")
+    .select("id, slug, nom_fr, couleur")
+    .eq("slug", slug)
+    .single();
 
+  if (catError || !category) notFound();
+
+  // ── Fetch brands ────────────────────────────────────────────────────────────
+  const { data: rawBrands } = await supabase
+    .from("brands")
+    .select("*")
+    .eq("category_id", category.id)
+    .order("ordre");
+
+  const visible = (rawBrands ?? []).filter(
+    (b: Brand) => !HIDDEN_SLUGS.has(b.slug)
+  );
+
+  // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <>
       <Header />
@@ -144,7 +103,7 @@ export default async function CategoryPage({
             <div className="flex flex-col items-center text-center py-16 gap-5 max-w-sm mx-auto">
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
-                style={{ background: category.couleur ? `${category.couleur}22` : undefined }}
+                style={{ background: category.couleur ? `${category.couleur}22` : "#F4F7FA" }}
                 aria-hidden
               >
                 🔧
@@ -175,7 +134,7 @@ export default async function CategoryPage({
             </div>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-3 lg:gap-4">
-              {visible.map((brand) => (
+              {visible.map((brand: Brand) => (
                 <BrandCard
                   key={brand.id}
                   name={brand.nom}
