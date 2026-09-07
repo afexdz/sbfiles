@@ -23,6 +23,9 @@ export default async function ComptePage({
   const profile = profileRes.data as Profile | null;
   const atelier = atelierRes.data as Atelier | null;
 
+  // Atelier non approuvé → page dédiée d'attente
+  if (atelier && atelier.statut !== "approuve") redirect("/en-attente");
+
   return (
     <>
       <Header />
