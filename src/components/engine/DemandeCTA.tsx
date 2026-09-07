@@ -32,8 +32,12 @@ export function DemandeCTA({ engineId, label = "Demander ce fichier →", classN
       .eq("user_id", user.id)
       .maybeSingle();
 
-    if (!atelier || atelier.statut !== "approuve") {
-      router.push("/compte?notice=upload_reserved");
+    if (!atelier) {
+      router.push("/inscription");
+      return;
+    }
+    if (atelier.statut !== "approuve") {
+      router.push("/en-attente");
       return;
     }
 

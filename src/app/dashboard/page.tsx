@@ -250,7 +250,7 @@ export default async function DashboardPage() {
           <section className="mb-10">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-xl">Mes demandes</h2>
-              <Link href="/demande" className="text-xs text-ember hover:underline font-medium">
+              <Link href="/marques" className="text-xs text-ember hover:underline font-medium">
                 Nouvelle demande →
               </Link>
             </div>
@@ -258,7 +258,7 @@ export default async function DashboardPage() {
             {demandes.length === 0 ? (
               <div className="border border-line rounded-[10px] px-6 py-10 text-center">
                 <p className="text-mute text-sm">Aucune demande pour l&apos;instant.</p>
-                <Link href="/demande" className="inline-block mt-3 text-xs font-medium text-ember hover:underline">
+                <Link href="/marques" className="inline-block mt-3 text-xs font-medium text-ember hover:underline">
                   Soumettre ma première demande
                 </Link>
               </div>
