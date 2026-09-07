@@ -132,16 +132,9 @@ export function Header() {
                   </a>
                 ))}
               </div>
-              <div className="py-4 flex flex-col gap-2">
+              <div className="py-4">
                 <a
                   href="/connexion"
-                  className="block w-full text-center border border-line rounded px-4 py-2 text-sm font-medium text-ink hover:bg-soft transition-colors duration-[180ms]"
-                  onClick={closeMenu}
-                >
-                  Se connecter
-                </a>
-                <a
-                  href="/inscription"
                   className="block w-full text-center bg-ember text-white rounded px-4 py-2 text-sm font-semibold hover:bg-ember-ink transition-colors duration-[180ms]"
                   onClick={closeMenu}
                 >

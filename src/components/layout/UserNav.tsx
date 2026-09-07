@@ -64,20 +64,12 @@ export function UserNav() {
   // Not logged in
   if (!user) {
     return (
-      <>
-        <Link
-          href="/connexion"
-          className="hidden [min-width:940px]:inline-flex items-center text-sm font-medium text-ink2 hover:text-ink transition-colors duration-[180ms] px-3 py-1.5"
-        >
-          Se connecter
-        </Link>
-        <Link
-          href="/inscription"
-          className="hidden [min-width:940px]:inline-flex items-center bg-ember text-white text-sm font-semibold px-4 py-1.5 rounded hover:bg-ember-ink transition-colors duration-[180ms]"
-        >
-          Espace atelier
-        </Link>
-      </>
+      <Link
+        href="/connexion"
+        className="hidden [min-width:940px]:inline-flex items-center bg-ember text-white text-sm font-semibold px-4 py-1.5 rounded hover:bg-ember-ink transition-colors duration-[180ms]"
+      >
+        Espace atelier
+      </Link>
     );
   }
 

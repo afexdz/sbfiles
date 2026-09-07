@@ -89,10 +89,10 @@ export default function ConnexionPage() {
       <main className="flex-1">
         <div className={`${WRAP} py-14 sm:py-20`}>
           <h1 className="font-display text-[clamp(26px,3.5vw,34px)] mb-1 text-center">
-            Se connecter
+            Espace atelier
           </h1>
           <p className="text-ink2 text-sm text-center mb-8">
-            Atelier professionnel ?{" "}
+            Pas encore enregistré ?{" "}
             <Link href="/inscription" className="text-ember hover:underline font-medium">
               Créer un compte atelier
             </Link>
