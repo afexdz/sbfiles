@@ -51,6 +51,8 @@ export default async function Home() {
       <Header />
 
       <main className="flex-1">
+        <h1 className="sr-only">SBFiles — Fichiers de reprogrammation moteur</h1>
+
         {/* ---- Hero ---- */}
         <Hero brands={brands} />
 
@@ -131,7 +133,7 @@ function AccentLink({ href, label, className = "" }: { href: string; label: stri
       href={href}
       className={`group inline-flex items-center gap-1.5 text-sm sm:text-base ${className}`}
       style={{
-        color: "var(--ember)",
+        color: "var(--ember-ink)",
         fontWeight: 700,
         textDecoration: "underline",
         textUnderlineOffset: "4px",

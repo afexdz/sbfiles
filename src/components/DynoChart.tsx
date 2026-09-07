@@ -199,7 +199,7 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
     <div className="bg-card border border-line rounded-lg shadow-card-lg overflow-hidden">
       {/* Header */}
       <div className="flex flex-wrap items-center gap-2 px-4 sm:px-5 pt-4 pb-0">
-        <h3 className="font-display text-[18px] sm:text-[20px] min-w-0">{title ?? "Comparatif origine / SBFiles"}</h3>
+        <h2 className="font-display text-[18px] sm:text-[20px] min-w-0">{title ?? "Comparatif origine / SBFiles"}</h2>
         <span className="ml-auto text-[12px] text-ink2 bg-soft border border-line px-[9px] py-[3px] rounded-full whitespace-nowrap">
           {ecu}
         </span>
