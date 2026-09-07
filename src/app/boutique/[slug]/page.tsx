@@ -1,3 +1,5 @@
+export const dynamicParams = true;
+
 import { createClient }       from "../../../../lib/supabase/server";
 import { Header }             from "@/components/layout/Header";
 import { Footer }             from "@/components/layout/Footer";

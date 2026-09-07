@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { TiltCard, Glare } from "@/components/ui/TiltCard";
 import { CATEGORY_ICONS } from "@/components/icons/VehicleIcons";
 
@@ -9,20 +10,16 @@ interface Props {
   count: string;
   color: string;
   icon: string;
-  onClick?: () => void;
 }
 
-export function CategoryCard({ slug: _slug, name, count, color, icon, onClick }: Props) {
+export function CategoryCard({ slug, name, count, color, icon }: Props) {
   const Icon = CATEGORY_ICONS[icon];
 
   return (
     <TiltCard>
-      <div
-        onClick={onClick}
-        role={onClick ? "button" : undefined}
-        tabIndex={onClick ? 0 : undefined}
-        onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
-        className="cursor-pointer rounded-[14px] overflow-hidden bg-card border border-line shadow-card group-hover:shadow-[0_30px_60px_-28px_rgba(16,32,48,.5),0_2px_6px_rgba(16,32,48,.08)] transition-shadow duration-[400ms]"
+      <Link
+        href={`/categories/${slug}`}
+        className="block rounded-[14px] overflow-hidden bg-card border border-line shadow-card group-hover:shadow-[0_30px_60px_-28px_rgba(16,32,48,.5),0_2px_6px_rgba(16,32,48,.08)] transition-shadow duration-[400ms]"
       >
         {/* Colored top section */}
         <div
@@ -71,7 +68,7 @@ export function CategoryCard({ slug: _slug, name, count, color, icon, onClick }:
           <b className="font-display text-[22px] font-semibold">{name}</b>
           <i className="not-italic text-[12.5px] text-mute">{count}</i>
         </div>
-      </div>
+      </Link>
     </TiltCard>
   );
 }
