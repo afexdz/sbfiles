@@ -74,7 +74,7 @@ export default async function AdxDemandesPage() {
     const filePath = `tune/${demandeId}/${file.name}`;
     const { error: uploadErr } = await sb.storage
       .from("bin-tune")
-      .upload(filePath, file, { upsert: true });
+      .upload(filePath, file, { upsert: true, contentType: "application/octet-stream" });
 
     if (uploadErr) return { ok: false, message: uploadErr.message };
 
