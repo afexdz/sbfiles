@@ -43,7 +43,7 @@ export default async function Home() {
   // Preload the first 4 marquee logos so they're fetched before the JS runs
   const HIDDEN = new Set(["tesla"]);
   brands.filter((b) => !HIDDEN.has(b.slug)).slice(0, 4).forEach((b) => {
-    preload(`/logos/${fileSlug(b.slug)}.svg`, { as: "image", type: "image/svg+xml" });
+    preload(`/logos/${fileSlug(b.slug)}.webp`, { as: "image", type: "image/webp" });
   });
 
   return (

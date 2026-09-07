@@ -91,10 +91,10 @@ const GRID_HTML = (() => {
 const LABELS_HTML =
   RPM.filter((_, i) => i % 2 === 0)
     .map((r, j) =>
-      `<text x="${pxF(j * 2)}" y="${H - 11}" fill="#7A8A97" font-size="11" text-anchor="middle" font-family="IBM Plex Sans">${r / 1000}k</text>`
+      `<text x="${pxF(j * 2)}" y="${H - 11}" fill="#5C6C79" font-size="11" text-anchor="middle" font-family="IBM Plex Sans">${r / 1000}k</text>`
     )
     .join("") +
-  `<text x="${ML - 8}" y="${MT + 7}" fill="#7A8A97" font-size="11" text-anchor="end" font-family="IBM Plex Sans">ch</text>`;
+  `<text x="${ML - 8}" y="${MT + 7}" fill="#5C6C79" font-size="11" text-anchor="end" font-family="IBM Plex Sans">ch</text>`;
 
 export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: Props) {
   const [stage, setStage] = useState<Stage>(defaultStage);
@@ -128,9 +128,11 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
     el.style.transition = "none";
     el.style.strokeDasharray = `${L}`;
     el.style.strokeDashoffset = `${L}`;
+    el.style.willChange = "stroke-dashoffset";
     void el.getBoundingClientRect();
     el.style.transition = `stroke-dashoffset ${dur}ms cubic-bezier(.25,.8,.3,1)`;
     el.style.strokeDashoffset = "0";
+    el.addEventListener("transitionend", () => { el.style.willChange = "auto"; }, { once: true });
   }, []);
 
   const animCounter = useCallback((from: number, to: number, dur: number, setter: (v: number) => void, ref: React.MutableRefObject<number>) => {

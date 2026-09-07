@@ -4,7 +4,11 @@ import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
 import { createClient } from "../../../lib/supabase/client";
-import { DynoChart } from "@/components/DynoChart";
+import dynamic from "next/dynamic";
+const DynoChart = dynamic(
+  () => import("@/components/DynoChart").then((m) => m.DynoChart),
+  { ssr: false }
+);
 import { Button } from "@/components/ui/Button";
 import type { Brand, Model, Period, Engine } from "@/lib/types";
 
