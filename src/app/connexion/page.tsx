@@ -60,16 +60,18 @@ export default function ConnexionPage() {
     if (role === "super_admin") { router.push("/sbx"); return; }
     if (role === "admin")       { router.push("/adx"); return; }
 
-    // Honour ?next= for regular users
-    if (nextUrl) { router.push(nextUrl); return; }
-
     const { data: atelier } = await supabase
       .from("ateliers")
-      .select("id")
+      .select("id, statut")
       .eq("user_id", data.user.id)
       .maybeSingle();
 
-    router.push(atelier ? "/dashboard" : "/compte");
+    // No atelier → regular user, honour ?next= or go to /compte
+    if (!atelier) { router.push(nextUrl || "/compte"); return; }
+
+    // Atelier exists: status determines destination, ?next= is ignored
+    if (atelier.statut === "approuve") { router.push("/dashboard"); return; }
+    router.push("/en-attente");
   }
 
   async function handleGoogle() {

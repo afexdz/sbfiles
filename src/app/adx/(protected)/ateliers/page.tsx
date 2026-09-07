@@ -1,7 +1,8 @@
-import { revalidatePath }  from "next/cache";
-import { createClient }     from "../../../../../lib/supabase/server";
-import { AteliersTable }    from "@/components/admin/AteliersTable";
-import type { Atelier }     from "@/lib/types";
+import { revalidatePath }             from "next/cache";
+import { createClient }              from "../../../../../lib/supabase/server";
+import { AteliersTable }             from "@/components/admin/AteliersTable";
+import { sendAtelierApprouveEmail }  from "@/lib/email";
+import type { Atelier }              from "@/lib/types";
 
 export default async function AdxAteliersPage() {
   const supabase = await createClient();
@@ -37,6 +38,22 @@ export default async function AdxAteliersPage() {
     if (!sb) return { ok: false, message: "Erreur serveur." };
     const { error } = await sb.from("ateliers").update({ statut: "approuve" }).eq("id", id);
     if (error) return { ok: false, message: error.message };
+
+    // Récupère l'email du propriétaire de l'atelier et envoie la notification
+    const { data: row } = await sb
+      .from("ateliers")
+      .select("user_id")
+      .eq("id", id)
+      .single();
+    if (row) {
+      const { data: profile } = await sb
+        .from("profiles")
+        .select("email")
+        .eq("id", row.user_id)
+        .single();
+      if (profile?.email) await sendAtelierApprouveEmail(profile.email);
+    }
+
     revalidatePath("/adx/ateliers");
     return { ok: true };
   }

@@ -58,8 +58,13 @@ export async function GET(request: Request) {
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (atelier) return NextResponse.redirect(`${origin}/dashboard`);
+  // No atelier → regular user, honour ?next= or go to /compte
+  if (!atelier) {
+    if (next !== "/") return NextResponse.redirect(`${origin}${next}`);
+    return NextResponse.redirect(`${origin}/compte`);
+  }
 
-  if (next !== "/") return NextResponse.redirect(`${origin}${next}`);
-  return NextResponse.redirect(`${origin}/compte`);
+  // Atelier exists: status determines destination
+  if (atelier.statut === "approuve") return NextResponse.redirect(`${origin}/dashboard`);
+  return NextResponse.redirect(`${origin}/en-attente`);
 }
