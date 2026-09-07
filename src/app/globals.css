@@ -122,9 +122,6 @@ button, select, input { font: inherit; color: inherit; }
 }
 
 /* ---- marquee ---- */
-@keyframes marquee-slide {
-  to { transform: translateX(-50%); }
-}
 .marquee {
   position: relative;
   overflow: hidden;
@@ -136,13 +133,8 @@ button, select, input { font: inherit; color: inherit; }
   align-items: stretch;
   gap: 16px;
   width: max-content;
-  animation: marquee-slide 48s linear infinite;
+  /* transform driven by JS RAF — no CSS animation */
 }
-.marquee-track.rev {
-  animation-direction: reverse;
-  animation-duration: 60s;
-}
-.marquee:hover .marquee-track { animation-play-state: paused; }
 
 /* ---- Brands grid stagger (IntersectionObserver driven) ---- */
 .brand-item {
