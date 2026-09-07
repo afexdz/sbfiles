@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { createClient } from "../../../lib/supabase/client";
+import { createClient }           from "../../../lib/supabase/client";
+import { creerAtelierEnAttente }  from "./atelierAction";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -56,14 +57,29 @@ export default function InscriptionPage() {
       `${window.location.origin}/auth/callback` +
       (nextUrl ? `?next=${encodeURIComponent(nextUrl)}` : "");
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: { data: metadata, emailRedirectTo },
     });
 
+    if (signUpError) { setLoading(false); setError(signUpError.message); return; }
+
+    // Créer la fiche atelier immédiatement — ne pas attendre la confirmation email
+    // (le callback /auth/callback est un filet de sécurité supplémentaire)
+    if (signUpData?.user?.id) {
+      const result = await creerAtelierEnAttente(signUpData.user.id, {
+        nom:               nomAtelier,
+        ville:             wilaya,
+        adresse,
+        registre_commerce: registre,
+      });
+      if (!result.ok) {
+        console.error("[inscription] creerAtelierEnAttente:", result.error);
+      }
+    }
+
     setLoading(false);
-    if (signUpError) { setError(signUpError.message); return; }
     setSuccess(true);
   }
 
