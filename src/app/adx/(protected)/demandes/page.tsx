@@ -72,9 +72,10 @@ export default async function AdxDemandesPage() {
     const { data: { user } } = await sb.auth.getUser();
 
     const filePath = `tune/${demandeId}/${file.name}`;
+    const buffer = await file.arrayBuffer();
     const { error: uploadErr } = await sb.storage
       .from("bin-tune")
-      .upload(filePath, file, { upsert: true, contentType: "application/octet-stream" });
+      .upload(filePath, buffer, { upsert: true, contentType: "application/octet-stream" });
 
     if (uploadErr) return { ok: false, message: uploadErr.message };
 

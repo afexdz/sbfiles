@@ -81,9 +81,12 @@ export function DemandeForm({
       const uploadSlot = crypto.randomUUID();
       const storagePath = `${atelierId}/${uploadSlot}/${file.name}`;
 
+      // Convert to ArrayBuffer so the Supabase client has no File.type to fall back on;
+      // contentType is the sole source of the Content-Type header sent to storage.
+      const buffer = await file.arrayBuffer();
       const { error: uploadError } = await supabase.storage
         .from("bin-original")
-        .upload(storagePath, file, { contentType: "application/octet-stream", upsert: false });
+        .upload(storagePath, buffer, { contentType: "application/octet-stream", upsert: false });
 
       if (uploadError) throw new Error(`Upload : ${uploadError.message}`);
 
