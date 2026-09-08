@@ -15,17 +15,19 @@ const STATUS_BADGE: Record<AtelierStatut, string> = {
 };
 
 interface AtelierWithSolde extends Atelier {
-  solde?: number;
+  solde?:  number;
+  email?:  string;
 }
 
 interface Props {
-  ateliers:       AtelierWithSolde[];
-  approuverAction:(id: string)               => Promise<{ ok: boolean; message?: string }>;
-  refuserAction:  (id: string, note: string) => Promise<{ ok: boolean; message?: string }>;
-  ajusterAction:  (id: string, delta: number, note: string) => Promise<{ ok: boolean; nouveau_solde?: number; message?: string }>;
+  ateliers:            AtelierWithSolde[];
+  approuverAction:     (id: string)               => Promise<{ ok: boolean; message?: string }>;
+  refuserAction:       (id: string, note: string) => Promise<{ ok: boolean; message?: string }>;
+  ajusterAction:       (id: string, delta: number, note: string) => Promise<{ ok: boolean; nouveau_solde?: number; message?: string }>;
+  resetPasswordAction: (email: string)            => Promise<{ ok: boolean; link?: string; message?: string }>;
 }
 
-export function AteliersTable({ ateliers, approuverAction, refuserAction, ajusterAction }: Props) {
+export function AteliersTable({ ateliers, approuverAction, refuserAction, ajusterAction, resetPasswordAction }: Props) {
   const [filter, setFilter]     = useState<AtelierStatut | "">("");
   const [modal, setModal]       = useState<AtelierWithSolde | null>(null);
   const [refusNote, setRefusNote] = useState("");
@@ -33,13 +35,27 @@ export function AteliersTable({ ateliers, approuverAction, refuserAction, ajuste
   const [adjNote, setAdjNote]   = useState("");
   const [msg, setMsg]           = useState("");
   const [busy, setBusy]         = useState(false);
+  const [resetLink, setResetLink] = useState("");
+  const [resetBusy, setResetBusy] = useState(false);
 
   const STATUTS: AtelierStatut[] = ["en_attente","approuve","refuse"];
 
   const filtered = filter ? ateliers.filter((a) => a.statut === filter) : ateliers;
 
   function openModal(a: AtelierWithSolde) {
-    setModal(a); setMsg(""); setRefusNote(""); setAdjDelta(0); setAdjNote("");
+    setModal(a); setMsg(""); setRefusNote(""); setAdjDelta(0); setAdjNote(""); setResetLink("");
+  }
+
+  async function handleResetPassword() {
+    if (!modal?.email) return;
+    setResetBusy(true);
+    const res = await resetPasswordAction(modal.email);
+    setResetBusy(false);
+    if (res.ok && res.link) {
+      setResetLink(res.link);
+    } else {
+      setMsg(`✗ ${res.message ?? "Erreur inconnue"}`);
+    }
   }
 
   async function handleApprouver() {
@@ -113,7 +129,10 @@ export function AteliersTable({ ateliers, approuverAction, refuserAction, ajuste
             )}
             {filtered.map((a) => (
               <tr key={a.id} className="border-b border-line last:border-0 hover:bg-soft/40">
-                <td className="px-4 py-3 font-medium">{a.nom}</td>
+                <td className="px-4 py-3">
+                  <p className="font-medium">{a.nom}</p>
+                  {a.email && <p className="text-xs text-mute mt-0.5">{a.email}</p>}
+                </td>
                 <td className="px-4 py-3 text-ink2">{a.ville ?? "—"}</td>
                 <td className="px-4 py-3 text-ink2">{a.telephone ?? "—"}</td>
                 <td className="px-4 py-3 font-mono">{a.solde ?? 0}</td>
@@ -156,6 +175,7 @@ export function AteliersTable({ ateliers, approuverAction, refuserAction, ajuste
                 </span>
               </dd>
               <dt className="text-mute">Solde</dt><dd>{modal.solde ?? 0} tokens</dd>
+              {modal.email && <><dt className="text-mute">Email</dt><dd className="break-all">{modal.email}</dd></>}
               <dt className="text-mute">Ville</dt><dd>{modal.ville ?? "—"}</dd>
               <dt className="text-mute">Téléphone</dt><dd>{modal.telephone ?? "—"}</dd>
               {modal.adresse && <><dt className="text-mute">Adresse</dt><dd>{modal.adresse}</dd></>}
@@ -193,6 +213,36 @@ export function AteliersTable({ ateliers, approuverAction, refuserAction, ajuste
                 >
                   Refuser
                 </button>
+              </div>
+            )}
+
+            {/* Réinitialisation du mot de passe */}
+            {modal.email && (
+              <div className="border-t border-line pt-4 space-y-3">
+                <p className="text-sm font-medium">Mot de passe</p>
+                <p className="text-xs text-mute">
+                  Les mots de passe sont chiffrés (bcrypt) — ils ne peuvent pas être affichés.
+                </p>
+                {resetLink ? (
+                  <div className="space-y-1.5">
+                    <p className="text-xs text-ok font-medium">Lien de réinitialisation généré :</p>
+                    <input
+                      readOnly
+                      value={resetLink}
+                      onClick={(e) => (e.target as HTMLInputElement).select()}
+                      className="w-full bg-bg border border-line rounded px-3 py-2 text-xs font-mono focus:outline-none cursor-text"
+                    />
+                    <p className="text-[11px] text-mute">Copier et envoyer ce lien à l&apos;atelier (valable 24 h).</p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleResetPassword}
+                    disabled={resetBusy}
+                    className="w-full border border-line2 text-ink2 text-sm font-medium py-2 rounded cursor-pointer hover:border-ember hover:text-ember-ink transition-colors duration-150 disabled:opacity-50"
+                  >
+                    {resetBusy ? "…" : "Générer lien de réinitialisation"}
+                  </button>
+                )}
               </div>
             )}
 

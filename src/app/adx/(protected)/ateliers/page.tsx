@@ -1,5 +1,6 @@
 import { revalidatePath }             from "next/cache";
 import { createClient }              from "../../../../../lib/supabase/server";
+import { createAdminClient }         from "../../../../../lib/supabase/admin";
 import { AteliersTable }             from "@/components/admin/AteliersTable";
 import { sendAtelierApprouveEmail }  from "@/lib/email";
 import type { Atelier }              from "@/lib/types";
@@ -82,6 +83,18 @@ export default async function AdxAteliersPage() {
     return { ok: true, nouveau_solde: data as number };
   }
 
+  async function resetPassword(email: string): Promise<{ ok: boolean; link?: string; message?: string }> {
+    "use server";
+    const sb = createAdminClient();
+    const { data, error } = await sb.auth.admin.generateLink({
+      type: "recovery",
+      email,
+      options: { redirectTo: "https://www.sbfiles.com/reinitialiser-mot-de-passe" },
+    });
+    if (error) return { ok: false, message: error.message };
+    return { ok: true, link: data.properties.action_link };
+  }
+
   const pending = ateliers.filter((a) => a.statut === "en_attente").length;
 
   return (
@@ -93,7 +106,7 @@ export default async function AdxAteliersPage() {
           {pending > 0 && <> — <span className="text-ember font-medium">{pending} en attente</span></>}
         </p>
       </div>
-      <AteliersTable ateliers={ateliers} approuverAction={approuver} refuserAction={refuser} ajusterAction={ajuster} />
+      <AteliersTable ateliers={ateliers} approuverAction={approuver} refuserAction={refuser} ajusterAction={ajuster} resetPasswordAction={resetPassword} />
     </>
   );
 }

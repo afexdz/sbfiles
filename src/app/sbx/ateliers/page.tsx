@@ -1,5 +1,6 @@
 import { revalidatePath }              from "next/cache";
 import { createClient }               from "../../../../lib/supabase/server";
+import { createAdminClient }          from "../../../../lib/supabase/admin";
 import { SbxAteliersPanel }           from "./SbxAteliersPanel";
 import { sendAtelierApprouveEmail }   from "@/lib/email";
 import type { Atelier }               from "@/lib/types";
@@ -131,6 +132,18 @@ export default async function SbxAteliersPage() {
     return (data ?? []) as { id: string; reference: string; statut: string; cout_tokens: number; created_at: string; livree_le: string | null }[];
   }
 
+  async function resetPassword(email: string): Promise<{ ok: boolean; link?: string; message?: string }> {
+    "use server";
+    const sb = createAdminClient();
+    const { data, error } = await sb.auth.admin.generateLink({
+      type: "recovery",
+      email,
+      options: { redirectTo: "https://www.sbfiles.com/reinitialiser-mot-de-passe" },
+    });
+    if (error) return { ok: false, message: error.message };
+    return { ok: true, link: data.properties.action_link };
+  }
+
   return (
     <div>
       <h1 className="font-display text-[clamp(26px,3vw,36px)] text-white mb-2">Ateliers</h1>
@@ -144,6 +157,7 @@ export default async function SbxAteliersPage() {
         ajusterAction={ajuster}
         getLedgerAction={getLedger}
         getDemandesAction={getDemandes}
+        resetPasswordAction={resetPassword}
       />
     </div>
   );

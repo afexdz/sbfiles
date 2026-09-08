@@ -38,16 +38,17 @@ const MOTIF_LABEL: Record<string, string> = {
 type ModalType = "approuver" | "refuser" | "ajuster";
 
 interface Props {
-  ateliers:          AtelierWithMeta[];
-  approuverAction:   (id: string) => Promise<{ ok: boolean; message?: string }>;
-  refuserAction:     (id: string, note: string) => Promise<{ ok: boolean; message?: string }>;
-  ajusterAction:     (id: string, delta: number, note: string) => Promise<{ ok: boolean; nouveau_solde?: number; message?: string }>;
-  getLedgerAction:   (id: string) => Promise<LedgerEntry[]>;
-  getDemandesAction: (id: string) => Promise<Demande[]>;
+  ateliers:            AtelierWithMeta[];
+  approuverAction:     (id: string) => Promise<{ ok: boolean; message?: string }>;
+  refuserAction:       (id: string, note: string) => Promise<{ ok: boolean; message?: string }>;
+  ajusterAction:       (id: string, delta: number, note: string) => Promise<{ ok: boolean; nouveau_solde?: number; message?: string }>;
+  getLedgerAction:     (id: string) => Promise<LedgerEntry[]>;
+  getDemandesAction:   (id: string) => Promise<Demande[]>;
+  resetPasswordAction: (email: string) => Promise<{ ok: boolean; link?: string; message?: string }>;
 }
 
 export function SbxAteliersPanel({
-  ateliers, approuverAction, refuserAction, ajusterAction, getLedgerAction, getDemandesAction,
+  ateliers, approuverAction, refuserAction, ajusterAction, getLedgerAction, getDemandesAction, resetPasswordAction,
 }: Props) {
   const [filter, setFilter]   = useState<AtelierStatut | "">("");
   const [search, setSearch]   = useState("");
@@ -63,6 +64,8 @@ export function SbxAteliersPanel({
   const [adjNote, setAdjNote]     = useState("");
   const [actionMsg, setActionMsg] = useState("");
   const [actionBusy, setActionBusy] = useState(false);
+  const [resetLink, setResetLink]   = useState("");
+  const [resetBusy, setResetBusy]   = useState(false);
 
   const STATUTS: AtelierStatut[] = ["en_attente", "approuve", "refuse"];
 
@@ -84,6 +87,7 @@ export function SbxAteliersPanel({
     setSelected(a);
     setLedger([]);
     setDemandes([]);
+    setResetLink("");
     setLoadingDetail(true);
     const [l, d] = await Promise.all([getLedgerAction(a.id), getDemandesAction(a.id)]);
     setLedger(l);
@@ -94,6 +98,16 @@ export function SbxAteliersPanel({
   function openModal(type: ModalType, atelier: AtelierWithMeta) {
     setModal({ type, atelier });
     setRefusNote(""); setAdjDelta("0"); setAdjNote(""); setActionMsg("");
+  }
+
+  async function handleResetPassword() {
+    if (!selected?.email) return;
+    setResetBusy(true);
+    const res = await resetPasswordAction(selected.email);
+    setResetBusy(false);
+    if (res.ok && res.link) {
+      setResetLink(res.link);
+    }
   }
 
   async function executeAction() {
@@ -243,6 +257,33 @@ export function SbxAteliersPanel({
                 {new Date(selected.created_at).toLocaleDateString("fr-FR")}
               </DetailRow>
             </div>
+
+            {/* Mot de passe */}
+            {selected.email && (
+              <div className="mt-4 pt-4 border-t border-white/[0.06] space-y-2">
+                <p className="text-[11px] uppercase tracking-wider text-white/40">Mot de passe</p>
+                <p className="text-[11px] text-white/30">Chiffré (bcrypt) — non affichable.</p>
+                {resetLink ? (
+                  <div className="space-y-1">
+                    <p className="text-[11px] text-green-400">Lien généré (valable 24 h) :</p>
+                    <input
+                      readOnly
+                      value={resetLink}
+                      onClick={(e) => (e.target as HTMLInputElement).select()}
+                      className="w-full bg-[#0B0C10] border border-white/10 rounded px-2 py-1.5 text-[10px] font-mono text-white/60 focus:outline-none cursor-text"
+                    />
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleResetPassword}
+                    disabled={resetBusy}
+                    className="text-[11px] px-3 py-1.5 border border-white/10 text-white/50 rounded hover:border-[#F5C842]/40 hover:text-[#F5C842] cursor-pointer transition-colors duration-150 disabled:opacity-40"
+                  >
+                    {resetBusy ? "…" : "Générer lien de réinitialisation"}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {loadingDetail ? (
