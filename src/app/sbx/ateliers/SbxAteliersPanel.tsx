@@ -53,6 +53,8 @@ export function SbxAteliersPanel({
   const [filter, setFilter]   = useState<AtelierStatut | "">("");
   const [search, setSearch]   = useState("");
 
+  const [localAteliers, setLocalAteliers] = useState<AtelierWithMeta[]>(ateliers);
+
   const [selected, setSelected]           = useState<AtelierWithMeta | null>(null);
   const [ledger, setLedger]               = useState<LedgerEntry[]>([]);
   const [demandes, setDemandes]           = useState<Demande[]>([]);
@@ -70,7 +72,7 @@ export function SbxAteliersPanel({
   const STATUTS: AtelierStatut[] = ["en_attente", "approuve", "refuse"];
 
   const filtered = useMemo(() => {
-    let r = ateliers;
+    let r = localAteliers;
     if (filter) r = r.filter((a) => a.statut === filter);
     if (search.trim()) {
       const q = search.trim().toLowerCase();
@@ -81,7 +83,7 @@ export function SbxAteliersPanel({
       );
     }
     return r;
-  }, [ateliers, filter, search]);
+  }, [localAteliers, filter, search]);
 
   async function openDetail(a: AtelierWithMeta) {
     setSelected(a);
@@ -128,8 +130,16 @@ export function SbxAteliersPanel({
     if (res.ok) {
       const label = modal.type === "approuver" ? "Atelier approuvé." : modal.type === "refuser" ? "Atelier refusé." : "Solde ajusté.";
       setActionMsg(`✓ ${label}`);
-      if (modal.type === "ajuster" && res.nouveau_solde != null && selected?.id === modal.atelier.id) {
-        setSelected((prev) => prev ? { ...prev, solde: res.nouveau_solde! } : null);
+      if (modal.type === "ajuster" && res.nouveau_solde != null) {
+        const newSolde = res.nouveau_solde!;
+        setLocalAteliers((prev) => prev.map((a) => a.id === modal.atelier.id ? { ...a, solde: newSolde } : a));
+        setSelected((prev) => prev?.id === modal.atelier.id ? { ...prev, solde: newSolde } : prev);
+      } else if (modal.type === "approuver") {
+        setLocalAteliers((prev) => prev.map((a) => a.id === modal.atelier.id ? { ...a, statut: "approuve" as AtelierStatut } : a));
+        setSelected((prev) => prev?.id === modal.atelier.id ? { ...prev, statut: "approuve" as AtelierStatut } : prev);
+      } else if (modal.type === "refuser") {
+        setLocalAteliers((prev) => prev.map((a) => a.id === modal.atelier.id ? { ...a, statut: "refuse" as AtelierStatut } : a));
+        setSelected((prev) => prev?.id === modal.atelier.id ? { ...prev, statut: "refuse" as AtelierStatut } : prev);
       }
       setTimeout(() => setModal(null), 1200);
     } else {
@@ -153,12 +163,12 @@ export function SbxAteliersPanel({
           <div className="flex gap-1 flex-wrap">
             <button onClick={() => setFilter("")}
               className={`px-3 py-1 text-xs rounded cursor-pointer transition-colors duration-150 ${!filter ? "bg-white/10 text-white" : "text-white/40 hover:text-white hover:bg-white/[0.05]"}`}>
-              Tous ({ateliers.length})
+              Tous ({localAteliers.length})
             </button>
             {STATUTS.map((s) => (
               <button key={s} onClick={() => setFilter(s)}
                 className={`px-3 py-1 text-xs rounded cursor-pointer transition-colors duration-150 ${filter === s ? "bg-white/10 text-white" : "text-white/40 hover:text-white hover:bg-white/[0.05]"}`}>
-                {STATUS_LABEL[s]} ({ateliers.filter((a) => a.statut === s).length})
+                {STATUS_LABEL[s]} ({localAteliers.filter((a) => a.statut === s).length})
               </button>
             ))}
           </div>

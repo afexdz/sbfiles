@@ -1,4 +1,3 @@
-import { revalidatePath }              from "next/cache";
 import { createClient }               from "../../../../lib/supabase/server";
 import { createAdminClient }          from "../../../../lib/supabase/admin";
 import { SbxAteliersPanel }           from "./SbxAteliersPanel";
@@ -74,7 +73,6 @@ export default async function SbxAteliersPage() {
       if (profile?.email) await sendAtelierApprouveEmail(profile.email);
     }
 
-    revalidatePath("/sbx/ateliers");
     return { ok: true };
   }
 
@@ -85,7 +83,6 @@ export default async function SbxAteliersPage() {
     const { error } = await sb.from("ateliers")
       .update({ statut: "refuse", note_admin: note }).eq("id", id);
     if (error) return { ok: false, message: error.message };
-    revalidatePath("/sbx/ateliers");
     return { ok: true };
   }
 
@@ -98,7 +95,6 @@ export default async function SbxAteliersPage() {
       p_atelier: id, p_delta: delta, p_note: note,
     });
     if (error) return { ok: false, message: error.message };
-    revalidatePath("/sbx/ateliers");
     return { ok: true, nouveau_solde: data as number };
   }
 

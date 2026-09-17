@@ -109,6 +109,22 @@ function Track({ brands, direction, duration, eagerCount = 0 }: TrackProps) {
     rafId = requestAnimationFrame(loop);
 
     // ── Pointer events (covers mouse + touch + stylus) ────────────────────────
+    // NOTE: we do NOT use setPointerCapture — it re-routes the synthetic `click`
+    // event to the wrapper div instead of the <a> child, breaking navigation.
+    // Instead, move/up listeners are registered on document during active drag
+    // so the gesture still works when the pointer leaves the wrapper.
+
+    function cleanupDocListeners() {
+      document.removeEventListener("pointermove",   onMove);
+      document.removeEventListener("pointerup",     onUp);
+      document.removeEventListener("pointercancel", onCancel);
+    }
+
+    function stopPostDragClick(e: MouseEvent) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     function onDown(e: PointerEvent) {
       if (e.pointerType === "mouse" && e.button !== 0) return;
       isDragging  = true;
@@ -119,8 +135,10 @@ function Track({ brands, direction, duration, eagerCount = 0 }: TrackProps) {
       posAtStart  = pos;
       lastPtrX    = e.clientX;
       lastPtrTime = e.timeStamp;
-      wrapper.setPointerCapture(e.pointerId);
       wrapper.style.cursor = "grabbing";
+      document.addEventListener("pointermove",   onMove);
+      document.addEventListener("pointerup",     onUp);
+      document.addEventListener("pointercancel", onCancel);
     }
 
     function onMove(e: PointerEvent) {
@@ -141,24 +159,23 @@ function Track({ brands, direction, duration, eagerCount = 0 }: TrackProps) {
 
     function onUp() {
       if (!isDragging) return;
-      isDragging          = false;
+      isDragging = false;
       // autoFactor stays 0 → resumes gradually via RESUME_RATE in the loop
       wrapper.style.cursor = "grab";
+      cleanupDocListeners();
+      // Swallow the synthetic click browsers may fire right after pointerup
+      if (didDrag) {
+        document.addEventListener("click", stopPostDragClick, { capture: true, once: true });
+      }
+      didDrag = false;
     }
 
     function onCancel() {
-      isDragging          = false;
-      velocity            = 0;
+      isDragging = false;
+      velocity   = 0;
       wrapper.style.cursor = "grab";
-    }
-
-    // Prevent link navigation after a drag gesture
-    function onClick(e: MouseEvent) {
-      if (didDrag) {
-        e.preventDefault();
-        e.stopPropagation();
-        didDrag = false;
-      }
+      cleanupDocListeners();
+      didDrag = false;
     }
 
     // ── Wheel (trackpad horizontal scroll / mouse wheel) ──────────────────────
@@ -173,22 +190,15 @@ function Track({ brands, direction, duration, eagerCount = 0 }: TrackProps) {
       autoFactor  = 0;
     }
 
-    wrapper.addEventListener("pointerdown",  onDown);
-    wrapper.addEventListener("pointermove",  onMove);
-    wrapper.addEventListener("pointerup",    onUp);
-    wrapper.addEventListener("pointercancel", onCancel);
-    wrapper.addEventListener("click",        onClick,   { capture: true });
-    wrapper.addEventListener("wheel",        onWheel,   { passive: false });
+    wrapper.addEventListener("pointerdown", onDown);
+    wrapper.addEventListener("wheel",       onWheel, { passive: false });
 
     return () => {
       cancelAnimationFrame(rafId);
       ro.disconnect();
-      wrapper.removeEventListener("pointerdown",  onDown);
-      wrapper.removeEventListener("pointermove",  onMove);
-      wrapper.removeEventListener("pointerup",    onUp);
-      wrapper.removeEventListener("pointercancel", onCancel);
-      wrapper.removeEventListener("click",        onClick,  { capture: true });
-      wrapper.removeEventListener("wheel",        onWheel);
+      wrapper.removeEventListener("pointerdown", onDown);
+      wrapper.removeEventListener("wheel",       onWheel);
+      cleanupDocListeners();
     };
   }, [direction, duration]);
 
