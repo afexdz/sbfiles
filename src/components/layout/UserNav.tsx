@@ -3,8 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { UserPlus } from "lucide-react";
 import { createClient } from "../../../lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+
+const ICON_BTN =
+  "relative border border-line2 bg-card w-10 h-10 rounded cursor-pointer grid place-items-center " +
+  "hover:border-ink2 hover:shadow-card transition-[border-color,box-shadow] duration-[180ms]";
 
 export function UserNav() {
   const router             = useRouter();
@@ -64,12 +69,21 @@ export function UserNav() {
   // Not logged in
   if (!user) {
     return (
-      <Link
-        href="/connexion"
-        className="hidden [min-width:940px]:inline-flex items-center bg-ember text-white text-sm font-semibold px-4 py-1.5 rounded hover:bg-ember-ink transition-colors duration-[180ms]"
-      >
-        Espace atelier
-      </Link>
+      <div className="hidden [min-width:940px]:flex items-center gap-2">
+        <Link
+          href="/inscription"
+          aria-label="Créer un compte atelier"
+          className={ICON_BTN}
+        >
+          <UserPlus size={18} aria-hidden />
+        </Link>
+        <Link
+          href="/connexion"
+          className="inline-flex items-center bg-ember text-white text-sm font-semibold px-4 py-1.5 rounded hover:bg-ember-ink transition-colors duration-[180ms]"
+        >
+          Se connecter
+        </Link>
+      </div>
     );
   }
 
