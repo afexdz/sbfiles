@@ -1,5 +1,18 @@
 # SbFiles — Plateforme de tuning moteur
 
+## Variables d'environnement
+
+### Assistant IA (Anthropic)
+
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Obtenez votre clé sur [console.anthropic.com](https://console.anthropic.com) → **API Keys**.  
+Cette variable est uniquement lue côté serveur (route `src/app/api/assistant/route.ts`) et n'est jamais exposée au client.
+
+---
+
 ## OAuth Setup
 
 For Google OAuth and email magic links, configure the following redirect URLs:

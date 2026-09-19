@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Saira_Condensed, IBM_Plex_Sans } from "next/font/google";
-import { CartProvider }  from "@/lib/cart";
-import { CartDrawer }   from "@/components/cart/CartDrawer";
+import { CartProvider }     from "@/lib/cart";
+import { CartDrawer }      from "@/components/cart/CartDrawer";
+import { AssistantChat }   from "@/components/assistant/AssistantChat";
 import "./globals.css";
 
 const saira = Saira_Condensed({
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <CartProvider>
           {children}
           <CartDrawer />
+          <AssistantChat />
         </CartProvider>
       </body>
     </html>
