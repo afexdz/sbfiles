@@ -15,6 +15,11 @@
  * Idempotent : relancer ne crée aucun doublon.
  * Reprend là où il s'était arrêté grâce aux modfiles_id stockés en base.
  *
+ * Garanties :
+ *   - Ne crée jamais une marque sans modèle (brand créé seulement si ≥1 modèle)
+ *   - Jamais Tesla
+ *   - À la fin : supprime les brands source='modfiles' sans modèle
+ *
  * Cascade API :
  *   /types/cars/marks
  *   ↳ /types/cars/marks/{mark}/models
@@ -22,7 +27,7 @@
  *       ↳ /types/cars/marks/{mark}/models/{model}/engines/{engine}/horsepowers
  *
  * Mapping DB :
- *   mark      → brands   (upsert par slug ; complète modfiles_id si absent)
+ *   mark      → brands   (upsert par slug ; créé seulement si ≥1 modèle)
  *   model     → models   (upsert par brand_id+slug)
  *   hp groupe → periods  (label "2013 › 2017" ou "depuis 2020")
  *   hp item   → engines  (insert si modfiles_id absent)
@@ -132,7 +137,9 @@ function detectFuel(name) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
-  console.log("🚀  Import mod-files → Supabase\n");
+  const startTime = Date.now();
+  console.log("🚀  Import mod-files → Supabase (toutes marques)");
+  console.log(`    Démarré le ${new Date().toISOString()}\n`);
 
   // Récupère l'id de la catégorie voiture
   const { data: cat, error: catErr } = await sb
@@ -162,12 +169,55 @@ async function main() {
     console.log(`→  Filtre activé : ${match.name} (${match.id})\n`);
   }
 
+  console.log(`→  ${marks.length} marques à traiter (sans Tesla)\n`);
+
   const stats = { brands: 0, models: 0, periods: 0, engines: 0, skipped: 0 };
+  const failedBrands = [];  // { id, name, reason }
 
-  for (const mark of marks) {
-    console.log(`\n━━  ${mark.name}  (${mark.id})`);
+  for (let mi = 0; mi < marks.length; mi++) {
+    const mark = marks[mi];
+    const elapsed = Math.round((Date.now() - startTime) / 60000);
+    console.log(`\n━━  [${mi + 1}/${marks.length}] ${mark.name}  (${mark.id})  — +${elapsed}min`);
 
-    // ── Brand : upsert par slug ─────────────────────────────────────────────
+    // ── Charge les modfiles_id déjà importés pour cette marque ─────────────
+    // Ceci gère le resume : si des engines existent déjà pour ce mark, on les skipera.
+    const { data: existingEngines } = await sb
+      .from("engines")
+      .select("modfiles_id")
+      .like("modfiles_id", `${mark.id}/%`)
+      .not("modfiles_id", "is", null);
+
+    const importedIds = new Set((existingEngines ?? []).map((e) => e.modfiles_id));
+
+    // Index des modèles déjà entièrement importés (préfixe mark.id/model.id)
+    const importedModels = new Set();
+    for (const id of importedIds) {
+      const parts = id.split("/");
+      if (parts.length >= 2) importedModels.add(`${parts[0]}/${parts[1]}`);
+    }
+
+    console.log(`  ℹ  ${importedIds.size} moteurs déjà importés, ${importedModels.size} modèles`);
+
+    // ── Récupère les modèles AVANT de créer la brand ────────────────────────
+    await pause();
+    let models;
+    try {
+      const rawModels = await mfApi(`/types/cars/marks/${encodeURIComponent(mark.id)}/models`);
+      models = rawModels.map((m) => m.model).filter(Boolean);
+    } catch (e) {
+      console.warn(`  ✗ /models API échouée : ${e.message}`);
+      failedBrands.push({ id: mark.id, name: mark.name, reason: `/models API: ${e.message}` });
+      continue;
+    }
+
+    console.log(`  → ${models.length} modèles dans l'API`);
+
+    if (!models.length) {
+      console.log("  ⊘  Aucun modèle — marque ignorée (pas créée en base)");
+      continue;
+    }
+
+    // ── Brand : upsert par slug (créé seulement maintenant qu'on a des modèles) ──
     let brandDbId;
     const { data: existingBrand } = await sb
       .from("brands")
@@ -179,9 +229,9 @@ async function main() {
       brandDbId = existingBrand.id;
       if (!existingBrand.modfiles_id) {
         await sb.from("brands").update({ modfiles_id: mark.id }).eq("id", brandDbId);
-        console.log("  ↻ brand existant — modfiles_id ajouté");
+        console.log("  ↻ brand existante — modfiles_id ajouté");
       } else {
-        console.log("  ✓ brand existant");
+        console.log("  ✓ brand existante");
       }
     } else {
       const { data: newBrand, error } = await sb
@@ -196,36 +246,17 @@ async function main() {
         })
         .select("id")
         .single();
-      if (error) { console.error(`  ✗ brand INSERT : ${error.message}`); continue; }
+      if (error) {
+        console.error(`  ✗ brand INSERT : ${error.message}`);
+        failedBrands.push({ id: mark.id, name: mark.name, reason: `brand INSERT: ${error.message}` });
+        continue;
+      }
       brandDbId = newBrand.id;
-      console.log("  + brand créé");
+      console.log("  + brand créée");
       stats.brands++;
     }
 
-    // ── Charge les modfiles_id déjà importés pour cette marque ─────────────
-    const { data: existingEngines } = await sb
-      .from("engines")
-      .select("modfiles_id")
-      .like("modfiles_id", `${mark.id}/%`)
-      .not("modfiles_id", "is", null);
-
-    const importedIds = new Set((existingEngines ?? []).map((e) => e.modfiles_id));
-
-    // Index des modèles déjà importés (première partie du chemin)
-    const importedModels = new Set();
-    for (const id of importedIds) {
-      const slash2 = id.indexOf("/", id.indexOf("/") + 1);
-      if (slash2 !== -1) importedModels.add(id.slice(0, slash2));
-    }
-
-    console.log(`  ℹ  ${importedIds.size} moteurs déjà importés, ${importedModels.size} modèles`);
-
     // ── Modèles ─────────────────────────────────────────────────────────────
-    await pause();
-    const rawModels = await mfApi(`/types/cars/marks/${encodeURIComponent(mark.id)}/models`);
-    const models = rawModels.map((m) => m.model).filter(Boolean);
-    console.log(`  → ${models.length} modèles dans l'API`);
-
     for (const model of models) {
       const modelModfilesId = `${mark.id}/${model.id}`;
 
@@ -379,16 +410,60 @@ async function main() {
     }
   }
 
+  // ── Nettoyage : supprime les brands source='modfiles' sans modèle ─────────
+  console.log("\n\n" + "─".repeat(56));
+  console.log("🧹  Nettoyage — brands modfiles sans modèle");
+
+  const { data: orphanBrands } = await sb
+    .from("brands")
+    .select("id, slug, nom")
+    .eq("source", "modfiles");
+
+  let deleted = 0;
+  for (const brand of (orphanBrands ?? [])) {
+    const { count } = await sb
+      .from("models")
+      .select("id", { count: "exact", head: true })
+      .eq("brand_id", brand.id);
+
+    if ((count ?? 0) === 0) {
+      const { error } = await sb.from("brands").delete().eq("id", brand.id);
+      if (error) {
+        console.warn(`  ✗ DELETE brand ${brand.slug} : ${error.message}`);
+      } else {
+        console.log(`  🗑  Supprimé : ${brand.nom} (${brand.slug})`);
+        deleted++;
+      }
+    }
+  }
+  if (deleted === 0) console.log("  ✓  Aucune brand orpheline");
+
+  // ── Rapport final ─────────────────────────────────────────────────────────
+  const totalMin = Math.round((Date.now() - startTime) / 60000);
   console.log("\n" + "═".repeat(56));
   console.log("📊  Résultat de l'import");
   console.log("═".repeat(56));
-  if (stats.brands > 0) console.log(`  Nouvelles marques     : ${stats.brands}`);
-  console.log(  `  Modèles créés         : ${stats.models}`);
-  console.log(  `  Périodes traitées     : ${stats.periods}`);
-  console.log(  `  Moteurs importés      : ${stats.engines}`);
-  if (stats.skipped > 0) console.log(`  Déjà présents (sautés): ${stats.skipped}`);
+  console.log(`  Durée totale           : ${totalMin} min`);
+  console.log(`  Nouvelles marques      : ${stats.brands}`);
+  console.log(`  Modèles créés          : ${stats.models}`);
+  console.log(`  Périodes traitées      : ${stats.periods}`);
+  console.log(`  Moteurs importés       : ${stats.engines}`);
+  if (stats.skipped > 0)
+    console.log(`  Déjà présents (sautés) : ${stats.skipped}`);
+  if (deleted > 0)
+    console.log(`  Brands orphelines sup. : ${deleted}`);
+
+  if (failedBrands.length > 0) {
+    console.log("\n⚠   Marques en échec :");
+    for (const f of failedBrands) {
+      console.log(`    • ${f.name} (${f.id}) — ${f.reason}`);
+    }
+  } else {
+    console.log("\n✅  Aucune marque en échec.");
+  }
+
   console.log("═".repeat(56));
-  console.log("✅  Terminé.\n");
+  console.log(`✅  Terminé le ${new Date().toISOString()}\n`);
 }
 
 main().catch((err) => {
