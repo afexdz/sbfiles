@@ -2,6 +2,20 @@
 
 ## Variables d'environnement
 
+### API Chiptuning — mod-files.com
+
+```
+MODFILES_API_KEY=your-modfiles-api-key
+MODFILES_API_SECRET=your-modfiles-api-secret
+```
+
+Abonnement requis sur [mod-files.com](https://mod-files.com).  
+Ces variables sont **uniquement lues côté serveur** via `src/lib/modfiles.ts` — elles ne sont jamais exposées au client.
+
+Codes d'erreur : `2` = clés invalides · `3` = pas d'abonnement · `103` = aucun résultat.
+
+---
+
 ### Assistant IA (Anthropic)
 
 ```
