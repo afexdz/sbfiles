@@ -208,9 +208,9 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock", hp
         </span>
       </div>
 
-      {/* Stage buttons */}
+      {/* Stage buttons — E85 masqué pour diesel/hybride */}
       <div className="flex flex-wrap gap-1.5 px-4 sm:px-5 py-3 sm:py-[14px]">
-        {STAGES.map(({ key, label }) => (
+        {STAGES.filter(({ key }) => key !== "e85" || fuelKey === "essence").map(({ key, label }) => (
           <Button
             key={key}
             variant="stage"
@@ -303,6 +303,13 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock", hp
           className="col-span-2 sm:col-span-1 border-t border-line sm:border-t-0 sm:border-l sm:border-line"
         />
       </div>
+
+      {/* Mention "Valeurs estimées" pour S2 et E85 uniquement */}
+      {(stage === "s2" || stage === "e85") && (
+        <div className="border-t border-line bg-soft px-5 py-1.5 text-[11px] text-mute text-center tracking-wide">
+          Valeurs estimées
+        </div>
+      )}
     </div>
   );
 }

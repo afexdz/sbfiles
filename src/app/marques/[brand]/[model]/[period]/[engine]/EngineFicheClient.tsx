@@ -82,6 +82,19 @@ export function EngineFicheClient({
   const nm = engine.nm_stock ?? 380;
   const fmt = (n: number) => n.toLocaleString("fr-FR");
 
+  // Tableau comparatif — S1 réel si disponible, S2/E85 toujours estimés
+  const s1Hp   = engine.ch_stage1 ?? Math.round(hp * 1.27);
+  const s1Nm   = engine.nm_stage1 ?? Math.round(nm * 1.21);
+  const s1Real = engine.ch_stage1 != null && engine.nm_stage1 != null;
+  const showE85 = engine.carburant === "essence";
+
+  type StageRow = { key: string; label: string; chVal: number; nmVal: number; estimated: boolean };
+  const stageRows: StageRow[] = [
+    { key: "s1",  label: "Stage 1",      chVal: s1Hp,               nmVal: s1Nm,               estimated: !s1Real },
+    { key: "s2",  label: "Stage 2",      chVal: Math.round(hp * 1.42), nmVal: Math.round(nm * 1.36), estimated: true },
+    ...(showE85 ? [{ key: "e85", label: "Éthanol E85", chVal: Math.round(hp * 1.33), nmVal: Math.round(nm * 1.30), estimated: true } as StageRow] : []),
+  ];
+
   const showImage       = !!period.image_url && !imgFailed;
   const multipleEngines = engines.length > 1;
   const multiplePeriods = allPeriods.length > 1;
@@ -248,56 +261,39 @@ export function EngineFicheClient({
             <h2 className="font-display text-lg">Comparatif par stage</h2>
           </div>
 
-          {files.length === 0 ? (
-            <div className="px-5 py-8 text-mute text-sm text-center">
-              Fichiers disponibles sur demande.
-            </div>
-          ) : (
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-soft border-b border-line text-xs text-mute uppercase tracking-wider">
-                  <th className="text-left px-5 py-2.5">Stage</th>
-                  <th className="text-right px-4 py-2.5">ch</th>
-                  <th className="text-right px-4 py-2.5">Nm</th>
-                  <th className="text-right px-4 py-2.5">+ch</th>
-                  <th className="text-right px-4 py-2.5">+Nm</th>
-                  <th className="text-right px-4 py-2.5">Tokens</th>
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="bg-soft border-b border-line text-xs text-mute uppercase tracking-wider">
+                <th className="text-left px-5 py-2.5">Stage</th>
+                <th className="text-right px-4 py-2.5">ch</th>
+                <th className="text-right px-4 py-2.5">Nm</th>
+                <th className="text-right px-4 py-2.5">Gain</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-line bg-soft/40">
+                <td className="px-5 py-2.5 font-medium text-mute">Origine</td>
+                <td className="px-4 py-2.5 text-right tabular-nums">{hp}</td>
+                <td className="px-4 py-2.5 text-right tabular-nums">{nm}</td>
+                <td className="px-4 py-2.5 text-right text-mute">—</td>
+              </tr>
+              {stageRows.map((row) => (
+                <tr key={row.key} className="border-b border-line last:border-0 hover:bg-soft/30 transition-colors">
+                  <td className="px-5 py-2.5 font-medium leading-tight">
+                    {row.label}
+                    {row.estimated && (
+                      <span className="block text-[10px] text-mute font-normal mt-px">estimé</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2.5 text-right tabular-nums font-semibold">{row.chVal}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums font-semibold">{row.nmVal}</td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-ok font-medium whitespace-nowrap">
+                    +{row.chVal - hp}&thinsp;ch&ensp;·&ensp;+{row.nmVal - nm}&thinsp;Nm
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-line bg-soft/40">
-                  <td className="px-5 py-2.5 font-medium text-mute">Origine</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums">{hp}</td>
-                  <td className="px-4 py-2.5 text-right tabular-nums">{nm}</td>
-                  <td className="px-4 py-2.5 text-right text-mute">—</td>
-                  <td className="px-4 py-2.5 text-right text-mute">—</td>
-                  <td className="px-4 py-2.5 text-right text-mute">—</td>
-                </tr>
-                {files.map((file) => {
-                  const gainHp = file.ch_tune != null && hp ? file.ch_tune - hp : null;
-                  const gainNm = file.nm_tune != null && nm ? file.nm_tune - nm : null;
-                  return (
-                    <tr key={file.id} className="border-b border-line last:border-0 hover:bg-soft/30 transition-colors">
-                      <td className="px-5 py-2.5 font-medium">{file.tuning_type.nom_fr}</td>
-                      <td className="px-4 py-2.5 text-right tabular-nums font-semibold">{file.ch_tune ?? "—"}</td>
-                      <td className="px-4 py-2.5 text-right tabular-nums font-semibold">{file.nm_tune ?? "—"}</td>
-                      <td className="px-4 py-2.5 text-right tabular-nums text-ok font-medium">
-                        {gainHp != null ? `+${gainHp}` : "—"}
-                      </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums text-ok font-medium">
-                        {gainNm != null ? `+${gainNm}` : "—"}
-                      </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums">
-                        <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs bg-ember-soft text-ember-ink font-semibold">
-                          {file.tuning_type.cout_tokens}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
