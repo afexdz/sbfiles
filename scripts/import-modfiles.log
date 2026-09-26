@@ -1,0 +1,2065 @@
+🚀  Import mod-files → Supabase (toutes marques)
+    Démarré le 2026-09-26T14:31:08.888Z
+
+✓  Catégorie "voiture" : af148de4-5714-4529-80e0-8a6975ee2d12
+✓  122 marques dans l'API
+
+→  121 marques à traiter (sans Tesla)
+
+
+━━  [1/121] BAW  (baw)  — +0min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  ✓ brand existante
+
+━━  [2/121] Ineos  (ineos)  — +0min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : Grenadier
+
+━━  [3/121] GAC  (gac)  — +0min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : GS8
+    + modèle : GS4
+    + modèle : GM8
+    + modèle : GA4
+
+━━  [4/121] Exeed  (exeed)  — +0min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 7 modèles dans l'API
+  + brand créée
+    + modèle : VX
+    + modèle : TX
+    + modèle : RX
+    + modèle : LX
+    + modèle : Lingyun
+    + modèle : Lanyue
+    + modèle : Exlantix ES
+
+━━  [5/121] DFSK  (dfsk)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 5 modèles dans l'API
+  + brand créée
+    + modèle : Fengon 7
+    + modèle : SF5
+    + modèle : Fengon 5
+    + modèle : E5
+    + modèle : 600
+
+━━  [6/121] Dallara  (dallara)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : Stradale
+
+━━  [7/121] Baojun  (baojun)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 7 modèles dans l'API
+  + brand créée
+    + modèle : 730
+    + modèle : 610
+    + modèle : 560
+    + modèle : 510
+    + modèle : 360
+    + modèle : 330
+    + modèle : 310
+
+━━  [8/121] Wiesmann  (wiesmann)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : GT / Roadster
+
+━━  [9/121] Westfield  (westfield)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : FW300
+
+━━  [10/121] SWM  (swm)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 3 modèles dans l'API
+  + brand créée
+    + modèle : X3
+    + modèle : G05
+    + modèle : G01F
+
+━━  [11/121] Tank  (tank)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : 300
+
+━━  [12/121] VinFast  (vinfast)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 3 modèles dans l'API
+  + brand créée
+    + modèle : Lux SA
+    + modèle : Lux A
+    + modèle : President
+
+━━  [13/121] Morgan  (morgan)  — +1min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 8 modèles dans l'API
+  + brand créée
+    + modèle : Midsummer
+    + modèle : Roadster
+    + modèle : Plus 6
+    + modèle : Plus 8
+    + modèle : Aero 8
+    + modèle : 4/4
+    + modèle : 3 Wheeler
+    + modèle : Plus 4
+
+━━  [14/121] Maxus  (maxus)  — +2min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 6 modèles dans l'API
+  + brand créée
+    + modèle : T90
+    + modèle : V90
+    + modèle : G20
+    + modèle : G50
+    + modèle : D60
+    + modèle : T60
+
+━━  [15/121] Haval  (haval)  — +2min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 16 modèles dans l'API
+  + brand créée
+    + modèle : Xiaolong
+    + modèle : Shenshou
+    + modèle : M6
+    + modèle : Jolion
+    + modèle : H9
+    + modèle : H6
+    + modèle : Dargo
+    + modèle : Cool Dog
+    + modèle : Chitu
+    + modèle : H4
+    + modèle : H3
+    + modèle : H2
+    + modèle : H1
+    + modèle : F7
+    + modèle : F5
+    + modèle : Big Dog
+
+━━  [16/121] Haima  (haima)  — +2min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : S5
+    + modèle : F5
+
+━━  [17/121] Hawtai  (hawtai)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : Terracan
+
+━━  [18/121] Chery  (chery)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 8 modèles dans l'API
+  + brand créée
+    + modèle : Exeed TX
+    + modèle : E5
+    + modèle : E3
+    + modèle : Arrizo M7
+    + modèle : Arrizo 7
+    + modèle : A3
+    + modèle : A1
+    + modèle : A13
+
+━━  [19/121] Besturn  (besturn)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : B70
+    + modèle : B50
+
+━━  [20/121] Artega  (artega)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : GT Coupé
+
+━━  [21/121] Polestar  (polestar)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : 1
+
+━━  [22/121] Genesis  (genesis)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 5 modèles dans l'API
+  + brand créée
+    + modèle : GV80
+    + modèle : GV70
+    + modèle : G90
+    + modèle : G80
+    + modèle : G70
+
+━━  [23/121] Secma  (secma)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 3 modèles dans l'API
+  + brand créée
+    + modèle : Fun Buggy
+    + modèle : F16 Turbo
+    + modèle : F16
+
+━━  [24/121] DR  (dr)  — +3min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 7 modèles dans l'API
+  + brand créée
+    + modèle : DR 6
+    + modèle : DR 5
+    + modèle : DR 4
+    + modèle : DR 3
+    + modèle : DR 1
+    + modèle : DR 2
+    + modèle : City Cross
+
+━━  [25/121] SANTANA  (santana)  — +4min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : PS
+
+━━  [26/121] Dongfeng  (dongfeng)  — +4min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 5 modèles dans l'API
+  + brand créée
+    + modèle : Ruijing 6
+    + modèle : Venucia E30
+    + modèle : ix5
+    + modèle : AX4
+    + modèle : AX7
+
+━━  [27/121] Acura  (acura)  — +4min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 10 modèles dans l'API
+  + brand créée
+    + modèle : TLX
+    + modèle : ZDX
+    + modèle : TSX
+    + modèle : TL
+    + modèle : RLX
+    + modèle : RL
+    + modèle : RDX
+    + modèle : MDX
+    + modèle : ILX
+    + modèle : CSX
+
+━━  [28/121] Lynk & Co  (lynk-co)  — +4min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 5 modèles dans l'API
+  + brand créée
+    + modèle : 09
+    + modèle : 05
+    + modèle : 03
+    + modèle : 02
+    + modèle : 01
+
+━━  [29/121] BAIC  (baic)  — +5min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 12 modèles dans l'API
+  + brand créée
+    + modèle : X35
+    + modèle : X25
+    + modèle : X7
+    + modèle : X3
+    + modèle : U5
+    + modèle : D20
+    + modèle : D50
+    + modèle : X65
+    + modèle : X55
+    + modèle : BJ80
+    + modèle : BJ40
+    + modèle : BJ20
+
+━━  [30/121] MAN  (man)  — +5min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : TGE
+
+━━  [31/121] WEY  (wey)  — +5min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : VV7
+    + modèle : VV5
+
+━━  [32/121] JAC  (jac)  — +5min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : T6
+    + modèle : X200
+
+━━  [33/121] Geely  (geely)  — +5min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 19 modèles dans l'API
+  + brand créée
+    + modèle : Okavango
+    + modèle : Tugella
+    + modèle : Starray
+    + modèle : Monjaro
+    + modèle : EX5
+    + modèle : Coolray
+    + modèle : Azkarra
+    + modèle : Emgrand X7
+    + modèle : Emgrand GT
+    + modèle : Bo Rui
+    + modèle : Bin Yue
+    + modèle : Xingyue
+    + modèle : Vision X6
+    + modèle : Vision
+    + modèle : SX11
+    + modèle : Jiaji
+    + modèle : Icon
+    + modèle : Emgrand GL
+    + modèle : Boyue
+
+━━  [34/121] Ariel Motors  (ariel-motors)  — +6min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : Nomad
+    + modèle : Atom 4
+
+━━  [35/121] Scion  (scion)  — +6min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : TC
+    + modèle : FR-S
+
+━━  [36/121] Samsung  (samsung)  — +6min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : QM3
+    + modèle : SM6
+
+━━  [37/121] Rolls Royce  (rolls-royce)  — +6min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 5 modèles dans l'API
+  + brand créée
+    + modèle : Phantom
+    + modèle : Ghost
+    + modèle : Dawn
+    + modèle : Cullinan
+    + modèle : Wraith
+
+━━  [38/121] PGO  (pgo)  — +6min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : Speedster II
+    + modèle : Speedster
+    + modèle : Hemera
+    + modèle : Cevennes
+
+━━  [39/121] Bugatti  (bugatti)  — +7min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 5 modèles dans l'API
+  + brand créée
+    + modèle : La Voiture Noir
+    + modèle : Divo
+    + modèle : Centodieci
+    + modèle : Veyron
+    + modèle : Chiron
+
+━━  [40/121] Alpine  (alpine)  — +7min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : A290
+    + modèle : A110
+
+━━  [41/121] Tata  (tata)  — +7min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 10 modèles dans l'API
+  + brand créée
+    + modèle : Tigor
+    + modèle : Nexon
+    + modèle : Hexa
+    + modèle : Altroz
+    + modèle : Indica
+    + modèle : Tiago
+    + modèle : Harrier
+    + modèle : Vista
+    + modèle : Aria
+    + modèle : Safari/Xenon
+
+━━  [42/121] Cupra  (cupra)  — +7min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 6 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Terramar
+    + modèle : Formentor
+    + modèle : Arona
+    + modèle : Leon
+    + modèle : Ibiza
+    + modèle : Ateca
+
+━━  [43/121] Piaggio  (piaggio)  — +8min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : PORTER MAXXI
+
+━━  [44/121] PAGANI  (pagani)  — +8min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : ZONDA
+    + modèle : HUAYRA C9
+
+━━  [45/121] Maybach  (maybach)  — +8min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 3 modèles dans l'API
+  + brand créée
+    + modèle : 62
+    + modèle : MERCEDES-MAYBACH G650 LANDAULET
+    + modèle : 57
+
+━━  [46/121] LADA  (lada)  — +8min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : Niva
+    + modèle : 112
+    + modèle : 111
+    + modèle : 110
+
+━━  [47/121] KTM  (ktm)  — +8min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : X-Bow
+    + modèle : X-BOW
+
+━━  [48/121] Fisker  (fisker)  — +8min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : KARMA
+
+━━  [49/121] Daihatsu  (daihatsu)  — +8min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 13 modèles dans l'API
+  + brand créée
+    + modèle : YRV
+    + modèle : TREVIS
+    + modèle : TERIOS
+    + modèle : SIRION
+    + modèle : ROCKY WAGON
+    + modèle : MOVE
+    + modèle : Materia
+    + modèle : GRAN MOVE
+    + modèle : FEROZA
+    + modèle : Cuore
+    + modèle : COPEN
+    + modèle : CHARADE
+    + modèle : APPLAUSE
+
+━━  [50/121] Corvette  (corvette)  — +9min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : C6
+
+━━  [51/121] Catheram  (catheram)  — +9min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : Seven
+    + modèle : SUPERSEVEN
+
+━━  [52/121] BORGWARD  (borgward)  — +9min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : BX5
+    + modèle : BX 7
+
+━━  [53/121] Saturn  (saturn)  — +9min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 7 modèles dans l'API
+  + brand créée
+    + modèle : Vue
+    + modèle : Sky
+    + modèle : Relay
+    + modèle : Outlook
+    + modèle : L-Series
+    + modèle : Ion
+    + modèle : Aura
+
+━━  [54/121] Pontiac  (pontiac)  — +9min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 12 modèles dans l'API
+  + brand créée
+    + modèle : Torrent
+    + modèle : Sunfire
+    + modèle : Solstice
+    + modèle : Montana
+    + modèle : GTO
+    + modèle : Grand Prix
+    + modèle : Grand Am
+    + modèle : G8
+    + modèle : G6
+    + modèle : G5
+    + modèle : Firebird
+    + modèle : Bonneville
+
+━━  [55/121] Mercury  (mercury)  — +9min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : Sable
+    + modèle : Mountaineer
+    + modèle : Mariner
+    + modèle : Grand Marquis
+
+━━  [56/121] Vauxhall  (vauxhall)  — +10min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : Zafira
+    + modèle : Vectra
+    + modèle : Insignia
+    + modèle : Astra
+
+━━  [57/121] oldsmobile  (oldsmobile)  — +10min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 3 modèles dans l'API
+  + brand créée
+    + modèle : Silhouette
+    + modèle : Bravada
+    + modèle : Alero
+
+━━  [58/121] McLaren  (mclaren)  — +10min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : Artura
+    + modèle : Ultimate Series
+    + modèle : Super Series
+    + modèle : Sports Series
+
+━━  [59/121] Lotus  (lotus)  — +10min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 6 modèles dans l'API
+  + brand créée
+    + modèle : Emira
+    + modèle : 2-Eleven
+    + modèle : Exige
+    + modèle : Evora
+    + modèle : Europa
+    + modèle : Elise
+
+━━  [60/121] Lincoln  (lincoln)  — +10min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 12 modèles dans l'API
+  + brand créée
+    + modèle : Zephyr
+    + modèle : Corsair
+    + modèle : Aviator
+    + modèle : MKZ
+    + modèle : MKX / Nautilus
+    + modèle : MKC
+    + modèle : Continental
+    + modèle : Towncar
+    + modèle : Navigator
+    + modèle : MKT
+    + modèle : MKS
+    + modèle : LS
+
+━━  [61/121] Lamborghini  (lamborghini)  — +11min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 9 modèles dans l'API
+  + brand créée
+    + modèle : LB634
+    + modèle : Fenomeno
+    + modèle : Countach
+    + modèle : Sian
+    + modèle : Urus
+    + modèle : Murciélago
+    + modèle : Huracan
+    + modèle : Gallardo
+    + modèle : Aventador
+
+━━  [62/121] Hummer  (hummer)  — +11min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 3 modèles dans l'API
+  + brand créée
+    + modèle : H3
+    + modèle : H2
+    + modèle : H1
+
+━━  [63/121] Holden  (holden)  — +11min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 6 modèles dans l'API
+  + brand créée
+    + modèle : Rodeo
+    + modèle : Monaro
+    + modèle : Cruze
+    + modèle : Commodore
+    + modèle : Colorado
+    + modèle : Captiva
+
+━━  [64/121] GMC  (gmc)  — +11min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 10 modèles dans l'API
+  + brand créée
+    + modèle : Hummer
+    + modèle : Yukon
+    + modèle : Terrain
+    + modèle : Sonoma
+    + modèle : Sierra
+    + modèle : Savana
+    + modèle : Safari
+    + modèle : Envoy
+    + modèle : Canyon
+    + modèle : Acadia
+
+━━  [65/121] Ferrari  (ferrari)  — +12min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 34 modèles dans l'API
+  + brand créée
+    + modèle : SC40
+    + modèle : Amalfi
+    + modèle : 849 Testarossa
+    + modèle : 499P
+    + modèle : 296 Competizione
+    + modèle : 12 Cilindri
+    + modèle : Purosangue
+    + modèle : SF90 Stradale
+    + modèle : Roma
+    + modèle : LaFerrari
+    + modèle : F8 Tributo / Spider
+    + modèle : Daytona
+    + modèle : BR20
+    + modèle : 296 GTB
+    + modèle : 812 Superfast
+    + modèle : Portofino
+    + modèle : GTC 4 Lusso
+    + modèle : Enzo
+    + modèle : F150 / La Ferrari
+    + modèle : M575
+    + modèle : FF
+    + modèle : F430
+    + modèle : F12 Berlinetta
+    + modèle : California
+    + modèle : 612 Scaglietti
+    + modèle : 599 GTO
+    + modèle : 599 GTB
+    + modèle : 512TR
+    + modèle : 488 GTB/Spider
+    + modèle : 458 Italia
+    + modèle : 456
+    + modèle : 360 Modena/Spider
+    + modèle : 355 GTS/GTB/Spider
+    + modèle : 348 GTS/GTB/Spider
+
+━━  [66/121] Roewe  (roewe)  — +13min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : 550
+
+━━  [67/121] Mahindra  (mahindra)  — +13min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 10 modèles dans l'API
+  + brand créée
+    + modèle : XUV300
+    + modèle : XUV700
+    + modèle : Imperio
+    + modèle : Bolero
+    + modèle : Thar
+    + modèle : Xylo
+    ✗ engine INSERT (mahindra/xylo/crdi/2.5) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : XUV500
+    + modèle : Scorpio
+    + modèle : Quanto
+    + modèle : Genio
+
+━━  [68/121] Luxgen  (luxgen)  — +13min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 7 modèles dans l'API
+  + brand créée
+    + modèle : U5
+    + modèle : S3
+    + modèle : V7
+    + modèle : U7
+    + modèle : M7
+    + modèle : U6
+    + modèle : S5
+
+━━  [69/121] Lexus  (lexus)  — +14min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 16 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : TX
+    + modèle : LM
+    + modèle : LBX
+    + modèle : HS
+    + modèle : GX
+    + modèle : LX
+    + modèle : LC
+    + modèle : UX
+    + modèle : RX
+    + modèle : RC
+    + modèle : NX
+    + modèle : LS
+    + modèle : CT
+    + modèle : ES
+    + modèle : GS
+    + modèle : IS
+
+━━  [70/121] DS  (ds)  — +15min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 8 modèles dans l'API
+  + brand créée
+    + modèle : DS9
+    + modèle : DS8
+    + modèle : DS3 Crossback
+    + modèle : DS7 Crossback
+    + modèle : DS5
+    ✗ engine INSERT (ds/ds5/bluehdi/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : DS4 Crossback
+    + modèle : DS4
+    + modèle : DS3 - Cabrio
+    ✗ engine INSERT (ds/ds3-cabrio/puretech/1.2) : duplicate key value violates unique constraint "engines_period_nom_key"
+
+━━  [71/121] Daewoo  (daewoo)  — +16min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : Winstorm
+    + modèle : Tosca
+    + modèle : Nubira
+    + modèle : Matiz
+
+━━  [72/121] Bentley  (bentley)  — +16min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 10 modèles dans l'API
+  + brand créée
+    + modèle : Arnage
+    + modèle : Bacalar
+    + modèle : Continental Supersports
+    + modèle : Continental Flying Spur
+    + modèle : Mulsanne
+    + modèle : Continental GTC
+    ✗ engine INSERT (bentley/continental-gtc/tfsi-v8/4.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Continental GT3-R
+    + modèle : Continental GT Speed
+    + modèle : Bentayga
+    + modèle : Continental GT/S
+
+━━  [73/121] Alpina  (alpina)  — +17min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 17 modèles dans l'API
+  + brand créée
+    + modèle : XB7
+    + modèle : XD4
+    + modèle : D5 S
+    + modèle : D3 S
+    + modèle : B8
+    + modèle : B4 S
+    + modèle : XD3
+    + modèle : D5
+    + modèle : D4
+    + modèle : D3
+    + modèle : B7
+    + modèle : B6 S
+    + modèle : B6
+    + modèle : B5
+    + modèle : B4
+    + modèle : B3 S
+    + modèle : B3
+
+━━  [74/121] Abarth  (abarth)  — +18min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 3 modèles dans l'API
+  + brand créée
+    + modèle : 124 Spider
+    + modèle : Punto
+    ✗ engine INSERT (abarth/punto/t-jet/1.4) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : 500
+
+━━  [75/121] Suzuki  (suzuki)  — +18min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 19 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Swace
+    + modèle : XL6
+    + modèle : Ciaz
+    + modèle : Across
+    + modèle : Escudo
+    + modèle : Reno
+    + modèle : Baleno
+    + modèle : XL7
+    + modèle : Vitara
+    + modèle : Wagon R
+    + modèle : Swift
+    + modèle : Splash
+    + modèle : SX4 S-Cross
+    + modèle : SX4
+    + modèle : Liana
+    + modèle : Kizashi
+    + modèle : Jimny
+    + modèle : Ignis
+    + modèle : Grand Vitara
+
+━━  [76/121] Subaru  (subaru)  — +19min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 12 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : WRX
+    + modèle : Liberty
+    + modèle : Ascent
+    + modèle : Levorg
+    + modèle : XV
+    + modèle : Tribeca
+    + modèle : Trezia
+    + modèle : Outback
+    + modèle : Legacy
+    + modèle : Impreza
+    + modèle : Forester
+    + modèle : BRZ
+
+━━  [77/121] SsangYong  (ssangyong)  — +20min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 8 modèles dans l'API
+  + brand créée
+    + modèle : XLV
+    + modèle : Tivoli
+    + modèle : Musso
+    + modèle : Rodius
+    + modèle : Rexton
+    + modèle : Kyron
+    + modèle : Korando
+    + modèle : Actyon
+
+━━  [78/121] Smart  (smart)  — +20min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 7 modèles dans l'API
+  + brand créée
+    + modèle : #3
+    + modèle : #1
+    + modèle : Roadster
+    + modèle : ForTwo
+    + modèle : ForFour
+    + modèle : Crossblade
+    + modèle : City
+
+━━  [79/121] Saab  (saab)  — +21min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 4 modèles dans l'API
+  + brand créée
+    + modèle : 900 Cabriolet
+    + modèle : 9-5
+    + modèle : 9-4 X
+    + modèle : 9-3
+
+━━  [80/121] Rover  (rover)  — +21min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  + brand créée
+    + modèle : 25
+    + modèle : 75
+
+━━  [81/121] Porsche  (porsche)  — +21min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 9 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Taycan
+    + modèle : 918
+    + modèle : Panamera
+    + modèle : Macan
+    ✗ engine INSERT (porsche/macan/tdi-s/3-0-v6-) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Cayman
+    + modèle : Cayenne
+    + modèle : Carrera GT
+    + modèle : Boxster
+    + modèle : 911
+
+━━  [82/121] Mitsubishi  (mitsubishi)  — +23min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 21 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : RVR
+    + modèle : Xforce
+    + modèle : Mirage
+    + modèle : Delica Mini
+    + modèle : Xpander
+    + modèle : Montero
+    + modèle : Eclipse Cross
+    + modèle : Fuso
+    + modèle : EVO
+    + modèle : Delica
+    + modèle : Lancer EVO
+    + modèle : Triton
+    + modèle : Spacestar
+    + modèle : Pajero
+    + modèle : Outlander
+    + modèle : Lancer
+    + modèle : L200
+    + modèle : Grandis
+    + modèle : Colt
+    ✗ engine INSERT (mitsubishi/colt/di-d/1.5) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Carisma
+    + modèle : ASX
+
+━━  [83/121] Mini  (mini)  — +24min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 9 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Aceman
+    + modèle : Roadster
+    + modèle : Paceman
+    + modèle : One
+    + modèle : Countryman
+    + modèle : Cooper S D
+    + modèle : Cooper S
+    + modèle : Cooper
+    + modèle : Clubman
+
+━━  [84/121] Maserati  (maserati)  — +25min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 11 modèles dans l'API
+  + brand créée
+    + modèle : MCXtrema
+    + modèle : MC20
+    + modèle : Grancabrio
+    + modèle : Grecale
+    + modèle : Gransport
+    + modèle : 3200 GT
+    + modèle : Levante
+    + modèle : Quattroporte
+    + modèle : GranTurismo
+    + modèle : Ghibli
+    + modèle : 4200 GT / Coupé
+
+━━  [85/121] MG  (mg)  — +26min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 21 modèles dans l'API
+  + brand créée
+    + modèle : One
+    + modèle : QS
+    + modèle : V80
+    + modèle : MG7
+    + modèle : MG6
+    + modèle : MG5
+    + modèle : MG3
+    + modèle : HES
+    + modèle : EHS
+    + modèle : RX8
+    + modèle : RX5
+    + modèle : Pilot
+    + modèle : HS
+    + modèle : Hector
+    + modèle : GT
+    + modèle : Extender
+    + modèle : 3 SW
+    + modèle : ZT
+    + modèle : ZS
+    + modèle : 6
+    + modèle : 550
+
+━━  [86/121] Lancia  (lancia)  — +27min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 9 modèles dans l'API
+  + brand créée
+    + modèle : Ypsilon
+    + modèle : Voyager
+    + modèle : Thesis
+    + modèle : Thema
+    + modèle : Phedra
+    + modèle : Musa
+    + modèle : Lybra
+    + modèle : Kappa
+    + modèle : Delta
+
+━━  [87/121] Jeep  (jeep)  — +27min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 13 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Recon
+    + modèle : Meridian
+    + modèle : Avenger
+    + modèle : Wagoneer
+    + modèle : Gladiator
+    + modèle : Renegade
+    ✗ engine INSERT (jeep/renegade/jtdm/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Liberty
+    + modèle : Wrangler
+    + modèle : Patriot
+    + modèle : Grand Cherokee
+    + modèle : Compass
+    + modèle : Commander
+    + modèle : Cherokee
+
+━━  [88/121] Jaguar  (jaguar)  — +29min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 15 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : XK8
+    + modèle : I Pace
+    + modèle : XFR-S
+    ✗ engine INSERT (jaguar/xfr-s/supercharged/5.0-v8) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : XKR-S
+    + modèle : XK coupé
+    + modèle : E Pace
+    + modèle : XKR
+    + modèle : XE
+    ✗ engine INSERT (jaguar/xe/supercharged/3.0-v6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : F Pace
+    + modèle : XJ
+    + modèle : XF Sportbrake
+    + modèle : XF
+    + modèle : X Type
+    + modèle : S Type
+    + modèle : F type
+
+━━  [89/121] Isuzu  (isuzu)  — +30min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 6 modèles dans l'API
+  + brand créée
+    + modèle : M21
+    + modèle : MU-X
+    + modèle : N-series
+    + modèle : I-Series
+    + modèle : Ascender
+    + modèle : D-Max
+
+━━  [90/121] Infiniti  (infiniti)  — +31min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 18 modèles dans l'API
+  + brand créée
+    + modèle : ESQ
+    + modèle : QX55
+    + modèle : QX56
+    + modèle : QX60
+    + modèle : QX80
+    + modèle : G25
+    + modèle : G35
+    + modèle : QX30
+    + modèle : Q70
+    + modèle : Q60
+    + modèle : Q30
+    + modèle : G37/M37
+    + modèle : QX70
+    + modèle : QX50
+    + modèle : Q50
+    + modèle : M
+    + modèle : FX
+    + modèle : EX
+
+━━  [91/121] GWM  (gwm)  — +31min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 13 modèles dans l'API
+  + brand créée
+    + modèle : Wey G9
+    + modèle : Wingle 5
+    + modèle : Tank 500
+    + modèle : Tank 300
+    + modèle : Poer
+    + modèle : Cannon Alpha
+    + modèle : Haval H9
+    + modèle : H3
+    + modèle : V80
+    + modèle : Steed 5
+    + modèle : H5
+    + modèle : H6
+    + modèle : C50
+
+━━  [92/121] Changan  (changan)  — +32min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 1 modèles dans l'API
+  + brand créée
+    + modèle : Raeton
+
+━━  [93/121] Buick  (buick)  — +32min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 19 modèles dans l'API
+  + brand créée
+    + modèle : GL8
+    + modèle : GL6
+    + modèle : Enclave (China)
+    + modèle : Encore
+    + modèle : Ankela
+    + modèle : Verano
+    + modèle : Terraza
+    + modèle : Rendezvous
+    + modèle : Rainier
+    + modèle : Park Avenue
+    + modèle : Lucerne
+    + modèle : Lesabre
+    + modèle : Lacrosse
+    + modèle : Envision
+    + modèle : Enclave
+    + modèle : Century
+    + modèle : Cascada
+    + modèle : Regal
+    + modèle : Excelle GT
+
+━━  [94/121] Mazda  (mazda)  — +33min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 23 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : CX-90
+    + modèle : CX-80
+    + modèle : CX-70
+    + modèle : CX-60
+    + modèle : CX-50
+    ✗ engine INSERT (mazda/cx-50/skyactiv-g/2-5) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : CX-8
+    + modèle : CX-4
+    + modèle : 323
+    + modèle : CX-30
+    + modèle : CX-9
+    ✗ engine INSERT (mazda/cx-9/skyactiv-g/2.5) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Tribute
+    + modèle : RX-8
+    + modèle : CX-3
+    ✗ engine INSERT (mazda/cx-3/skyactiv-g/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Mazda 6
+    + modèle : Mazda 5
+    + modèle : Mazda 3
+    + modèle : Mazda 2
+    + modèle : MX-5
+    + modèle : MPV
+    + modèle : MPS
+    + modèle : CX-7
+    + modèle : CX-5
+    + modèle : BT-50
+
+━━  [95/121] Iveco  (iveco)  — +34min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 2 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Massif
+    + modèle : Daily
+
+━━  [96/121] Volvo  (volvo)  — +35min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 17 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : P1800 Cyan
+    + modèle : XC40
+    + modèle : V60 Cross Country
+    + modèle : S90 / V90
+    + modèle : XC90
+    + modèle : XC70
+    + modèle : XC60
+    ✗ engine INSERT (volvo/xc60/t6/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : V70
+    + modèle : V60
+    ✗ engine INSERT (volvo/v60/t6-(polestar)/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : V50
+    + modèle : V40 / V40 Cross Country
+    + modèle : S80
+    + modèle : S70
+    + modèle : S60
+    + modèle : S40
+    ✗ engine INSERT (volvo/s40/d4/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : C70
+    + modèle : C30
+
+━━  [97/121] Toyota  (toyota)  — +39min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 53 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Yaris Cross
+    + modèle : Wildlander
+    + modèle : Veloz
+    + modèle : Voxy
+    + modèle : Venza
+    + modèle : Starlet Cross
+    + modèle : Sequoia
+    + modèle : Rush
+    + modèle : ProAce Max
+    + modèle : Land Cruiser Prado
+    + modèle : Innova
+    + modèle : GR86
+    + modèle : Granvia
+    + modèle : Corolla Cross
+    + modèle : Copen
+    + modèle : Century SUV
+    + modèle : Century
+    + modèle : Prius/Prius +
+    + modèle : ProAce City
+    + modèle : Mirai
+    + modèle : Harrier
+    + modèle : Agya
+    + modèle : Crown
+    + modèle : Quantum
+    + modèle : Highlander
+    + modèle : Tacoma
+    + modèle : Tundra
+    + modèle : Avelon
+    + modèle : Alphard
+    + modèle : 4Runner
+    + modèle : Vellfire
+    + modèle : camry
+    + modèle : Supra (GR)
+    + modèle : Corolla Verso
+    + modèle : FJ Cruiser
+    + modèle : Fortuner
+    + modèle : ProAce / ProAce Verso
+    + modèle : C-HR
+    + modèle : Verso
+    + modèle : Yaris
+    + modèle : Verso S
+    + modèle : Urban Cruiser
+    + modèle : Rav4
+    + modèle : Previa
+    + modèle : Land Cruiser
+    + modèle : IQ
+    + modèle : Hiace
+    + modèle : GT86
+    + modèle : Corolla
+    + modèle : Aygo
+    + modèle : Avensis
+    + modèle : Auris
+
+━━  [98/121] Land Rover  (land-rover)  — +43min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 7 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Discovery
+
+━━  [99/121] Skoda  (skoda)  — +44min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 12 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Enyaq
+    + modèle : Scala
+    + modèle : Kamiq
+    + modèle : Kodiaq
+    ✗ engine INSERT (skoda/kodiaq/tsi/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Karoq
+    + modèle : Yeti
+    + modèle : Superb
+    + modèle : Roomster
+    + modèle : Rapid
+    ✗ engine INSERT (skoda/rapid/tsi/1.4) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Octavia
+    + modèle : Fabia
+    + modèle : Citigo
+
+━━  [100/121] Kia  (kia)  — +46min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 38 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Syros
+    + modèle : Tasman
+    + modèle : EV9
+    + modèle : EV6
+    + modèle : EV3
+    + modèle : Sonet
+    + modèle : ProCeed
+    + modèle : KX7
+    + modèle : KX3
+    + modèle : Pride
+    + modèle : Opirus
+    + modèle : Joice
+    + modèle : Cadenza
+    + modèle : Borrego
+    + modèle : Bongo
+    + modèle : Forte
+    + modèle : K9
+    + modèle : Niro
+    + modèle : K5
+    + modèle : K7
+    + modèle : Mohave
+    + modèle : Seltos
+    + modèle : Telluride
+    + modèle : Xceed
+    + modèle : Stinger
+    + modèle : Stonic
+    ✗ engine INSERT (kia/stonic/crdi/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Venga
+    ✗ engine INSERT (kia/venga/crdi/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Sportage
+    ✗ engine INSERT (kia/sportage/t-gdi-phev/1-6-) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Soul
+    ✗ engine INSERT (kia/soul/crdi/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Sorento
+    + modèle : Rio
+    + modèle : Picanto
+    + modèle : Optima
+    + modèle : Magentis
+    + modèle : Cerato
+    + modèle : Ceed
+    ✗ engine INSERT (kia/ceed/crdi/1-4) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Carnival
+    + modèle : Carens
+
+━━  [101/121] Nissan  (nissan)  — +49min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 48 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Z
+    + modèle : Townstar
+    + modèle : Titan
+    + modèle : Terra
+    + modèle : Rogue
+    + modèle : NV350
+    + modèle : Maxima
+    + modèle : Livina
+    + modèle : Kicks
+    + modèle : Elgrand
+    + modèle : Armada
+    + modèle : Altima
+    + modèle : Skyline
+    + modèle : Versa
+    + modèle : Quest
+    + modèle : Fuga
+    + modèle : Frontier
+    + modèle : NV250
+    + modèle : Leaf
+    + modèle : Tiida
+    ✗ engine INSERT (nissan/tiida/dig-t/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Sentra
+    + modèle : NV300
+    ✗ engine INSERT (nissan/nv300/dci-(euro-6)/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Cabstar / NT400
+    + modèle : Atleon / NT 500
+    + modèle : Terrano 2
+    + modèle : Pulsar
+    + modèle : Evalia
+    + modèle : Cube
+    + modèle : X-Trail
+    + modèle : Qashqai
+    + modèle : Primera
+    + modèle : Primastar
+    + modèle : Patrol
+    + modèle : Pathfinder
+    + modèle : Note
+    + modèle : Navara
+    + modèle : NV400
+    ✗ engine INSERT (nissan/nv400/dci/2.3) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : NV200
+    ✗ engine INSERT (nissan/nv200/dci/1.5) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : NP300
+    + modèle : Murano
+    + modèle : Micra
+    + modèle : Kubistar
+    + modèle : Juke
+    + modèle : Interstar
+    + modèle : GT-R
+    + modèle : Almera
+    + modèle : 370Z
+    + modèle : 350Z
+
+━━  [102/121] Opel  (opel)  — +51min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 27 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Rocks-e
+    + modèle : Karl
+    + modèle : Grandland
+    + modèle : Crossland
+    + modèle : Zafira Life
+    + modèle : Grandland X
+    + modèle : Crossland X
+    + modèle : Zafira
+    + modèle : Vivaro
+    + modèle : Vectra
+    + modèle : Tigra (Twintop)
+    + modèle : Speedster
+    + modèle : Signum
+    + modèle : Omega
+    + modèle : Movano
+    + modèle : Mokka
+    + modèle : Meriva
+    + modèle : Insignia
+    + modèle : GT
+    + modèle : Frontera
+    + modèle : Corsa
+    + modèle : Combo
+    + modèle : Cascada
+    + modèle : Astra
+    + modèle : Antara
+    + modèle : Agila
+    + modèle : Adam
+
+━━  [103/121] Seat  (seat)  — +55min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 13 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Tarraco
+    + modèle : Arona
+    + modèle : Ateca
+    ✗ engine INSERT (seat/ateca/tdi/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Toledo
+    + modèle : Mii
+    + modèle : Leon
+    + modèle : Ibiza
+    + modèle : Exeo
+    + modèle : Cordoba
+    + modèle : Arosa
+    + modèle : Altea FreeTrack
+    + modèle : Altea / XL
+    + modèle : Alhambra
+
+━━  [104/121] Mercedes-Benz  (mercedes-benz)  — +57min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 39 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Marco Polo
+    + modèle : CLE
+    + modèle : AMG One
+    + modèle : T
+    + modèle : Maybach
+    + modèle : AMG GT Coupé / Roadster
+    + modèle : AMG GT 4-door Coupé
+    + modèle : GLB
+    + modèle : X
+    + modèle : SLC
+    + modèle : GT
+    + modèle : GLS
+    + modèle : GLE
+    + modèle : GLC
+    + modèle : Vito
+    + modèle : Viano
+    + modèle : Vaneo
+    + modèle : V-Klasse
+    + modèle : Sprinter
+    + modèle : SLS
+    + modèle : SLK
+    + modèle : SL
+    + modèle : S
+    + modèle : R
+    + modèle : ML
+    + modèle : GLK
+    + modèle : GLA
+    + modèle : GL
+    + modèle : G
+    + modèle : E
+    + modèle : Citan
+    + modèle : CLS
+    + modèle : CLK
+    + modèle : CLC
+    + modèle : CLA
+    + modèle : CL
+    + modèle : C
+    + modèle : B
+    + modèle : A
+
+━━  [105/121] Volkswagen  (volkswagen)  — +64min
+  ℹ  416 moteurs déjà importés, 46 modèles
+  → 48 modèles dans l'API
+  ✓ brand existante
+
+━━  [106/121] Peugeot  (peugeot)  — +64min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 34 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : 309
+    + modèle : Pick Up
+    + modèle : Landtrek
+    + modèle : Traveller
+    + modèle : 301
+    + modèle : Rifter
+    + modèle : 6008
+    + modèle : RCZ
+    + modèle : Expert
+    ✗ engine INSERT (peugeot/expert/bluehdi/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    ✗ engine INSERT (peugeot/expert/hdi/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    ✗ engine INSERT (peugeot/expert/hdi/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Boxer
+    + modèle : Bipper
+    + modèle : 807
+    + modèle : 806
+    + modèle : 607
+    + modèle : 508
+    + modèle : 5008
+    + modèle : 408
+    + modèle : 407
+    ✗ engine INSERT (peugeot/407/hdi/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : 406
+    + modèle : 4008
+    + modèle : 4007
+    + modèle : 308
+    + modèle : 307
+    + modèle : 306
+    ✗ engine INSERT (peugeot/306/hdi/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : 3008
+    + modèle : 208
+    + modèle : 207
+    + modèle : 206
+    + modèle : 2008
+    + modèle : 108
+    + modèle : 107
+    + modèle : 106
+    + modèle : 1007
+
+━━  [107/121] Renault  (renault)  — +67min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 34 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Kardian
+    + modèle : ZOE
+    + modèle : Rafale
+    + modèle : Megane E-Tech
+    + modèle : Duster
+    + modèle : Austral
+    + modèle : Triber
+    + modèle : Kwid
+    + modèle : Kiger
+    + modèle : Express Van
+    + modèle : Arkana
+    + modèle : Alaskan
+    + modèle : Talisman
+    + modèle : Kadjar
+    + modèle : Wind
+    + modèle : Vel Satis
+    + modèle : Twingo
+    + modèle : Trafic
+    + modèle : Scenic
+    + modèle : Modus
+    + modèle : Megane
+    + modèle : Maxity
+    + modèle : Master
+    ✗ engine INSERT (renault/master/dci/2-3) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Mascott
+    + modèle : Latitude
+    ✗ engine INSERT (renault/latitude/dci/3.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Laguna Coupé
+    ✗ engine INSERT (renault/laguna-coupe/dci/3.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Laguna
+    + modèle : Koleos
+    ✗ engine INSERT (renault/koleos/dci/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Kangoo
+    + modèle : Fluence
+    + modèle : Espace
+    + modèle : Clio
+    + modèle : Captur / QM3
+    + modèle : Avantime
+
+━━  [108/121] Hyundai  (hyundai)  — +71min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 43 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Staria
+    + modèle : Solaris
+    + modèle : Santa Cruz
+    + modèle : Ioniq
+    + modèle : i800
+    + modèle : H350
+    + modèle : H-1
+    + modèle : Celesta
+    + modèle : Bayon
+    + modèle : Aura
+    + modèle : Venue
+    + modèle : Nexo
+    + modèle : Lafesta
+    + modèle : Palisade
+    + modèle : ix25 / Creta
+    + modèle : Porter
+    + modèle : Coupe
+    + modèle : Azera
+    + modèle : Avante Sport
+    + modèle : Kona
+    + modèle : ix55
+    + modèle : ix45
+    + modèle : ix35
+    + modèle : ix20
+    + modèle : i40
+    ✗ engine INSERT (hyundai/i40/crdi/1.7) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : i30
+    + modèle : i20
+    + modèle : i10
+    + modèle : Verna
+    + modèle : Veloster
+    + modèle : Trajet
+    + modèle : Terracan
+    + modèle : Starex
+    + modèle : Sonota
+    + modèle : Santa Fe
+    + modèle : Matrix
+    + modèle : H-Serie
+    + modèle : Grandeur
+    + modèle : Getz
+    + modèle : Genesis
+    + modèle : Elantra
+    + modèle : Accent
+    ✗ engine INSERT (hyundai/accent/crdi/1.6) : duplicate key value violates unique constraint "engines_period_nom_key"
+
+━━  [109/121] Honda  (honda)  — +74min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 34 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Z-RV
+    + modèle : Elevate
+    + modèle : XR-V
+    + modèle : Pilot
+    + modèle : Passport
+    + modèle : Mobilio
+    + modèle : Legend
+    + modèle : Jade
+    + modèle : Integra
+    + modèle : Fit
+    + modèle : Freed
+    + modèle : Brio
+    + modèle : Amaze
+    + modèle : Jazz
+    + modèle : Insight
+    + modèle : WR-V
+    + modèle : Vezel
+    + modèle : Odyssey
+    + modèle : Crider
+    + modèle : CR-Z
+    + modèle : City
+    + modèle : BR-V
+    + modèle : Breeze
+    + modèle : Avencier
+    + modèle : UR-V
+    + modèle : Ridgeline
+    + modèle : Stepwgn
+    + modèle : NSX
+    + modèle : S2000
+    + modèle : HR-V
+    + modèle : FR-V
+    + modèle : Civic
+    + modèle : CR-V
+    + modèle : Accord
+
+━━  [110/121] Ford  (ford)  — +77min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 53 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Mondeo Sport
+    + modèle : Maverick
+    + modèle : Evos
+    + modèle : Equator Sport
+    + modèle : Equator
+    + modèle : Bronco Sport
+    + modèle : Territory
+    + modèle : Puma
+    + modèle : GT
+    + modèle : Everest
+    + modèle : Bronco
+    ✗ engine INSERT (ford/bronco/ecoboost/2-7t) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Tourneo Custom
+    + modèle : Ranger Raptor
+    + modèle : Figo
+    + modèle : Taurus
+    + modèle : Sport trac
+    + modèle : Raptor
+    + modèle : Freestyle
+    + modèle : Freestar
+    + modèle : Flex
+    + modèle : Five Hundred
+    + modèle : F-550
+    + modèle : F-450
+    + modèle : F-350
+    + modèle : F-250
+    + modèle : F-150
+    + modèle : Explorer
+    + modèle : Expedition
+    + modèle : Excursion
+    + modèle : Escape
+    + modèle : E-Series
+    + modèle : Crown Victoria
+    + modèle : Tourneo Connect
+    + modèle : Fusion (USA)
+    + modèle : Edge
+    + modèle : Transit Custom
+    ✗ engine INSERT (ford/transit-custom/tdci-ecoblue/2-0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Transit Courier
+    ✗ engine INSERT (ford/transit-courier/tdci/1.5) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Transit Connect
+    + modèle : Transit
+    + modèle : Tourneo
+    + modèle : S-Max
+    + modèle : Ranger
+    ✗ engine INSERT (ford/ranger/ecoblue/3-0-v6) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Mustang
+    + modèle : Mondeo
+    + modèle : Kuga
+    + modèle : Ka / Ka+
+    + modèle : Galaxy
+    + modèle : Fusion
+    + modèle : Focus
+    + modèle : Fiesta
+    ✗ engine INSERT (ford/fiesta/mhev/1-0t-ecoboost) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : EcoSport
+    ✗ engine INSERT (ford/ecosport/ecoblue/1.5) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : C-Max
+    + modèle : B-Max
+
+━━  [111/121] Fiat  (fiat)  — +82min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 40 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Topolino
+    + modèle : Pulse
+    + modèle : Grande Panda
+    + modèle : Fastback
+    ✗ engine INSERT (fiat/fastback/multiair/1-3-) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Argo
+    + modèle : 600
+    + modèle : Mobi
+    + modèle : Uno
+    + modèle : Cronos
+    + modèle : Toro
+    + modèle : Linea
+    + modèle : Fullback
+    + modèle : 124 Spider
+    + modèle : Tipo
+    + modèle : Talento
+    + modèle : 500X
+    + modèle : Viaggio
+    + modèle : Ulysse
+    + modèle : Strada
+    + modèle : Stilo
+    + modèle : Sedici
+    + modèle : Scudo
+    + modèle : Qubo
+    + modèle : Punto EVO
+    + modèle : Punto
+    + modèle : Panda
+    + modèle : Ottimo
+    + modèle : Multipla
+    + modèle : Marea
+    + modèle : Idea
+    + modèle : Grande Punto
+    + modèle : Freemont
+    + modèle : Fiorino
+    + modèle : Ducato
+    + modèle : Croma
+    + modèle : Bravo
+    + modèle : Brava
+    + modèle : 500L
+    + modèle : 500
+
+━━  [112/121] Dodge  (dodge)  — +86min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 15 modèles dans l'API
+  + brand créée
+    + modèle : Hornet
+    + modèle : Neon
+    + modèle : Magnum
+    + modèle : Viper
+    + modèle : Ram
+    + modèle : Durango
+    + modèle : Dart
+    + modèle : Charger
+    + modèle : Dakota
+    + modèle : Challenger
+    + modèle : Caravan
+    + modèle : Nitro
+    + modèle : Journey
+    + modèle : Caliber
+    + modèle : Avenger
+
+━━  [113/121] Dacia  (dacia)  — +87min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 8 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Bigster
+    + modèle : Spring
+    + modèle : Jogger
+    ✗ engine INSERT (dacia/jogger/tce/1-0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Sandero
+    + modèle : Logan
+    ✗ engine INSERT (dacia/logan/tce/1-0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Lodgy
+    + modèle : Duster
+    + modèle : Dokker
+    ✗ engine INSERT (dacia/dokker/dci/1.5) : duplicate key value violates unique constraint "engines_period_nom_key"
+
+━━  [114/121] Citroën  (citroen)  — +88min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 29 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Saxo
+    + modèle : C5 Aircross
+    + modèle : SpaceTourer
+    + modèle : C3-XR
+    + modèle : Synergie
+    + modèle : EVASION
+    + modèle : C3 Aircross
+    + modèle : C-Elysée
+    + modèle : Xsara Picasso
+    + modèle : Xantia
+    + modèle : Nemo
+    + modèle : Jumpy
+    + modèle : Jumper
+    ✗ engine INSERT (citroen/jumper/hdi/2.2) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : DS5
+    + modèle : DS4
+    + modèle : DS3
+    + modèle : C8
+    + modèle : C6
+    + modèle : C5
+    + modèle : C4 Picasso / C4 Space Tourer
+    + modèle : C4 Cactus
+    + modèle : C4 Aircross
+    + modèle : C4
+    + modèle : C3 Picassso
+    + modèle : C3
+    + modèle : C2
+    + modèle : C1
+    + modèle : C-Crosser
+    + modèle : Berlingo
+
+━━  [115/121] Chrysler  (chrysler)  — +92min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 10 modèles dans l'API
+  + brand créée
+    + modèle : Town Country MPV
+    + modèle : Pacifica
+    + modèle : Aspen
+    + modèle : 200
+    + modèle : Voyager
+    + modèle : Sebring
+    + modèle : PT Cruiser
+    + modèle : Grand Voyager
+    + modèle : Crossfire
+    + modèle : 300C
+
+━━  [116/121] Chevrolet  (chevrolet)  — +92min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 46 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Spin
+    + modèle : Rezzo
+    + modèle : N300
+    + modèle : Beat
+    + modèle : Sonic
+    + modèle : Onix
+    + modèle : Monza
+    + modèle : D-Max
+    + modèle : Cheyenne
+    + modèle : Venture
+    + modèle : Uplander
+    + modèle : Traverse
+    + modèle : Trailblazer
+    + modèle : Tahoe
+    + modèle : Suburban
+    + modèle : SSR
+    + modèle : SS
+    + modèle : Silverado
+    + modèle : S10
+    + modèle : Nubira
+    + modèle : Monte Carlo
+    + modèle : Lumina
+    + modèle : Impala
+    + modèle : Express
+    + modèle : Equinox
+    + modèle : Corvette ZR1
+    + modèle : Corvette Z06
+    + modèle : Corvette
+    + modèle : Colorado
+    + modèle : Cobalt
+    + modèle : Cavelier
+    + modèle : Caprice
+    + modèle : Blazer
+    + modèle : Avalanche
+    + modèle : Astro
+    + modèle : Malibu
+    + modèle : HHR
+    + modèle : Trax
+    + modèle : Spark
+    + modèle : Orlando
+    + modèle : Lacetti
+    + modèle : Epica
+    + modèle : Cruze
+    + modèle : Captiva
+    + modèle : Camaro
+    + modèle : Aveo
+
+━━  [117/121] Cadillac  (cadillac)  — +94min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 17 modèles dans l'API
+  + brand créée
+    + modèle : XT6
+    + modèle : XT4
+    + modèle : CT6
+    + modèle : CT5
+    + modèle : CT4
+    + modèle : XTS
+    + modèle : XT5
+    + modèle : XLR
+    + modèle : STS
+    + modèle : SRX
+    + modèle : SLS
+    + modèle : Escalade
+    + modèle : DTS
+    + modèle : ATS
+    + modèle : Seville
+    + modèle : CTS
+    + modèle : BLS
+
+━━  [118/121] BMW  (bmw)  — +95min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 42 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : iX3
+    + modèle : IX
+    + modèle : M8
+    + modèle : 8 serie GC
+    + modèle : 6 serie GC
+    + modèle : 2 serie GC
+    + modèle : 1 serie Sedan (china)
+    + modèle : X7
+    + modèle : X4 M
+    + modèle : X3 M
+    + modèle : 8 Serie
+    + modèle : 6 serie GT
+    + modèle : X2
+    + modèle : i8
+    + modèle : X6 M
+    + modèle : X5 M
+    + modèle : M2
+    + modèle : Z8
+    + modèle : Z4
+    + modèle : Z3
+    + modèle : Z1
+    + modèle : X6
+    + modèle : X5
+    + modèle : X4
+    + modèle : X3
+    + modèle : X1
+    + modèle : M6
+    + modèle : M5
+    + modèle : M4
+    + modèle : M3
+    + modèle : 7 serie
+    + modèle : 6 serie
+    + modèle : 5 serie GT
+    + modèle : 5 serie
+    + modèle : 4 serie GC
+    + modèle : 4 serie
+    + modèle : 3 serie GT
+    + modèle : 3 serie
+    + modèle : 2 serie Grand/Active Tourer
+    + modèle : 2 serie
+    + modèle : M1
+    + modèle : 1 serie
+
+━━  [119/121] Audi  (audi)  — +98min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 40 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : SQ6
+    + modèle : Q6
+    + modèle : Q4 e-tron
+    + modèle : E-Tron
+    + modèle : RSQ8
+    + modèle : SQ8
+    + modèle : SQ2
+    + modèle : Q8
+    + modèle : RSQ3
+    + modèle : Q2
+    + modèle : SQ7
+    + modèle : 80
+    + modèle : TT S
+    + modèle : TT RS
+    + modèle : TT
+    + modèle : SQ5
+    + modèle : S8
+    + modèle : S7
+    + modèle : S6
+    + modèle : S5
+    + modèle : S4
+    + modèle : S3
+    + modèle : S1
+    + modèle : RS7
+    + modèle : RS6
+    + modèle : RS5
+    + modèle : RS4
+    + modèle : RS3
+    + modèle : R8
+    + modèle : Q7
+    + modèle : Q5
+    + modèle : Q3
+    + modèle : A8
+    + modèle : A7
+    + modèle : A6
+    ✗ engine INSERT (audi/a6/tfsi-(2-0t)/40-) : duplicate key value violates unique constraint "engines_period_nom_key"
+    ✗ engine INSERT (audi/a6/tdi-(2-0d)/40) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : A5
+    + modèle : A4
+    + modèle : A3
+    + modèle : A2
+    + modèle : A1
+    ✗ engine INSERT (audi/a1/tfsi/1.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    ✗ engine INSERT (audi/a1/tfsi/1-2) : duplicate key value violates unique constraint "engines_period_nom_key"
+
+━━  [120/121] Aston Martin  (aston-martin)  — +106min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 16 modèles dans l'API
+  + brand créée
+    + modèle : Valiant
+    + modèle : Valour
+    + modèle : Valhalla
+    + modèle : DB12
+    + modèle : V12 Speedster
+    + modèle : Vanquish
+    + modèle : V12 Zagato
+    + modèle : One-77
+    + modèle : Valkyrie
+    + modèle : DBX
+    + modèle : DB11
+    + modèle : Virage
+    + modèle : DBS
+    + modèle : Vantage
+    ✗ engine INSERT (aston-martin/vantage/bi-turbo/4.0-v8) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : Rapide
+    + modèle : DB9
+
+━━  [121/121] Alfa Romeo  (alfa-romeo)  — +106min
+  ℹ  0 moteurs déjà importés, 0 modèles
+  → 18 modèles dans l'API
+  ↻ brand existante — modfiles_id ajouté
+    + modèle : Tonale
+    + modèle : Milano
+    + modèle : Junior
+    + modèle : Brennero
+    + modèle : 8C
+    + modèle : Stelvio
+    + modèle : Giulia
+    + modèle : 159
+    + modèle : Spider
+    + modèle : Mito
+    + modèle : Giulietta
+    ✗ engine INSERT (alfa-romeo/giulietta/jtdm/2.0) : duplicate key value violates unique constraint "engines_period_nom_key"
+    + modèle : GT
+    + modèle : Crosswagon
+    + modèle : Brera
+    + modèle : 4C
+    + modèle : 166
+    + modèle : 156
+    + modèle : 147
+    ✗ engine INSERT (alfa-romeo/147/t-spark/1-6) : duplicate key value violates unique constraint "engines_period_nom_key"
+
+
+────────────────────────────────────────────────────────
+🧹  Nettoyage — brands modfiles sans modèle
+  ✓  Aucune brand orpheline
+
+════════════════════════════════════════════════════════
+📊  Résultat de l'import
+════════════════════════════════════════════════════════
+  Durée totale           : 108 min
+  Nouvelles marques      : 85
+  Modèles créés          : 1375
+  Périodes traitées      : 3895
+  Moteurs importés       : 4868
+  Déjà présents (sautés) : 46
+
+✅  Aucune marque en échec.
+════════════════════════════════════════════════════════
+✅  Terminé le 2026-09-26T16:19:29.708Z
+
