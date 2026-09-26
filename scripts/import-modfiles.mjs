@@ -146,7 +146,7 @@ async function main() {
 
   // Récupère toutes les marques de l'API
   const rawMarks = await mfApi("/types/cars/marks");
-  const allMarks = rawMarks.map((m) => m.mark);
+  const allMarks = rawMarks.map((m) => m.mark).filter(Boolean);
   console.log(`✓  ${allMarks.length} marques dans l'API\n`);
 
   // Filtre : exclut Tesla, applique --brand= si fourni
@@ -223,7 +223,7 @@ async function main() {
     // ── Modèles ─────────────────────────────────────────────────────────────
     await pause();
     const rawModels = await mfApi(`/types/cars/marks/${encodeURIComponent(mark.id)}/models`);
-    const models = rawModels.map((m) => m.model);
+    const models = rawModels.map((m) => m.model).filter(Boolean);
     console.log(`  → ${models.length} modèles dans l'API`);
 
     for (const model of models) {
@@ -282,7 +282,7 @@ async function main() {
         console.warn(`    ✗ /engines API (${model.id}) : ${e.message}`);
         continue;
       }
-      const engines = rawEngines.map((e) => e.engine);
+      const engines = rawEngines.map((e) => e.engine).filter(Boolean);
       if (!engines.length) continue;
 
       for (const engine of engines) {
@@ -348,7 +348,7 @@ async function main() {
               continue;
             }
 
-            const engineName = `${engine.name} ${hp.horsepower.name}`.trim();
+            const engineName = `${engine.name} ${hp.horsepower?.name ?? ""}`.trim();
             const chStock  = parseVal(hp.hp?.standard);
             const nmStock  = parseVal(hp.torque?.standard);
             const chStage1 = parseVal(hp.hp?.system);
