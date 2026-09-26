@@ -239,6 +239,8 @@ export function EngineFicheClient({
           ecu={engine.ecu ?? "—"}
           title={`${brand.nom} ${model.nom} · ${engine.nom}`}
           defaultStage="stock"
+          hpS1={engine.ch_stage1 ?? undefined}
+          nmS1={engine.nm_stage1 ?? undefined}
         />
 
         <div className="bg-card border border-line rounded-lg shadow-card overflow-hidden">

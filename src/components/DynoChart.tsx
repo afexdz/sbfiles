@@ -14,6 +14,9 @@ interface Props {
   ecu: string;
   title?: string;
   defaultStage?: Stage;
+  /** Valeurs réelles Stage 1 issues de la base (ch_stage1 / nm_stage1). */
+  hpS1?: number;
+  nmS1?: number;
 }
 
 const RPM = [1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000];
@@ -96,7 +99,7 @@ const LABELS_HTML =
     .join("") +
   `<text x="${ML - 8}" y="${MT + 7}" fill="#5C6C79" font-size="11" text-anchor="end" font-family="IBM Plex Sans">ch</text>`;
 
-export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: Props) {
+export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock", hpS1, nmS1 }: Props) {
   const [stage, setStage] = useState<Stage>(defaultStage);
   const [dispHp, setDispHp] = useState(hp);
   const [dispNm, setDispNm] = useState(nm);
@@ -152,8 +155,8 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
   const draw = useCallback((mode: Stage) => {
     const sh = SHAPE[fuelKey];
     const g  = GAINS[mode];
-    const tHp = Math.round(hp * g.hp);
-    const tNm = Math.round(nm * g.nm);
+    const tHp = (mode === "s1" && hpS1 != null) ? hpS1 : Math.round(hp * g.hp);
+    const tNm = (mode === "s1" && nmS1 != null) ? nmS1 : Math.round(nm * g.nm);
     const maxP = Math.max(hp, tHp) * 1.12;
     const maxT = Math.max(nm, tNm) * 1.1;
 
@@ -182,13 +185,13 @@ export function DynoChart({ hp, nm, fuel, ecu, title, defaultStage = "stock" }: 
     setDeltaHp(mode === "stock" ? "" : `+${tHp - hp} ch`);
     setDeltaNm(mode === "stock" ? "" : `+${tNm - nm} Nm`);
     setPrice(g.price);
-  }, [hp, nm, fuelKey, animPath, animCounter]);
+  }, [hp, nm, hpS1, nmS1, fuelKey, animPath, animCounter]);
 
   /* Draw on mount and when base props change */
   useEffect(() => {
     draw(stage);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hp, nm, fuel]);
+  }, [hp, nm, fuel, hpS1, nmS1]);
 
   function handleStage(key: Stage) {
     setStage(key);

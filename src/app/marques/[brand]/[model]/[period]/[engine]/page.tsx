@@ -109,6 +109,8 @@ export default async function EnginePage({
       carburant:   (engine.carburant ?? null) as Engine["carburant"],
       ch_stock:    (engine.ch_stock ?? null) as number | null,
       nm_stock:    (engine.nm_stock ?? null) as number | null,
+      ch_stage1:   (engine.ch_stage1 ?? null) as number | null,
+      nm_stage1:   (engine.nm_stage1 ?? null) as number | null,
       ecu:         (engine.ecu ?? null) as string | null,
     };
     periodEngines = [fallback, ...periodEngines];

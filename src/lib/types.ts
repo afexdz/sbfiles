@@ -45,6 +45,8 @@ export interface Engine {
   carburant: Fuel | null;
   ch_stock: number | null;
   nm_stock: number | null;
+  ch_stage1: number | null;
+  nm_stage1: number | null;
   ecu: string | null;
 }
 
