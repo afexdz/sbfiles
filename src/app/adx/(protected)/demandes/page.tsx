@@ -17,7 +17,7 @@ interface EnrichedDemande extends TuningDemande {
 function enrich(d: Record<string, unknown>): EnrichedDemande {
   const engine = d.engine as {
     nom: string;
-    period?: { nom: string; model?: { nom: string; brand?: { nom: string } } };
+    period?: { label: string; model?: { nom: string; brand?: { nom: string } } };
   } | null;
   return {
     ...(d as unknown as TuningDemande),
@@ -26,7 +26,7 @@ function enrich(d: Record<string, unknown>): EnrichedDemande {
     tuning_nom:  (d.tuning_type as { nom_fr: string } | null)?.nom_fr,
     brand_nom:   engine?.period?.model?.brand?.nom,
     model_nom:   engine?.period?.model?.nom,
-    period_nom:  engine?.period?.nom,
+    period_nom:  engine?.period?.label,
     option_noms: (d.option_noms as string[]) ?? [],
   };
 }
@@ -34,7 +34,7 @@ function enrich(d: Record<string, unknown>): EnrichedDemande {
 const DEMANDE_SELECT = `
   *,
   atelier:ateliers(nom),
-  engine:engines(nom, period:periods(nom, model:models(nom, brand:brands(nom)))),
+  engine:engines(nom, period:periods(label, model:models(nom, brand:brands(nom)))),
   tuning_type:tuning_types(nom_fr)
 ` as const;
 
