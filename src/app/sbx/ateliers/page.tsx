@@ -115,17 +115,79 @@ export default async function SbxAteliersPage() {
 
   async function getDemandes(id: string): Promise<{
     id: string; reference: string; statut: string; cout_tokens: number; created_at: string; livree_le: string | null;
+    traite_par: string | null; assigned_admin_id: string | null;
+    traite_par_nom: string | null; assigned_admin_nom: string | null;
   }[]> {
     "use server";
     const sb = await createActionClient().catch(() => null);
     if (!sb) return [];
     const { data } = await sb
       .from("tuning_demandes")
-      .select("id, reference, statut, cout_tokens, created_at, livree_le")
+      .select("id, reference, statut, cout_tokens, created_at, livree_le, traite_par, assigned_admin_id")
       .eq("atelier_id", id)
       .order("created_at", { ascending: false })
       .limit(15);
-    return (data ?? []) as { id: string; reference: string; statut: string; cout_tokens: number; created_at: string; livree_le: string | null }[];
+
+    const rows = (data ?? []) as {
+      id: string; reference: string; statut: string; cout_tokens: number;
+      created_at: string; livree_le: string | null;
+      traite_par: string | null; assigned_admin_id: string | null;
+    }[];
+
+    const adminIds = [...new Set(
+      rows.flatMap((r) => [r.traite_par, r.assigned_admin_id].filter(Boolean) as string[])
+    )];
+    const adminMap: Record<string, string> = {};
+    if (adminIds.length > 0) {
+      const { data: profiles } = await sb
+        .from("profiles")
+        .select("id, nom, email")
+        .in("id", adminIds);
+      for (const p of profiles ?? []) {
+        const profile = p as { id: string; nom: string | null; email: string | null };
+        adminMap[profile.id] = profile.nom || profile.email || "Admin";
+      }
+    }
+
+    return rows.map((r) => ({
+      ...r,
+      traite_par_nom:       r.traite_par       ? (adminMap[r.traite_par] ?? null)       : null,
+      assigned_admin_nom:   r.assigned_admin_id ? (adminMap[r.assigned_admin_id] ?? null) : null,
+    }));
+  }
+
+  async function getDemandeHistory(demandeId: string): Promise<{
+    id: string; action: string; acteur_nom: string | null; created_at: string;
+  }[]> {
+    "use server";
+    const sb = await createActionClient().catch(() => null);
+    if (!sb) return [];
+    const { data } = await sb
+      .from("admin_actions")
+      .select("id, action, acteur_id, created_at")
+      .eq("cible_type", "tuning_demande")
+      .eq("cible_id", demandeId)
+      .order("created_at", { ascending: true });
+
+    const rows = (data ?? []) as { id: string; action: string; acteur_id: string | null; created_at: string }[];
+    const acteurIds = [...new Set(rows.map((r) => r.acteur_id).filter(Boolean) as string[])];
+    const acteurMap: Record<string, string> = {};
+    if (acteurIds.length > 0) {
+      const { data: profiles } = await sb
+        .from("profiles")
+        .select("id, nom, email")
+        .in("id", acteurIds);
+      for (const p of profiles ?? []) {
+        const profile = p as { id: string; nom: string | null; email: string | null };
+        acteurMap[profile.id] = profile.nom || profile.email || "Admin";
+      }
+    }
+    return rows.map((r) => ({
+      id:         r.id,
+      action:     r.action,
+      acteur_nom: r.acteur_id ? (acteurMap[r.acteur_id] ?? null) : null,
+      created_at: r.created_at,
+    }));
   }
 
   async function resetPassword(email: string): Promise<{ ok: boolean; link?: string; message?: string }> {
@@ -153,6 +215,7 @@ export default async function SbxAteliersPage() {
         ajusterAction={ajuster}
         getLedgerAction={getLedger}
         getDemandesAction={getDemandes}
+        getDemandeHistoryAction={getDemandeHistory}
         resetPasswordAction={resetPassword}
       />
     </div>

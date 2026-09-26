@@ -9,7 +9,13 @@ interface AtelierWithMeta extends Atelier {
 }
 
 type LedgerEntry = { id: string; delta: number; motif: string; note: string | null; created_at: string };
-type Demande     = { id: string; reference: string; statut: string; cout_tokens: number; created_at: string; livree_le: string | null };
+type Demande = {
+  id: string; reference: string; statut: string; cout_tokens: number;
+  created_at: string; livree_le: string | null;
+  traite_par: string | null; assigned_admin_id: string | null;
+  traite_par_nom: string | null; assigned_admin_nom: string | null;
+};
+type DemandeHistoryEntry = { id: string; action: string; acteur_nom: string | null; created_at: string };
 
 const STATUS_LABEL: Record<AtelierStatut, string> = {
   en_attente: "En attente",
@@ -38,17 +44,19 @@ const MOTIF_LABEL: Record<string, string> = {
 type ModalType = "approuver" | "refuser" | "ajuster";
 
 interface Props {
-  ateliers:            AtelierWithMeta[];
-  approuverAction:     (id: string) => Promise<{ ok: boolean; message?: string }>;
-  refuserAction:       (id: string, note: string) => Promise<{ ok: boolean; message?: string }>;
-  ajusterAction:       (id: string, delta: number, note: string) => Promise<{ ok: boolean; nouveau_solde?: number; message?: string }>;
-  getLedgerAction:     (id: string) => Promise<LedgerEntry[]>;
-  getDemandesAction:   (id: string) => Promise<Demande[]>;
-  resetPasswordAction: (email: string) => Promise<{ ok: boolean; link?: string; message?: string }>;
+  ateliers:                AtelierWithMeta[];
+  approuverAction:         (id: string) => Promise<{ ok: boolean; message?: string }>;
+  refuserAction:           (id: string, note: string) => Promise<{ ok: boolean; message?: string }>;
+  ajusterAction:           (id: string, delta: number, note: string) => Promise<{ ok: boolean; nouveau_solde?: number; message?: string }>;
+  getLedgerAction:         (id: string) => Promise<LedgerEntry[]>;
+  getDemandesAction:       (id: string) => Promise<Demande[]>;
+  getDemandeHistoryAction: (demandeId: string) => Promise<DemandeHistoryEntry[]>;
+  resetPasswordAction:     (email: string) => Promise<{ ok: boolean; link?: string; message?: string }>;
 }
 
 export function SbxAteliersPanel({
-  ateliers, approuverAction, refuserAction, ajusterAction, getLedgerAction, getDemandesAction, resetPasswordAction,
+  ateliers, approuverAction, refuserAction, ajusterAction, getLedgerAction,
+  getDemandesAction, getDemandeHistoryAction, resetPasswordAction,
 }: Props) {
   const [filter, setFilter]   = useState<AtelierStatut | "">("");
   const [search, setSearch]   = useState("");
@@ -59,6 +67,10 @@ export function SbxAteliersPanel({
   const [ledger, setLedger]               = useState<LedgerEntry[]>([]);
   const [demandes, setDemandes]           = useState<Demande[]>([]);
   const [loadingDetail, setLoadingDetail] = useState(false);
+
+  const [demandeHistory, setDemandeHistory]   = useState<Record<string, DemandeHistoryEntry[]>>({});
+  const [historyLoading, setHistoryLoading] = useState<string | null>(null);
+  const [expandedDemande, setExpandedDemande] = useState<string | null>(null);
 
   const [modal, setModal]       = useState<{ type: ModalType; atelier: AtelierWithMeta } | null>(null);
   const [refusNote, setRefusNote] = useState("");
@@ -90,11 +102,25 @@ export function SbxAteliersPanel({
     setLedger([]);
     setDemandes([]);
     setResetLink("");
+    setExpandedDemande(null);
     setLoadingDetail(true);
     const [l, d] = await Promise.all([getLedgerAction(a.id), getDemandesAction(a.id)]);
     setLedger(l);
     setDemandes(d);
     setLoadingDetail(false);
+  }
+
+  async function toggleDemandeHistory(demandeId: string) {
+    if (expandedDemande === demandeId) {
+      setExpandedDemande(null);
+      return;
+    }
+    setExpandedDemande(demandeId);
+    if (demandeHistory[demandeId]) return;
+    setHistoryLoading(demandeId);
+    const history = await getDemandeHistoryAction(demandeId);
+    setDemandeHistory((prev) => ({ ...prev, [demandeId]: history }));
+    setHistoryLoading(null);
   }
 
   function openModal(type: ModalType, atelier: AtelierWithMeta) {
@@ -329,19 +355,59 @@ export function SbxAteliersPanel({
                 {demandes.length === 0 ? (
                   <p className="text-white/20 text-xs">Aucune demande.</p>
                 ) : (
-                  <div className="space-y-2.5">
+                  <div className="space-y-2">
                     {demandes.map((d) => (
-                      <div key={d.id} className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <p className="text-xs font-mono text-white/60">{d.reference}</p>
-                          <p className="text-[10px] text-white/20">{new Date(d.created_at).toLocaleDateString("fr-FR")}</p>
-                        </div>
-                        <div className="text-right shrink-0">
-                          <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium ${DEMANDE_BADGE[d.statut] ?? "text-white/30"}`}>
-                            {d.statut}
-                          </span>
-                          <p className="text-[10px] text-white/30 mt-0.5 font-mono">{d.cout_tokens}t</p>
-                        </div>
+                      <div key={d.id} className="rounded-[8px] border border-white/[0.06] overflow-hidden">
+                        <button
+                          className="w-full flex items-start justify-between gap-2 px-3 py-2 hover:bg-white/[0.03] cursor-pointer transition-colors duration-100 text-left"
+                          onClick={() => toggleDemandeHistory(d.id)}
+                        >
+                          <div className="min-w-0">
+                            <p className="text-xs font-mono text-white/60">{d.reference}</p>
+                            <p className="text-[10px] text-white/20">{new Date(d.created_at).toLocaleDateString("fr-FR")}</p>
+                            {(d.traite_par_nom ?? d.assigned_admin_nom) && (
+                              <p className="text-[10px] text-white/30 mt-0.5">
+                                {d.statut === "livree"
+                                  ? `Livré par ${d.traite_par_nom ?? "—"}`
+                                  : d.assigned_admin_nom
+                                    ? `En cours : ${d.assigned_admin_nom}`
+                                    : ""}
+                              </p>
+                            )}
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium ${DEMANDE_BADGE[d.statut] ?? "text-white/30"}`}>
+                              {d.statut}
+                            </span>
+                            <p className="text-[10px] text-white/30 mt-0.5 font-mono">{d.cout_tokens}t</p>
+                          </div>
+                        </button>
+
+                        {expandedDemande === d.id && (
+                          <div className="border-t border-white/[0.05] px-3 py-2 bg-white/[0.02]">
+                            {historyLoading === d.id ? (
+                              <p className="text-[10px] text-white/20">Chargement…</p>
+                            ) : (demandeHistory[d.id] ?? []).length === 0 ? (
+                              <p className="text-[10px] text-white/20">Aucune action enregistrée.</p>
+                            ) : (
+                              <div className="space-y-1.5">
+                                {(demandeHistory[d.id] ?? []).map((h) => (
+                                  <div key={h.id} className="flex items-center justify-between gap-2">
+                                    <div>
+                                      <span className="text-[10px] text-white/50 font-mono">{h.action}</span>
+                                      {h.acteur_nom && (
+                                        <span className="text-[10px] text-white/30 ml-1">· {h.acteur_nom}</span>
+                                      )}
+                                    </div>
+                                    <span className="text-[9px] text-white/20 shrink-0">
+                                      {new Date(h.created_at).toLocaleString("fr-FR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" })}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

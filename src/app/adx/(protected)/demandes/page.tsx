@@ -1,75 +1,158 @@
 import { revalidatePath }       from "next/cache";
 import { createClient }          from "../../../../../lib/supabase/server";
-import { DemandTableAdx }        from "@/components/adx/DemandTableAdx";
+import { createActionClient }    from "../../../../../lib/supabase/server";
+import { DemandesAdxTabs }       from "@/components/adx/DemandesAdxTabs";
 import type { TuningDemande }    from "@/lib/types";
+
+interface EnrichedDemande extends TuningDemande {
+  atelier_nom?:  string;
+  engine_nom?:   string;
+  tuning_nom?:   string;
+  brand_nom?:    string;
+  model_nom?:    string;
+  period_nom?:   string;
+  option_noms?:  string[];
+}
+
+function enrich(d: Record<string, unknown>): EnrichedDemande {
+  const engine = d.engine as {
+    nom: string;
+    period?: { nom: string; model?: { nom: string; brand?: { nom: string } } };
+  } | null;
+  return {
+    ...(d as unknown as TuningDemande),
+    atelier_nom: (d.atelier as { nom: string } | null)?.nom,
+    engine_nom:  engine?.nom,
+    tuning_nom:  (d.tuning_type as { nom_fr: string } | null)?.nom_fr,
+    brand_nom:   engine?.period?.model?.brand?.nom,
+    model_nom:   engine?.period?.model?.nom,
+    period_nom:  engine?.period?.nom,
+    option_noms: (d.option_noms as string[]) ?? [],
+  };
+}
+
+const DEMANDE_SELECT = `
+  *,
+  atelier:ateliers(nom),
+  engine:engines(nom, period:periods(nom, model:models(nom, brand:brands(nom)))),
+  tuning_type:tuning_types(nom_fr)
+` as const;
 
 export default async function AdxDemandesPage() {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
 
-  const { data } = await supabase
-    .from("tuning_demandes")
-    .select(`
-      *,
-      atelier:ateliers (nom),
-      engine:engines (nom),
-      tuning_type:tuning_types (nom_fr)
-    `)
-    .order("created_at", { ascending: false });
+  // Batch fetch all option IDs across all demandes
+  const [aPrendreRaw, mesEnCoursRaw, mesLivreesRaw] = await Promise.all([
+    supabase
+      .from("tuning_demandes")
+      .select(DEMANDE_SELECT)
+      .eq("statut", "recue")
+      .is("assigned_admin_id", null)
+      .order("created_at", { ascending: true }),
 
-  const demandes = (data ?? []).map((d: Record<string, unknown>) => ({
-    ...(d as unknown as TuningDemande),
-    atelier_nom: (d.atelier as { nom: string } | null)?.nom,
-    engine_nom:  (d.engine  as { nom: string } | null)?.nom,
-    tuning_nom:  (d.tuning_type as { nom_fr: string } | null)?.nom_fr,
-  }));
+    supabase
+      .from("tuning_demandes")
+      .select(DEMANDE_SELECT)
+      .eq("statut", "en_cours")
+      .eq("assigned_admin_id", user.id)
+      .order("telecharge_le", { ascending: true }),
 
-  async function telechargerFichier(id: string): Promise<{ ok: boolean; url?: string; message?: string }> {
+    supabase
+      .from("tuning_demandes")
+      .select(DEMANDE_SELECT)
+      .eq("statut", "livree")
+      .eq("traite_par", user.id)
+      .order("livree_le", { ascending: false })
+      .limit(50),
+  ]);
+
+  const allRaw = [
+    ...(aPrendreRaw.data ?? []),
+    ...(mesEnCoursRaw.data ?? []),
+    ...(mesLivreesRaw.data ?? []),
+  ] as Record<string, unknown>[];
+
+  // Batch option names
+  const allOptionIds = [...new Set(
+    allRaw.flatMap((d) => (d.option_ids as string[] | null) ?? [])
+  )];
+  const optionMap: Record<string, string> = {};
+  if (allOptionIds.length > 0) {
+    const { data: opts } = await supabase
+      .from("options")
+      .select("id, nom_fr")
+      .in("id", allOptionIds);
+    for (const o of opts ?? []) {
+      const opt = o as { id: string; nom_fr: string };
+      optionMap[opt.id] = opt.nom_fr;
+    }
+  }
+
+  function withOptions(d: Record<string, unknown>): EnrichedDemande {
+    const base = enrich(d);
+    base.option_noms = ((d.option_ids as string[] | null) ?? [])
+      .map((id) => optionMap[id]).filter(Boolean);
+    return base;
+  }
+
+  const aPrendre  = (aPrendreRaw.data  ?? []).map(withOptions);
+  const mesEnCours = (mesEnCoursRaw.data ?? []).map(withOptions);
+  const mesLivrees = (mesLivreesRaw.data ?? []).map(withOptions);
+
+  // ── Server Actions ──────────────────────────────────────────────────────────
+
+  async function prendreEnCharge(id: string): Promise<{ ok: boolean; message?: string }> {
     "use server";
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return { ok: false, message: "Erreur serveur." };
-    const { data: { user } } = await sb.auth.getUser();
+    const { data, error } = await sb.rpc("prendre_en_charge", { p_demande: id });
+    if (error) return { ok: false, message: error.message };
+    if (!data) return { ok: false, message: "Cette demande vient d'être prise par un autre admin." };
+    revalidatePath("/adx/demandes");
+    return { ok: true };
+  }
+
+  async function telecharger(id: string): Promise<{ ok: boolean; url?: string; message?: string }> {
+    "use server";
+    const sb = await createActionClient().catch(() => null);
+    if (!sb) return { ok: false, message: "Erreur serveur." };
+    const { data: { user: u } } = await sb.auth.getUser();
 
     const { data: d } = await sb
       .from("tuning_demandes")
-      .select("fichier_original, statut")
-      .eq("id", id).single();
-
+      .select("fichier_original, fichier_original_nom")
+      .eq("id", id)
+      .single();
     if (!d) return { ok: false, message: "Demande introuvable." };
-
-    if (d.statut === "recue" && user) {
-      await sb.from("tuning_demandes").update({
-        telecharge_le:     new Date().toISOString(),
-        assigned_admin_id: user.id,
-        statut:            "en_cours",
-      }).eq("id", id);
-
-      await sb.from("admin_actions").insert({
-        acteur:     user.id,
-        action:     "telecharger_fichier_original",
-        cible_type: "tuning_demande",
-        cible_id:   id,
-        details:    { fichier: d.fichier_original },
-      });
-
-      revalidatePath("/adx/demandes");
-    }
 
     const { data: signed } = await sb.storage
       .from("bin-original")
       .createSignedUrl(d.fichier_original, 3600);
 
+    if (u) {
+      await sb.from("admin_actions").insert({
+        acteur_id:  u.id,
+        action:     "telecharger_fichier_original",
+        cible_type: "tuning_demande",
+        cible_id:   id,
+        details:    { fichier: d.fichier_original },
+      });
+    }
+
     return { ok: true, url: signed?.signedUrl };
   }
 
-  async function livrerDemande(fd: FormData): Promise<{ ok: boolean; message?: string }> {
+  async function livrer(fd: FormData): Promise<{ ok: boolean; message?: string }> {
     "use server";
     const demandeId = fd.get("demandeId") as string | null;
     const file      = fd.get("file")      as File  | null;
     if (!demandeId || !file) return { ok: false, message: "Données manquantes." };
 
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return { ok: false, message: "Erreur serveur." };
-    const { data: { user } } = await sb.auth.getUser();
+    const { data: { user: u } } = await sb.auth.getUser();
 
     const filePath = `tune/${demandeId}/${file.name}`;
     const buffer = await file.arrayBuffer();
@@ -84,14 +167,14 @@ export default async function AdxDemandesPage() {
       fichier_tune_nom: file.name,
       statut:           "livree",
       livree_le:        new Date().toISOString(),
-      traite_par:       user?.id ?? null,
+      traite_par:       u?.id ?? null,
     }).eq("id", demandeId);
 
     if (error) return { ok: false, message: error.message };
 
-    if (user) {
+    if (u) {
       await sb.from("admin_actions").insert({
-        acteur:     user.id,
+        acteur_id:  u.id,
         action:     "livrer_demande",
         cible_type: "tuning_demande",
         cible_id:   demandeId,
@@ -102,9 +185,31 @@ export default async function AdxDemandesPage() {
     return { ok: true };
   }
 
+  async function refuser(id: string, note: string): Promise<{ ok: boolean; message?: string }> {
+    "use server";
+    const sb = await createActionClient().catch(() => null);
+    if (!sb) return { ok: false, message: "Erreur serveur." };
+    const { data: { user: u } } = await sb.auth.getUser();
+    const { error } = await sb.rpc("rembourser_demande", { p_demande: id, p_note: note });
+    if (error) return { ok: false, message: error.message };
+
+    if (u) {
+      await sb.from("admin_actions").insert({
+        acteur_id:  u.id,
+        action:     "refuser_demande",
+        cible_type: "tuning_demande",
+        cible_id:   id,
+        details:    { note },
+      });
+    }
+
+    revalidatePath("/adx/demandes");
+    return { ok: true };
+  }
+
   async function modifierDelai(id: string, delai: number): Promise<{ ok: boolean; message?: string }> {
     "use server";
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return { ok: false, message: "Erreur serveur." };
     const { error } = await sb.from("tuning_demandes")
       .update({ delai_heures: delai }).eq("id", id);
@@ -113,34 +218,25 @@ export default async function AdxDemandesPage() {
     return { ok: true };
   }
 
-  async function refuserAction(id: string, note: string): Promise<{ ok: boolean; message?: string }> {
-    "use server";
-    const sb = await createClient().catch(() => null);
-    if (!sb) return { ok: false, message: "Erreur serveur." };
-    const { error } = await sb.rpc("rembourser_demande", { p_demande: id, p_note: note });
-    if (error) return { ok: false, message: error.message };
-    revalidatePath("/adx/demandes");
-    return { ok: true };
-  }
-
-  const pending = demandes.filter((d) => d.statut === "recue").length;
-
   return (
-    <>
-      <div className="mb-6">
+    <div>
+      <div className="mb-8">
         <h1 className="font-display text-[clamp(24px,3vw,34px)]">Demandes de tuning</h1>
-        <p className="text-ink2 text-[14.5px] mt-1">
-          {demandes.length} demande{demandes.length !== 1 ? "s" : ""}
-          {pending > 0 && <> — <span className="text-ember font-medium">{pending} nouvelles</span></>}
+        <p className="text-ink2 text-sm mt-1">
+          {aPrendre.length} à prendre
+          {mesEnCours.length > 0 && <> · <span className="text-ember font-medium">{mesEnCours.length} en cours</span></>}
         </p>
       </div>
-      <DemandTableAdx
-        demandes={demandes}
-        telechargerFichier={telechargerFichier}
-        livrerDemande={livrerDemande}
-        modifierDelai={modifierDelai}
-        refuserAction={refuserAction}
+      <DemandesAdxTabs
+        aPrendre={aPrendre}
+        mesEnCours={mesEnCours}
+        mesLivrees={mesLivrees}
+        prendreEnChargeAction={prendreEnCharge}
+        telechargerAction={telecharger}
+        livrerAction={livrer}
+        refuserAction={refuser}
+        modifierDelaiAction={modifierDelai}
       />
-    </>
+    </div>
   );
 }
