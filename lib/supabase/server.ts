@@ -35,3 +35,32 @@ export async function createClient() {
     }
   )
 }
+
+/**
+ * Server-action variant — reads the session from cookies but never writes back.
+ *
+ * Why: In Next.js 16, any cookie mutation inside a Server Action automatically
+ * triggers a full route re-render.  The Supabase client calls setAll() whenever
+ * it refreshes the access token, which sets a cookie, which triggers the re-render,
+ * which re-runs the layout's auth check.  If that check loses the race (network
+ * hiccup, auth server latency) it redirects to /403 — even though the action
+ * itself succeeded.
+ *
+ * The middleware already handles token refresh on every request, so by the time
+ * a Server Action runs the session is already fresh.  Suppressing setAll here
+ * prevents the spurious re-render without affecting auth correctness.
+ */
+export async function createActionClient() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll() { /* intentional noop — see JSDoc above */ },
+      },
+    }
+  )
+}

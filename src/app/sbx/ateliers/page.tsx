@@ -1,5 +1,5 @@
-import { createClient }               from "../../../../lib/supabase/server";
-import { createAdminClient }          from "../../../../lib/supabase/admin";
+import { createClient, createActionClient } from "../../../../lib/supabase/server";
+import { createAdminClient }               from "../../../../lib/supabase/admin";
 import { SbxAteliersPanel }           from "./SbxAteliersPanel";
 import { sendAtelierApprouveEmail }   from "@/lib/email";
 import type { Atelier }               from "@/lib/types";
@@ -53,7 +53,7 @@ export default async function SbxAteliersPage() {
 
   async function approuver(id: string): Promise<{ ok: boolean; message?: string }> {
     "use server";
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return { ok: false, message: "Erreur serveur." };
     const { error } = await sb.from("ateliers").update({ statut: "approuve" }).eq("id", id);
     if (error) return { ok: false, message: error.message };
@@ -78,7 +78,7 @@ export default async function SbxAteliersPage() {
 
   async function refuser(id: string, note: string): Promise<{ ok: boolean; message?: string }> {
     "use server";
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return { ok: false, message: "Erreur serveur." };
     const { error } = await sb.from("ateliers")
       .update({ statut: "refuse", note_admin: note }).eq("id", id);
@@ -89,7 +89,7 @@ export default async function SbxAteliersPage() {
   async function ajuster(id: string, delta: number, note: string)
     : Promise<{ ok: boolean; nouveau_solde?: number; message?: string }> {
     "use server";
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return { ok: false, message: "Erreur serveur." };
     const { data, error } = await sb.rpc("ajuster_solde", {
       p_atelier: id, p_delta: delta, p_note: note,
@@ -102,7 +102,7 @@ export default async function SbxAteliersPage() {
     id: string; delta: number; motif: string; note: string | null; created_at: string;
   }[]> {
     "use server";
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return [];
     const { data } = await sb
       .from("token_ledger")
@@ -117,7 +117,7 @@ export default async function SbxAteliersPage() {
     id: string; reference: string; statut: string; cout_tokens: number; created_at: string; livree_le: string | null;
   }[]> {
     "use server";
-    const sb = await createClient().catch(() => null);
+    const sb = await createActionClient().catch(() => null);
     if (!sb) return [];
     const { data } = await sb
       .from("tuning_demandes")

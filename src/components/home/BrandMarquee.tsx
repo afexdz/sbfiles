@@ -163,9 +163,18 @@ function Track({ brands, direction, duration, eagerCount = 0 }: TrackProps) {
       // autoFactor stays 0 → resumes gradually via RESUME_RATE in the loop
       wrapper.style.cursor = "grab";
       cleanupDocListeners();
-      // Swallow the synthetic click browsers may fire right after pointerup
+      // Swallow the synthetic click the browser fires after a small drag that
+      // keeps pointerdown+pointerup on the same element (which would navigate).
+      // Important: for *large* drags the browser never fires a click (different
+      // target elements), so we must remove the listener after 2 frames to
+      // avoid blocking the user's next intentional click.
       if (didDrag) {
         document.addEventListener("click", stopPostDragClick, { capture: true, once: true });
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() =>
+            document.removeEventListener("click", stopPostDragClick, true)
+          )
+        );
       }
       didDrag = false;
     }
